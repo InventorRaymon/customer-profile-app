@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const [inputValue, setInputValue] = useState({
-        email: "",
-        password: "",
+        username: "",
+        userpass: "",
     });
-    const { email, password } = inputValue;
+    const [showPassword, setShowPassword] = useState(true);
+    const { username, userpass } = inputValue;
+
     const handleOnChange = (e) => {
+        e.preventDefault();
         const { name, value } = e.target;
         setInputValue({
             ...inputValue,
@@ -17,32 +21,49 @@ const LoginPage = () => {
         });
     };
 
+    // const handleError = (err) =>
+    //     toast.error(err, {
+    //         position: "bottom-left",
+    //     });
+    // const handleSuccess = (msg) =>
+    //     toast.success(msg, {
+    //         position: "bottom-left",
+    // });
+    
+    const handleShowPass = () => {
+
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const { data } = await axios.post(
-                "http://localhost:3001/login",
+                "http://172.16.61.121:7001/api/mobileapi/Postlogin",
                 {
                     ...inputValue,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             );
-            const { success, message } = data;
-            if (success) {
-                handleSuccess(message);
+
+            const {ReturnMsg, UserInfo} = data;
+            if (ReturnMsg === "Success") {
                 setTimeout(() => {
-                    navigate("/");
+                    navigate("/landing", 
+                    {state:{
+                        UserInfo
+                    }}
+                );
                 }, 1000);
             } else {
-                handleError(message);
+                // handleError(message);
             }
         } catch (error) {
             console.log(error);
         }
         setInputValue({
             ...inputValue,
-            email: "",
-            password: "",
+            username: "",
+            userpass: "",
         });
     };
 
@@ -55,7 +76,7 @@ const LoginPage = () => {
                 </div>
                 <div className="flex-auto self-start mt-3 underline text-neutral-800">
                     <span className="text-neutral-700">Not a member yet?</span>
-                    <a href="#" className="font-bold underline text-neutral-800">
+                    <a href="/signup" className="font-bold underline text-neutral-800">
                         {" "}
                         JOIN NOW
                     </a>
@@ -68,7 +89,7 @@ const LoginPage = () => {
         return (
             <footer className="flex gap-5 self-stretch mt-56 w-full text-sm leading-6 max-md:flex-wrap max-md:mt-10 max-md:max-w-full">
                 <div className="flex-auto tracking-tight text-neutral-400">
-                    Copyright 2021 - 2022 FoxHub Inc. All rights Reserved
+                    Copyright 2024 Cosmotech Inc. All rights Reserved
                 </div>
                 <div className="flex gap-2.5 text-neutral-700">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/1606a9b395bcfb2c9ab560494928bb93fc3031a591f7034d0c130aaf79a5f671?apiKey=966c510a434d496c8209492887da4d0c&" alt="Help icon" className="shrink-0 aspect-square w-[18px]" />
@@ -77,49 +98,6 @@ const LoginPage = () => {
             </footer>
         );
     }
-
-    function LoginForm() {
-        return (
-            <form onSubmit={handleSubmit}>
-                <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[420px] max-md:mt-10">
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="Email icon" className="shrink-0 w-6 aspect-square" />
-                    <label htmlFor="email" className="sr-only">Email</label>
-                    <input
-                        className="flex-auto my-auto bg-transparent border-none focus:outline-none"
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={handleOnChange}
-                        placeholder="example@email.com" />
-                </div>
-                <div className="flex gap-5 justify-between px-5 py-6 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[420px]">
-                    <div className="flex gap-3 text-base leading-7 text-neutral-700">
-                        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="Password icon" className="shrink-0 w-6 aspect-square" />
-                        <label htmlFor="password" className="sr-only">Password</label>
-                        <input
-                            className="flex-auto my-auto bg-transparent border-none focus:outline-none"
-                            type="password"
-                            id="password"
-                            placeholder="*********"
-                            value={password}
-                            onChange={handleOnChange}
-                        />
-                    </div>
-                    <div className="my-auto text-xs leading-6 text-right text-neutral-400">
-                        SHOW
-                    </div>
-                </div>
-                <button type="submit" className="flex gap-5 px-9 py-5 mt-5 max-w-full text-base leading-7 text-white bg-slate-800 w-[420px] max-md:px-5">
-                    <span className="flex-auto my-auto"><Link to={"/login"}>Proceed to my Account</Link></span>
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
-                </button>
-                <div className="mt-12 text-sm leading-6 text-right text-black max-md:mt-10">
-                    Having Issues with your Password?
-                </div>
-            </form>
-        );
-    }
-
 
 
     return (
@@ -148,7 +126,52 @@ const LoginPage = () => {
                         <p className="mt-8 text-base leading-7 text-center uppercase text-neutral-700">
                             LOG IN TO CONTINUE
                         </p>
-                        <LoginForm />
+                        <form onSubmit={handleSubmit}>
+                            <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[420px] max-md:mt-10">
+                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
+                                <label htmlFor="username" className="sr-only">username</label>
+                                <input
+                                    className="flex-auto my-auto bg-transparent border-none focus:outline-none"
+                                    type="username"
+                                    id="username"
+                                    name="username"
+                                    value={username}
+                                    required
+                                    onChange={handleOnChange}
+                                    placeholder="username"
+                                />
+                            </div>
+                            <div className='border-color red'>
+                            <div className="flex gap-5 justify-between px-5 py-6 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[420px]">
+                                <div className="flex gap-3 text-base leading-7 text-neutral-700">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
+                                    <label htmlFor="userpass" className="sr-only">userpass</label>
+                                    <input
+                                        className="flex-auto my-auto bg-transparent border-none focus:outline-none"
+                                        type="password"
+                                        id="userpass"
+                                        name="userpass"
+                                        placeholder="*********"
+                                        value={userpass}
+                                        required
+                                        onChange={handleOnChange}
+                                    />
+                                </div>
+                                <div className="my-auto text-xs leading-6 text-right text-neutral-400">
+                                <a className="font-bold text-neutral-800" onClick={handleShowPass}>
+                                <label for="check">Show</label>
+                                </a>
+                                </div>
+                            </div>
+                            </div>
+                            <button type="submit" className="flex gap-5 px-9 py-5 mt-5 max-w-full text-base leading-7 text-white bg-slate-800 w-[420px] max-md:px-5">
+                                <span className="flex-auto my-auto">Proceed to my Account</span>
+                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
+                            </button>
+                            <div className="mt-12 text-sm leading-6 text-right text-black max-md:mt-10">
+                                Having Issues with your username?
+                            </div>
+                        </form>
                     </main>
                     <Footer />
                 </div>
