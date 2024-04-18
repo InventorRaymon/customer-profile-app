@@ -7,35 +7,35 @@ const LandingPage = () => {
 
   const [clientData, setClientData] = useState([]);
   const { state } = useLocation();
-  const token = state.UserInfo.UserPass;
-  const getClientList = async () => {
-    try {
-      const { data } = await axios.get(
-        "http://172.16.61.121:7001/api/mobileapi/GetAllCLient",
-        // { withCredentials: true },
-        {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
-      setClientData(data.SelectListItem);
-    } catch (error) {
-      console.log(error);
-    }
-    // const response = await fetch(url);
-    // try {
-    //   const responseJson = await data.json();
-    //   console.log(responseJson);
-    //   setClientData = (responseJson.results);
-    // } catch (err) {
-    //   console.error(err);
-    // }
+  // const token = state.UserInfo.UserPass;
+  // const getClientList = async () => {
+  //   try {
+  //     const { data } = await axios.get(
+  //       "http://172.16.61.121:7001/api/mobileapi/GetAllCLient",
+  //       // { withCredentials: true },
+  //       {
+  //         headers: {
+  //           'Authorization': 'Bearer ' + token
+  //         }
+  //       });
+  //     setClientData(data.SelectListItem);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   // const response = await fetch(url);
+  //   // try {
+  //   //   const responseJson = await data.json();
+  //   //   console.log(responseJson);
+  //   //   setClientData = (responseJson.results);
+  //   // } catch (err) {
+  //   //   console.error(err);
+  //   // }
 
-  };
+  // };
 
-  useEffect(() => {
-    getClientList();
-  }, [state]);
+  // useEffect(() => {
+  //   getClientList();
+  // }, [state]);
 
 
 
@@ -70,9 +70,9 @@ const LandingPage = () => {
               clip-rule="evenodd"></path>
           </svg>
         </button>
-        <a href="javascript:void(0)" class="ml-8"><img src="https://readymadeui.com/readymadeui.svg" alt="logo"
+        {/* <a href="javascript:void(0)" class="ml-8"><img src="https://readymadeui.com/readymadeui.svg" alt="logo"
             class='w-36' />
-        </a>
+        </a> */}
       </div>
   
       <div
