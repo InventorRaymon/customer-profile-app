@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
 
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
     username: "",
     userpass: "",
@@ -30,6 +33,41 @@ const SignUpPage = () => {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post(
+        "http://172.16.61.121:7001/api/mobileapi/Postlogin",
+        {
+          ...inputValue,
+        },
+        { withCredentials: true },
+      );
+
+      const { ReturnMsg, UserInfo } = data;
+      if (ReturnMsg === "Success") {
+        setTimeout(() => {
+          navigate("/landing",
+            {
+              state: {
+                UserInfo
+              }
+            }
+          );
+        }, 1000);
+      } else {
+        // handleError(message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setInputValue({
+      ...inputValue,
+      username: "",
+      userpass: "",
+    });
+  };
+
   return (
     <div className="pr-16 bg-gray-50 max-md:pr-5">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -37,7 +75,10 @@ const SignUpPage = () => {
           <div className="flex flex-col grow justify-center px-px w-full text-center max-md:mt-5 max-md:max-w-full">
             <div className="flex overflow-hidden relative flex-col px-11 py-20 w-full min-h-[900px] max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-violet-500 via-50% to-slate-900 to 90%">
               <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/fd9a211f424de7005b3462a65a7e3c70ad79833b2a345223dc6805aa0d720d6b?apiKey=966c510a434d496c8209492887da4d0c&" alt="" className="object-cover absolute inset-0 size-full" />
-              {/* <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/09b1f6122fe4455c93254471095c8f8819082b8885342cfd4dceaba95a6108e8?apiKey=966c510a434d496c8209492887da4d0c&" alt="" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" /> */}
+              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f7be567ff398a84e469482560657981934afd9669fa8f9a5d2bb97e4f9b91d95?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
+              <div className="flex-auto my-auto">
+                <span className="font-bold text-3xl text-white max-md:mt-10">COSMOHUB</span>
+              </div>
               <h1 className="relative mt-96 text-4xl font-black leading-10 text-white max-md:mt-10">
                 Partnership for Business Growth
               </h1>
@@ -70,7 +111,7 @@ const SignUpPage = () => {
             <p className="mt-3 text-base leading-7 text-center uppercase text-neutral-700">
               SIGN UP and join the partnership{" "}
             </p>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="flex gap-3 px-5 py-6 mt-5 max-w-full text-base leading-7 bg-white border border-solid border-neutral-500 text-neutral-700 w-[420px]">
                 <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/f293628d6139f61f9752967ab92fd846bdbe86c00cd3da208b2105410456b872?apiKey=966c510a434d496c8209492887da4d0c&" alt="" className="shrink-0 w-6 aspect-square" />
                 <input
