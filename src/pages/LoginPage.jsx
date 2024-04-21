@@ -111,22 +111,19 @@ const LoginPage = () => {
 
 
     return (
-        <div className="pr-16 bg-gray-50 max-md:pr-5">
+        <div className=" bg-gray-50 flex-none md:flex-1">
             <div className="flex gap-5 max-md:flex-col max-md:gap-0">
                 <div className="flex flex-col w-[35%] max-md:ml-0 max-md:w-full">
                     <div className="flex flex-col grow justify-center px-px w-full text-center max-md:mt-5 max-md:max-w-full">
                         <div className="flex overflow-hidden relative flex-col px-11 py-20 w-full min-h-[900px] max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-violet-500 via-50% to-slate-900 to 90%">
                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/fd9a211f424de7005b3462a65a7e3c70ad79833b2a345223dc6805aa0d720d6b?apiKey=966c510a434d496c8209492887da4d0c&" alt="" className="object-cover absolute inset-0 size-full" />
-                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/f7be567ff398a84e469482560657981934afd9669fa8f9a5d2bb97e4f9b91d95?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
+                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d95a1b51139ebb63c90dd07fe1c74cb68c608f487830ce20a96be3c54ebc6034?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
                             <div className="flex-auto my-auto">
                                 <span className="font-bold text-3xl text-white max-md:mt-10">COSMOHUB</span>
                             </div>
                             <h1 className="relative mt-96 text-4xl font-black leading-10 text-white max-md:mt-10">
                                 Partnership for Business Growth
                             </h1>
-                            <p className="relative mt-4 mb-12 text-base leading-7 text-stone-300 max-md:mb-10">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididun.
-                            </p>
                         </div>
                     </div>
                 </div>

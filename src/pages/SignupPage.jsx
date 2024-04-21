@@ -69,7 +69,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="pr-16 bg-gray-50 max-md:pr-5">
+    <div className="flex bg-gray-50">
       <div className="flex gap-5 max-md:flex-col max-md:gap-0">
         <div className="flex flex-col w-[35%] max-md:ml-0 max-md:w-full">
           <div className="flex flex-col grow justify-center px-px w-full text-center max-md:mt-5 max-md:max-w-full">
