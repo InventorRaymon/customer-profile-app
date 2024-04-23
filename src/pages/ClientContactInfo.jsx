@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { base_url } from '../routes/urlHandler';
+import Swal from 'sweetalert2';
 
 const ClientContactInfo = () => {
     const state = useLocation().state;
     const navigate = useNavigate();
-    const clientId = state.clientId;
+    // const clientId = state.clientId;
+    const clientId = "1234";
+
     const token = localStorage.getItem("token");
     const [contactsData, setContactsData] = useState([]);
     const [isContactModalOpen, setIsContactModalOpen] = useState('hidden');
     const [onEditMode, setOnEditMode] = useState('hidden');
+    const [successAlert, setSuccessAlert] = useState('hidden');
     const [selectedImage, setSelectedImage] = useState(null);
     const [inputValue, setInputValue] = useState({
         contactPerson: "",
@@ -159,6 +163,7 @@ const ClientContactInfo = () => {
 
     const handleAddContact = async (e) => {
         e.preventDefault();
+        
         try {
             const { data } = await axios.post(
                 `${base_url}/PostCustomer`,
@@ -173,10 +178,19 @@ const ClientContactInfo = () => {
             );
             const { ReturnMsg } = data;
             if (ReturnMsg === "Success") {
-                // setTimeout(() => {
+                // setTimeout(() => {setTimeout(() => {
+                //     handlContactMocalClose();
+                //     handleEditMocalClose();
+                // }, 700);
+                Swal.fire({
+                    title: "Contact Added",
+                    text: "Successfuly added a new contact!",
+                    confirmButtonColor: "#334155",
+                    color: "#334155",
+                  }).then(()=> {
                     handlContactMocalClose();
                     handleEditMocalClose();
-                // }, 700);
+                  })
             } else {
             }
         } catch (error) {
@@ -298,12 +312,9 @@ const ClientContactInfo = () => {
                                     COSMOHUB
                                 </span>
                             </div>
-                            {/* <div class='flex flex-wrap w-full items-center'>
-            <input type='text' placeholder='Search something...'
-                class='xl:w-96 max-lg:w-full lg:ml-20 max-md:mt-4 max-lg:ml-4 bg-gray-100 focus:bg-transparent px-6 rounded h-11 outline-[#fdfdfd] text-sm transition-all text-white' />
-        </div> */}
                         </section>
                     </header>
+                   
                     <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
                         <div class="max-w-5xl max-sm:max-w-sm mx-auto">
                             <h2 class="text-3xl font-semibold flex-center">Client Contacts</h2>
@@ -700,6 +711,7 @@ const ClientContactInfo = () => {
                                 <button type="button"
                                     onClick={handleAddContact}
                                     class="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
+                                    
                             </form>
                         </div>
                     </div>

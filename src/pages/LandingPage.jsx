@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { base_url } from '../routes/urlHandler';
+import Swal from 'sweetalert2';
 
 const LandingPage = () => {
 
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const token = "124";
   const navigate = useNavigate();
   const [clientData, setClientData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -22,6 +24,13 @@ const LandingPage = () => {
   const { clientid, clientname, clientaddress } = inputValue;
 
   const getClientList = async () => {
+    const dummyArray = [
+      {
+        clientid: "123",
+        clientname: "asdsadasdsa",
+        clientaddress: "asd",
+      }
+    ]
     try {
       const { data } = await axios.get(
         `${base_url}/GetAllCLient`,
@@ -82,10 +91,14 @@ const LandingPage = () => {
       );
       const { ReturnMsg } = data;
       if (ReturnMsg === "Success") {
-        // setTimeout(() => {
-        setIsModalOpen('hidden');
-        // navigate("/landing");
-        // }, 800);
+        Swal.fire({
+          title: "Client Added",
+          text: "Successfuly added a new client!",
+          confirmButtonColor: "#334155",
+          color: "#334155",
+        }).then(()=> {
+          setIsModalOpen('hidden');
+        })
       } else {
       }
     } catch (error) {
@@ -124,15 +137,20 @@ const LandingPage = () => {
       );
       const { ReturnMsg, ClientProfile } = data;
       if (ReturnMsg === "Success") {
-
-        setIsClientModalOpen('block');
-
-        setInputValue({
-          ...inputValue,
-          clientid: ClientProfile.ClientId,
-          clientname: ClientProfile.ClientName,
-          clientaddress: ClientProfile.ClientAddress
-        });
+        Swal.fire({
+          title: "Client Added",
+          text: "Successfuly added a new client!",
+          confirmButtonColor: "#334155",
+          color: "#334155",
+        }).then(()=> {
+          setIsClientModalOpen('block');
+          setInputValue({
+            ...inputValue,
+            clientid: ClientProfile.ClientId,
+            clientname: ClientProfile.ClientName,
+            clientaddress: ClientProfile.ClientAddress
+          });
+        })
       } else {
       }
     } catch (error) {
@@ -171,7 +189,15 @@ const LandingPage = () => {
           }
         }
       );
-      
+      const { ReturnMsg } = data;
+      if (ReturnMsg === "Success") {
+        Swal.fire({
+          title: "Client Added",
+          text: "Successfuly added a new client!",
+          confirmButtonColor: "#334155",
+          color: "#334155"
+        })
+      }
     } catch (error) {
       console.log(error);
     }
