@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { base_url } from '../routes/urlHandler';
 
 const ClientContactInfo = () => {
     const state = useLocation().state;
@@ -88,7 +89,7 @@ const ClientContactInfo = () => {
     const getContactList = async () => {
         try {
             const { data } = await axios.get(
-                "http://172.16.61.121:7001/api/mobileapi/GetAllCustomerList/" + clientId,
+                `${base_url}/GetAllCustomerList/${clientId}`,
                 {
                     headers: {
                         'Authorization': 'Bearer ' + token
@@ -127,14 +128,6 @@ const ClientContactInfo = () => {
 
     }
 
-    // const handleDateOnChange = (e) => {
-    //     e.preventDefault();
-    //     const selectedDate = e.target.value;
-    //     const [year, month, day] = selectedDate.split('-');
-    //     const formattedDate = month + "/" + day + "/" + year;    
-    //     setInputValue({ ...inputValue, "birthdate": formattedDate })
-    // }
-
     const handleOnChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
@@ -166,14 +159,9 @@ const ClientContactInfo = () => {
 
     const handleAddContact = async (e) => {
         e.preventDefault();
-        // console.log(inputValue)
-        // const selectedDate = birthdate;
-        // const [year, month, day] = selectedDate.split('-');
-        // const formattedDate = month + "/" + day + "/" + year; 
-        // console.log(formattedDate)
         try {
             const { data } = await axios.post(
-                "http://172.16.61.121:7001/api/mobileapi/PostCustomer",
+                `${base_url}/PostCustomer`,
                 {
                     ...inputValue
                 },
@@ -185,10 +173,10 @@ const ClientContactInfo = () => {
             );
             const { ReturnMsg } = data;
             if (ReturnMsg === "Success") {
-                setTimeout(() => {
+                // setTimeout(() => {
                     handlContactMocalClose();
                     handleEditMocalClose();
-                }, 700);
+                // }, 700);
             } else {
             }
         } catch (error) {
@@ -214,7 +202,7 @@ const ClientContactInfo = () => {
         const contactId = parentElement.getAttribute('data-key');
         try {
             const { data } = await axios.post(
-                "http://172.16.61.121:7001/api/mobileapi/DeleteCustomer",
+                `${base_url}/DeleteCustomer`,
                 {
                     "Id": contactId
                 },
@@ -245,21 +233,21 @@ const ClientContactInfo = () => {
         setOnEditMode('block');
         const parentElement = e.target.closest("#parentElement");
         const contactId = parentElement.getAttribute('data-key');
-
+        
         for (let index in contactsData) {
             let contactInfo = contactsData[index];
-            let formattedBirthday = "";
-            if (contactInfo.Birthday !== undefined) {
-                const birthdayInfo = contactInfo.Birthday;
-                const [month, day, year] = birthdayInfo.split("/");
-                formattedBirthday = year + "-" + month + "-" + day;
-            } else {
-                const birthdayInfo = contactInfo.birthdate;
-                const [month, day, year] = birthdayInfo.split("/");
-                formattedBirthday = year + "-" + month + "-" + day;
-            }
             if (contactInfo.Id === contactId) {
                 setSelectedImage(contactInfo.ProfileImage)
+                let formattedBirthday = "";
+                if (contactInfo.Birthday !== undefined) {
+                    const birthdayInfo = contactInfo.Birthday;
+                    const [month, day, year] = birthdayInfo.split("/");
+                    formattedBirthday = year + "-" + month + "-" + day;
+                } else {
+                    const birthdayInfo = contactInfo.birthdate;
+                    const [month, day, year] = birthdayInfo.split("/");
+                    formattedBirthday = year + "-" + month + "-" + day;
+                }
                 setInputValue({
                     ...inputValue,
                     Id: contactId,
@@ -274,6 +262,25 @@ const ClientContactInfo = () => {
                     contactNumber3: contactInfo.ContactNumber3,
                     profileImage: contactInfo.ProfileImage
                 });
+            }
+        }
+    }
+
+    const handleOpenInfo = (e) => {
+        const parentElement = e.target.closest("#parentElement");
+        const contactId = parentElement.getAttribute('data-key');
+        const allElements = document.getElementsByName("hide-show");
+        for (let index in allElements) {
+            if (allElements[index].id === contactId) {
+                if (allElements[index].getAttribute('class') !== null) {
+                    allElements[index].removeAttribute("class")
+                } else {
+                    allElements[index].setAttribute('class', 'mt-4 hidden')
+                }
+            } else {
+                if (allElements[index].id !== undefined) {
+                    allElements[index].setAttribute('class', 'mt-4 hidden')
+                }
             }
         }
     }
@@ -297,69 +304,12 @@ const ClientContactInfo = () => {
         </div> */}
                         </section>
                     </header>
-                    {/* <div class="bg-gray-50 grid lg:grid-cols-2 gap-6 sm:px-8 px-4 py-16 font-[sans-serif] text-[#333]">
-                        <div class="space-y-6">
-                            <div class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg transition-all" role="accordion">
-                                <button type="button" class="w-full text-base font-semibold text-left p-6 text-blue-600
-           flex items-center hover:text-blue-600 transition-all">
-                                    <span class="mr-4">Are there any special discounts or promotions available during the event.</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current ml-auto shrink-0" viewBox="0 0 124 124">
-                                        <path d="M112 50H12C5.4 50 0 55.4 0 62s5.4 12 12 12h100c6.6 0 12-5.4 12-12s-5.4-12-12-12z" data-original="#000000" />
-                                    </svg>
-                                </button>
-                                <div class="pb-5 px-6">
-                                    <p class="text-sm text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor auctor arcu,
-                                        at fermentum dui. Maecenas
-                                        vestibulum a turpis in lacinia. Proin aliquam turpis at erat venenatis malesuada. Sed semper, justo vitae
-                                        consequat fermentum, felis diam posuere ante, sed fermentum quam justo in dui. Nulla facilisi. Nulla aliquam
-                                        auctor purus, vitae dictum dolor sollicitudin vitae. Sed bibendum purus in efficitur consequat. Fusce et
-                                        tincidunt arcu. Curabitur ac lacus lectus. Morbi congue facilisis sapien, a semper orci facilisis in.
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg transition-all" role="accordion">
-                                <button type="button" class="w-full text-base font-semibold text-left p-6 text-[#333] flex items-center hover:text-blue-600 transition-all">
-                                    <span class="mr-4">What are the dates and locations for the product launch events?</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current ml-auto shrink-0" viewBox="0 0 42 42">
-                                        <path d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" data-original="#000000" />
-                                    </svg>
-                                </button>
-                                <div class="hidden pb-5 px-6">
-                                    <p class="text-sm text-gray-500">Content</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg transition-all" role="accordion">
-                                <button type="button" class="w-full text-base font-semibold text-left p-6 text-[#333] flex items-center hover:text-blue-600 transition-all">
-                                    <span class="mr-4">Can I bring a guest with me to the product launch event?</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current ml-auto shrink-0" viewBox="0 0 42 42">
-                                        <path d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" data-original="#000000" />
-                                    </svg>
-                                </button>
-                                <div class="hidden pb-5 px-6">
-                                    <p class="text-sm text-gray-500">Content</p>
-                                </div>
-                            </div>
-                            <div class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg transition-all" role="accordion">
-                                <button type="button" class="w-full text-base font-semibold text-left p-6 text-[#333] flex items-center hover:text-blue-600 transition-all">
-                                    <span class="mr-4">Are there any special discounts or promotions available during the event.</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current ml-auto shrink-0" viewBox="0 0 42 42">
-                                        <path d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" data-original="#000000" />
-                                    </svg>
-                                </button>
-                                <div class="hidden pb-5 px-6">
-                                    <p class="text-sm text-gray-500">Content</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                     <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
                         <div class="max-w-5xl max-sm:max-w-sm mx-auto">
                             <h2 class="text-3xl font-semibold flex-center">Client Contacts</h2>
                             <button type="button"
                                 onClick={handleAddContactOpen}
-                                class="m-10 px-4 py-2.5 flex items-center text-[#fff] rounded-full text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-indigo-700 active:bg-slate-600">
+                                class="m-10 px-4 py-2.5 flex items-center text-[#fff] rounded-full text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" class="mr-2" viewBox="0 0 6.35 6.35">
                                     <path fill-rule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paint-order="stroke fill markers" />
                                 </svg>
@@ -369,7 +319,9 @@ const ClientContactInfo = () => {
                             <div class="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12">
 
                                 {contactsData && contactsData.map((contactInfo) => {
-                                    let formattedBirthday = "";
+                                    // console.log(contactInfo)
+                                    let formattedBirthday;
+                                    let formattedContactInfo;
                                     if (contactInfo.Birthday !== undefined) {
                                         const birthdayInfo = contactInfo.Birthday;
                                         const [month, day, year] = birthdayInfo.split("/");
@@ -379,22 +331,21 @@ const ClientContactInfo = () => {
                                         const [month, day, year] = birthdayInfo.split("/");
                                         formattedBirthday = year + "-" + month + "-" + day;
                                     }
+                                    
                                     return (
                                         <>
-                                            <div key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement" class="bg-slate-200 py-1 px-2 rounded-md">
+                                            <div
+                                                key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement"
+                                                onClick={handleOpenInfo}
+                                                class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
                                                 <div class="mt-2 mb-2">
                                                     <div class="bg-white py-4 px-2 rounded-md ">
-                                                        {/* <button type="button" class="w-full text-base font-semibold text-left p-6 text-[#333] flex items-center hover:text-slate-500 transition-all">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current ml-auto shrink-0" viewBox="0 0 42 42">
-                                                                <path d="M37.059 16H26V4.941C26 2.224 23.718 0 21 0s-5 2.224-5 4.941V16H4.941C2.224 16 0 18.282 0 21s2.224 5 4.941 5H16v11.059C16 39.776 18.282 42 21 42s5-2.224 5-4.941V26h11.059C39.776 26 42 23.718 42 21s-2.224-5-4.941-5z" data-original="#000000" />
-                                                            </svg>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-current ml-auto shrink-0" viewBox="0 0 124 124">
-                                        <path d="M112 50H12C5.4 50 0 55.4 0 62s5.4 12 12 12h100c6.6 0 12-5.4 12-12s-5.4-12-12-12z" data-original="#000000" />
-                                    </svg>
-                                                        </button> */}
-                                                        <img src={contactInfo.ProfileImage} alt='Img Error' class="w-36 h-36 rounded-sm inline-block" />
+                                                        <img src={contactInfo.ProfileImage} alt='Img Error' class="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
+                                                        <p class="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
+                                                        <p class="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
+                                                        <p class="text-xs text-gray-500 mt-0.5">{contactInfo.ContactNumber}</p>
+                                                        <div name="hide-show" id={contactInfo.Id} class="mt-4 hidden">
 
-                                                        <div class="mt-4">
                                                             <form class="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                                                 <div class="grid sm:grid-cols-2 gap-10">
                                                                     <div class="relative flex items-center sm:col-span-2">
@@ -490,45 +441,10 @@ const ClientContactInfo = () => {
                                                                         <input type="text" placeholder={contactInfo.ContactNumber}
                                                                             onChange={handleOnChange}
                                                                             name="contactNumber"
-                                                                            value={contactInfo.ContactNumber + ", " + contactInfo.ContactNumber2 + ", " + contactInfo.ContactNumber2}
+                                                                            value={contactInfo.ContactNumber + ", " + contactInfo.ContactNumber2 + ", " + contactInfo.ContactNumber3}
                                                                             disabled
-                                                                            class="px-1 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                        {/* <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
-                                                                    <path
-                                                                        d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
-                                                                        data-original="#000000"></path>
-                                                                </svg> */}
+                                                                            class="truncate px-1 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
                                                                     </div>
-                                                                    {/* <div class="relative flex items-center sm:col-span-2">
-                                                                <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
-                                                                    Contact No. 2</label>
-                                                                <input type="text" placeholder={contactInfo.ContactNumber2}
-                                                                    onChange={handleOnChange}
-                                                                    value={contactInfo.ContactNumber2}
-                                                                    name='contactNumber2'
-                                                                    disabled
-                                                                    class="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
-                                                                    <path
-                                                                        d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
-                                                                        data-original="#000000"></path>
-                                                                </svg>
-                                                            </div>
-                                                            <div class="relative flex items-center sm:col-span-2">
-                                                                <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
-                                                                    Contact No. 3</label>
-                                                                <input type="text" placeholder={contactInfo.ContactNumber3}
-                                                                    onChange={handleOnChange}
-                                                                    name='contactNumber3'
-                                                                    value={contactInfo.ContactNumber3}
-                                                                    disabled
-                                                                    class="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
-                                                                    <path
-                                                                        d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
-                                                                        data-original="#000000"></path>
-                                                                </svg>
-                                                            </div> */}
                                                                     <div class="relative flex items-center sm:col-span-2">
                                                                         <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
                                                                         <input type="email" placeholder={contactInfo.EmailAddress}
@@ -558,7 +474,7 @@ const ClientContactInfo = () => {
 
 
                                                                 </div>
-                                                                <div class="mt-2 font-[sans-serif] w-max mx-auto bg-gray-200 border divide-x divide-white flex rounded overflow-hidden">
+                                                                <div class="mt-4 font-[sans-serif] w-max mx-auto bg-gray-100 border divide-x divide-white flex rounded overflow-hidden">
                                                                     <button type="button"
                                                                         onClick={handleEditMode}
                                                                         class="px-4 py-2.5 flex items-center text-[#333] text-sm font-semibold outline-none hover:bg-gray-300 transition-all">
@@ -586,6 +502,7 @@ const ClientContactInfo = () => {
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </>
                                     );
                                 })}
@@ -688,6 +605,8 @@ const ClientContactInfo = () => {
 
                                         <input
                                             type="date"
+                                            name='birthdate'
+                                            value={birthdate}
                                             onChange={handleOnChange}
                                             class="px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
                                     </div>
@@ -988,8 +907,7 @@ const ClientContactInfo = () => {
                     </div>
                     <footer class="bg-gray-100 font-[sans-serif]">
                         <div class="py-8 px-4 sm:px-12">
-                            <p class='text-center text-gray-700 text-base'>Copyright © 2023<a href='https://readymadeui.com/'
-                                target='_blank' class="hover:underline mx-1">ReadymadeUI</a>All Rights Reserved.</p>
+                            <p class='text-center text-gray-700 text-base'>Copyright © 2024 Cosmotech All Rights Reserved.</p>
                         </div>
                     </footer>
                 </div>

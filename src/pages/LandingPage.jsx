@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import SignupModal from './SignupModal';
-import { Transition } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { base_url } from '../routes/urlHandler';
 
 const LandingPage = () => {
 
@@ -26,7 +24,7 @@ const LandingPage = () => {
   const getClientList = async () => {
     try {
       const { data } = await axios.get(
-        "http://172.16.61.121:7001/api/mobileapi/GetAllCLient",
+        `${base_url}/GetAllCLient`,
         {
           headers: {
             'Authorization': 'Bearer ' + token
@@ -41,10 +39,6 @@ const LandingPage = () => {
   useEffect(() => {
     getClientList();
   }, [clientData]);
-
-  const handleToggleOpen = () => {
-    setIsBurgMenuOpen('block');
-  }
 
   const handleToggleClose = () => {
     setIsBurgMenuOpen('hidden');
@@ -76,7 +70,7 @@ const LandingPage = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://172.16.61.121:7001/api/mobileapi/PostClient",
+        `${base_url}/PostClient`,
         {
           ...inputValue,
         },
@@ -93,7 +87,6 @@ const LandingPage = () => {
         // navigate("/landing");
         // }, 800);
       } else {
-        // handleError(message);
       }
     } catch (error) {
       console.log(error);
@@ -122,7 +115,7 @@ const LandingPage = () => {
     const clientId = parentElement.getAttribute('data-key');
     try {
       const { data } = await axios.get(
-        "http://172.16.61.121:7001/api/mobileapi/GetClientInfo/" + clientId,
+        `${base_url}/GetClientInfo/` + clientId,
         {
           headers: {
             'Authorization': 'Bearer ' + token
@@ -168,7 +161,7 @@ const LandingPage = () => {
     const tokenUpdate = localStorage.getItem("token");
     try {
       const { data } = await axios.post(
-        "http://172.16.61.121:7001/api/mobileapi/PostClient",
+        `${base_url}/PostClient`,
         {
           ...inputValue
         },
@@ -198,10 +191,6 @@ const LandingPage = () => {
                             COSMOHUB
                         </span>
                     </div>
-                    {/* <div class='flex flex-wrap w-full items-center'>
-            <input type='text' placeholder='Search something...'
-                class='xl:w-96 max-lg:w-full lg:ml-20 max-md:mt-4 max-lg:ml-4 bg-gray-100 focus:bg-transparent px-6 rounded h-11 outline-[#fdfdfd] text-sm transition-all text-white' />
-        </div> */}
                 </section>
             </header>
 

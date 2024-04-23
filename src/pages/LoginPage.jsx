@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import urlHandler from "../routes/urlHandler"
+import { base_url } from '../routes/urlHandler';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -23,15 +22,6 @@ const LoginPage = () => {
         });
     };
 
-    // const handleError = (err) =>
-    //     toast.error(err, {
-    //         position: "bottom-left",
-    //     });
-    // const handleSuccess = (msg) =>
-    //     toast.success(msg, {
-    //         position: "bottom-left",
-    // });
-
     const handleShowPass = () => {
         if (passwordType === 'password') {
             setShowHide("HIDE");
@@ -46,7 +36,7 @@ const LoginPage = () => {
         e.preventDefault();
         try {
             const { data } = await axios.post(
-                "http://172.16.61.121:7001/api/mobileapi/Postlogin",
+                `${base_url}/Postlogin`,
                 {
                     ...inputValue,
                 },
@@ -81,10 +71,6 @@ const LoginPage = () => {
     function Header() {
         return (
             <header className="flex gap-5 self-stretch w-full text-sm text-center max-md:flex-wrap max-md:max-w-full">
-                {/* <div className="flex gap-1.5 leading-[176%] text-neutral-700">
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/af82d5d1b1739694ac746c2429bafbdf1c3657e6e9e5f7cc032aee53d29c4e78?apiKey=966c510a434d496c8209492887da4d0c&" alt="Return home icon" className="shrink-0 w-6 aspect-square" />
-                    <div className="my-auto">Return Home</div>
-                </div> */}
                 <div className="flex-auto self-start mt-3 underline text-neutral-800">
                     <span className="text-neutral-700">Not a member yet?</span>
                     <a href="/signup" className="font-bold underline text-neutral-800">
