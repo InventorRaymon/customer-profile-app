@@ -213,7 +213,7 @@ const LandingPage = () => {
             </div>
 
             <div
-              class="bg-gray-100 flex border-2 rounded max-md:order-1 border-transparent focus-within:border-blue-500 focus-within:bg-transparent px-4 rounded-sm h-11 lg:w-2/4 max-md:w-full">
+              class="bg-gray-100 flex border-2 max-md:order-1 border-transparent focus-within:border-blue-500 focus-within:bg-transparent px-4 rounded-sm h-11 lg:w-2/4 max-md:w-full">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px"
                 class="fill-gray-400 mr-4 rotate-90">
                 <path

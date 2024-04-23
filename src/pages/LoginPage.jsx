@@ -112,6 +112,8 @@ const LoginPage = () => {
 
 
     return (
+        <div class="font-[sans-serif] text-[#333] bg-gray-50 p-4">
+        <div class="max-w-5xl max-sm:max-w-sm mx-auto">
         <div className=" bg-gray-50 flex-none md:flex-1">
             <div className="flex gap-5 max-md:flex-col max-md:gap-0">
                 <div className="flex flex-col w-[35%] max-md:ml-0 max-md:w-full">
@@ -187,6 +189,8 @@ const LoginPage = () => {
                     <Footer />
                 </div>
             </div>
+        </div>
+        </div>
         </div>
     )
 }
