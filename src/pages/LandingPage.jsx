@@ -117,9 +117,9 @@ const LandingPage = () => {
 
   const handleUpdateClient = async (e) => {
     e.preventDefault();
+    
     const parentElement = e.target.closest("#parentElement");
-    const childElement = parentElement.childNodes[0].childNodes[1].childNodes[0];
-    const clientId = childElement.nodeValue;
+    const clientId = parentElement.getAttribute('data-key');
     try {
       const { data } = await axios.get(
         "http://172.16.61.121:7001/api/mobileapi/GetClientInfo/" + clientId,
@@ -150,8 +150,7 @@ const LandingPage = () => {
   const handleOpenClientInfo = async (e) => {
 
     const parentElement = e.target.closest("#parentElement");
-    const childElement = parentElement.childNodes[0].childNodes[1].childNodes[0];
-    const clientId = childElement.nodeValue;
+    const clientId = parentElement.getAttribute('data-key');
 
       setTimeout(() => {
         navigate("/clientcontacts",
@@ -190,6 +189,21 @@ const LandingPage = () => {
     <div class="font-[sans-serif] text-[#333] bg-gray-50 p-4">
       <div class="max-w-5xl max-sm:max-w-sm mx-auto">
         {/* Header Component */}
+        <header class='shadow-md font-[sans-serif] tracking-wide relative z-50'>
+                <section class='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90%'>
+
+                    <div class="flex items-center cursor-pointer" onClick={() => navigate("/landing")}>
+                        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" class='shrink w-55 h-14 mr-4' />
+                        <span class="font-bold text-3xl text-white max-md:mt-10">
+                            COSMOHUB
+                        </span>
+                    </div>
+                    {/* <div class='flex flex-wrap w-full items-center'>
+            <input type='text' placeholder='Search something...'
+                class='xl:w-96 max-lg:w-full lg:ml-20 max-md:mt-4 max-lg:ml-4 bg-gray-100 focus:bg-transparent px-6 rounded h-11 outline-[#fdfdfd] text-sm transition-all text-white' />
+        </div> */}
+                </section>
+            </header>
 
         <header class='flex shadow-sm bg-white font-[sans-serif] min-h-[70px]'>
           <div
@@ -261,6 +275,7 @@ const LandingPage = () => {
           </div>
         </header>
         {/* Contact Persons List */}
+        
         {showModal ? (
           <>
             <div
@@ -421,34 +436,40 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12">
-          {clientData && clientData.map((clientInfo) => {
-            return (
-              <div key={clientInfo.Value} id="parentElement" class="bg-slate-200 cursor-pointer py-4 px-2 rounded-md hover:scale-110 transition-all duration-500">
-                <div class="mt-4">
-                  <h1 class="text-xl font-extrabold">{clientInfo.Text}</h1>
-                  <p id="childElement" class="hidden">{clientInfo.Value}</p>
-                  <div class="space-x-4 mt-4">
-                    <button
-                      type="button"
-                      onClick={handleUpdateClient}
-                      class="px-6 py-2.5 rounded text-white text-sm tracking-wider font-semibold border-none outline-none bg-slate-500 hover:bg-indigo-700 active:bg-slate-500">
-                      <span>Update info</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleOpenClientInfo}
-                      class="m-2 px-6 py-2.5 rounded text-white text-sm tracking-wider font-semibold border-none outline-none bg-slate-500 hover:bg-indigo-700 active:bg-slate-500">
-                      <span>Open Contact info</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        {/* <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12"> */}
+        <div className='w-full overflow-x-auto'>
+  <table className='w-full table-auto'>
+    {clientData && clientData.map((clientInfo) => {
+      // console.log(clientInfo)
+      return (
+        <div key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value} class="bg-slate-200 cursor-pointer rounded-md hover:scale-105 transition-all duration-500">
+          <div class=" flex justify-between items-center border-dotted border-2 border-slate-600">
+            <h1 class="text-xl font-semibold px-7">{clientInfo.Text}</h1>
+            <div className='flex'>
+              <button
+                type="button"
+                onClick={handleUpdateClient}
+                class="m-2 px-6 py-2.5 rounded text-white text-sm tracking-wider font-semibold border-none outline-none bg-slate-500 hover:bg-slate-700 active:bg-slate-500">
+                <span>Update info</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleOpenClientInfo}
+                class="m-2 px-6 py-2.5 rounded text-white text-sm tracking-wider font-semibold border-none outline-none bg-slate-500 hover:bg-slate-700 active:bg-slate-500">
+                <span>Open Contact info</span>
+              </button>
+            </div>
+          </div>
+          <p id="childElement" class="hidden">{clientInfo.Value}</p>
+        </div>
+      );
+    })}
+  </table>
+</div>
+
         </div>
       </div>
-    </div>
+    // </div>
   )
 }
 
