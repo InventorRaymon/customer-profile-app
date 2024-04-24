@@ -125,7 +125,7 @@ const LoginPage = () => {
                         LOG IN TO CONTINUE
                     </p>
                     <form onSubmit={handleSubmit} class="mt-12 max-w-[420px] mx-auto">
-                    <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[420px] max-md:mt-10">
+                    <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[410px] max-md:mt-10">
                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
                                 <label htmlFor="username" className="sr-only">username</label>
                                 <input
@@ -140,7 +140,7 @@ const LoginPage = () => {
                                 />
                             </div>
                             <div className='border-color red'>
-                                <div className="flex gap-5 justify-between px-5 py-6 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[420px]">
+                                <div className="flex gap-5 justify-between px-5 py-6 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[410px]">
                                     <div className="flex gap-3 text-base leading-7 text-neutral-700">
                                         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
                                         <label htmlFor="userpass" className="sr-only">userpass</label>
@@ -162,19 +162,16 @@ const LoginPage = () => {
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" className="flex gap-5 px-9 py-5 mt-5 max-w-full text-base leading-7 text-white bg-slate-800 w-[420px] max-md:px-5">
+                            <button type="submit" className="flex gap-5 px-9 py-5 mt-5 max-w-full text-base leading-7 text-white bg-slate-800 w-[410px] max-md:px-5">
                                 <span className="flex-auto my-auto">Proceed to my Account</span>
                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
                             </button>
-                            <div className="mt-12 text-sm leading-6 text-right text-black max-md:mt-10 cursor-pointer">
-                                Having Issues with your Account?
-                            </div>
                     </form>
                     <div class="mt-12 text-sm leading-6 text-right text-black cursor-pointer">
                         Having Issues with your Account?
                     </div>
                 </main>
-                <Footer />
+                {/* <Footer /> */}
             </div>
         </div>
     </div>

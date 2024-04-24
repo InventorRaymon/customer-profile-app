@@ -373,7 +373,7 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div className='w-full overflow-x-auto'>
+        {/* <div className='w-full overflow-x-auto'>
           <table className='w-full table-striped'>
             {clientData && clientData.map((clientInfo) => {
               return (
@@ -401,7 +401,38 @@ const LandingPage = () => {
               );
             })}
           </table>
+        </div> */}
+        <div className='w-full overflow-x-auto'>
+  <table className='w-full table-striped'>
+    {clientData && clientData.map((clientInfo) => {
+      return (
+        <div key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value} className="bg-gradient-to-r from-slate-200 to-slate-500 cursor-pointer rounded-md hover:scale-105 transition-all duration-500 mt-1">
+          <div className="flex flex-col justify-between items-start sm:flex-row sm:items-center border-dotted border-2 border-slate-600">
+            <h1 className="text-md font-semibold px-4 sm:px-6 truncate sm:w-2/3 lg:px-4">{clientInfo.Text}</h1>
+            <div className='flex justify-end sm:flex-row sm:w-1/3 sm:px-4'>
+              <button
+                type="button"
+                onClick={handleUpdateClient}
+                className="m-1 px-3 py-2 rounded text-white text-xs sm:text-sm tracking-wider font-semibold border-none outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-500">
+                <span className="sm:hidden">Update</span>
+                <span className="hidden sm:inline">Update info</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleOpenClientInfo}
+                className="m-1 px-3 py-2 rounded text-white text-xs sm:text-sm tracking-wider font-semibold border-none outline-none bg-slate-700 hover:bg-slate-700 active:bg-slate-500">
+                <span className="sm:hidden">Open</span>
+                <span className="hidden sm:inline">Open Contact info</span>
+              </button>
+            </div>
+          </div>
+          <p id="childElement" className="hidden">{clientInfo.Value}</p>
         </div>
+      );
+    })}
+  </table>
+</div>
+
 
       </div>
     </div>
