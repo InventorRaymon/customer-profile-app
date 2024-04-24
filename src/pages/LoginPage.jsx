@@ -97,14 +97,13 @@ const LoginPage = () => {
     }
 
 
-    return (
-        <div class="font-[sans-serif] text-[#333] bg-gray-50 p-4">
-        <div class="max-w-5xl max-sm:max-w-sm mx-auto">
-        <div className=" bg-gray-50 flex-none md:flex-1">
-            <div className="flex gap-5 max-md:flex-col max-md:gap-0">
-                <div className="flex flex-col w-[35%] max-md:ml-0 max-md:w-full">
-                    <div className="flex flex-col grow justify-center px-px w-full text-center max-md:mt-5 max-md:max-w-full">
-                        <div className="flex overflow-hidden relative flex-col px-11 py-20 w-full min-h-[900px] max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-violet-500 via-50% to-slate-900 to 90%">
+    return (    
+        <div class="font-sans text-[#333] bg-gray-50 p-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row md:space-x-5">
+            <div class="md:w-1/2">
+                <div class="px-px w-full text-center">
+                <div className="flex overflow-hidden relative flex-col px-11 py-20 w-full min-h-[900px] max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90%">
                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/fd9a211f424de7005b3462a65a7e3c70ad79833b2a345223dc6805aa0d720d6b?apiKey=966c510a434d496c8209492887da4d0c&" alt="" className="object-cover absolute inset-0 size-full" />
                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d95a1b51139ebb63c90dd07fe1c74cb68c608f487830ce20a96be3c54ebc6034?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
                             <div className="flex-auto my-auto">
@@ -114,19 +113,19 @@ const LoginPage = () => {
                                 Partnership for Business Growth
                             </h1>
                         </div>
-                    </div>
                 </div>
-                <div className="flex flex-col ml-5 w-[65%] max-md:ml-0 max-md:w-full">
-                    <main className="flex flex-col items-center self-stretch my-auto max-md:mt-10 max-md:max-w-full">
-                        <Header />
-                        <h2 className="mt-32 text-2xl font-black leading-10 text-center text-neutral-800 max-md:mt-10 max-md:max-w-full">
-                            WELCOME BACK EXCLUSIVE MEMBER
-                        </h2>
-                        <p className="mt-8 text-base leading-7 text-center uppercase text-neutral-700">
-                            LOG IN TO CONTINUE
-                        </p>
-                        <form onSubmit={handleSubmit}>
-                            <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[420px] max-md:mt-10">
+            </div>
+            <div class="md:w-1/2">
+                <main class="flex flex-col items-center justify-center mt-10">
+                    <Header />
+                    <h2 class="mt-10 text-2xl font-black leading-10 text-center text-neutral-800">
+                        WELCOME BACK EXCLUSIVE MEMBER
+                    </h2>
+                    <p class="mt-8 text-base leading-7 text-center uppercase text-neutral-700">
+                        LOG IN TO CONTINUE
+                    </p>
+                    <form onSubmit={handleSubmit} class="mt-12 max-w-[420px] mx-auto">
+                    <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[420px] max-md:mt-10">
                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
                                 <label htmlFor="username" className="sr-only">username</label>
                                 <input
@@ -170,14 +169,17 @@ const LoginPage = () => {
                             <div className="mt-12 text-sm leading-6 text-right text-black max-md:mt-10 cursor-pointer">
                                 Having Issues with your Account?
                             </div>
-                        </form>
-                    </main>
-                    <Footer />
-                </div>
+                    </form>
+                    <div class="mt-12 text-sm leading-6 text-right text-black cursor-pointer">
+                        Having Issues with your Account?
+                    </div>
+                </main>
+                <Footer />
             </div>
         </div>
-        </div>
-        </div>
+    </div>
+</div>
+
     )
 }
 
