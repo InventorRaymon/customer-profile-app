@@ -410,6 +410,11 @@ const ClientContactInfo = () => {
                                     </span>
                                 </div>
                                 <h2 className="text-2xl font-semibold flex-center text-white mb-2 lg:mb-0">Client Contacts</h2>
+                                <div class="flex items-center"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
+                                </svg>
+                                    {/* <span class="text-sm font-medium text-white">copy</span> */}
+                                    </div>
                                 <a href="javascript:void(0)"
                                     onClick={handleLogOut}
                                     className="cursor-pointer border-solid border-2 text-white hover:text-slate-600 text-sm flex items-center hover:bg-blue-50 rounded px-2 py-2 transition-all">
@@ -425,7 +430,7 @@ const ClientContactInfo = () => {
                         </section>
                     </header>
 
-                    <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
+                    {/* <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
                         <div class="max-w-5xl max-sm:max-w-sm mx-auto">
                             <button type="button"
                                 onClick={handleAddContactOpen}
@@ -469,6 +474,7 @@ const ClientContactInfo = () => {
                                                             <p class="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
                                                             <p class="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
                                                             <p class="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
+                                                        
                                                             <div name="hide-show" id={contactInfo.Id} class="mt-4 hidden">
 
                                                                 <form class="font-[sans-serif] m-6 max-w-4xl mx-auto">
@@ -641,7 +647,65 @@ const ClientContactInfo = () => {
                             </div>
 
                         </div>
+                    </div> */}
+                    <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
+                        <div class="max-w-5xl max-sm:max-w-sm mx-auto">
+                            <button type="button"
+                                onClick={handleAddContactOpen}
+                                class="m-10 px-4 py-2.5 flex items-center text-[#fff] rounded-full text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" class="mr-2" viewBox="0 0 6.35 6.35">
+                                    <path fill-rule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paint-order="stroke fill markers" />
+                                </svg>
+                                Add Contact
+                            </button>
+
+                            <div class="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12">
+                                {contactsData && contactsData.map((contactInfo) => {
+                                    let formattedBirthday;
+                                    if (contactInfo !== undefined) {
+                                        if (contactInfo.Birthday !== undefined) {
+                                            const birthdayInfo = contactInfo.Birthday;
+                                            const [month, day, year] = birthdayInfo.split("/");
+                                            formattedBirthday = year + "-" + month + "-" + day;
+                                        } else {
+                                            if (contactInfo.birthdate !== undefined) {
+                                                const birthdayInfo = contactInfo.birthdate;
+                                                const [month, day, year] = birthdayInfo.split("/");
+                                                formattedBirthday = year + "-" + month + "-" + day;
+                                            }
+                                        }
+                                    }
+
+                                    return (
+                                        <div
+                                            key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement"
+                                            onClick={handleOpenInfo}
+                                            class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
+                                            <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start">
+                                                <div class="mt-2 mb-2 lg:mb-0 lg:mr-4 h-[220px]">
+                                                    <div className='shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)]'>
+                                                        <div class="bg-white py-4 px-2 rounded-md">
+                                                            <img src={contactInfo.ProfileImage} alt='Img Error' class="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-col justify-center">
+                                                    <p class="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
+                                                    <p class="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
+                                                    <p class="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
+                                                </div>
+                                            </div>
+                                            {/* Additional content */}
+                                            <div name="hide-show" id={contactInfo.Id} class="mt-4 hidden">
+                                                {/* Your form content */}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
+
                     <div
                         class={isContactModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
                         <div class="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
