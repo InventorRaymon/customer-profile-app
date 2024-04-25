@@ -103,7 +103,7 @@ const LoginPage = () => {
                 <div class="flex flex-col md:flex-row md:space-x-5">
                     <div class="md:w-1/2">
                         <div class="px-px w-full text-center">
-                            <div class="flex overflow-hidden relative flex-col w-full max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[300px] sm:h-[40vh] md:h-[570px] lg:h-[570px] xl:h-[570px]">
+                            <div class="flex overflow-hidden relative flex-col w-full max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[300px] sm:h-[4vh] md:h-[560px] lg:h-[560px] xl:h-[560px]">
                                 {/* <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/fd9a211f424de7005b3462a65a7e3c70ad79833b2a345223dc6805aa0d720d6b?apiKey=966c510a434d496c8209492887da4d0c&" alt="" class="object-cover absolute inset-0 size-full mt-10 blur-2xl" /> */}
                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d95a1b51139ebb63c90dd07fe1c74cb68c608f487830ce20a96be3c54ebc6034?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" class="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
                                 <div class="flex-auto my-auto">

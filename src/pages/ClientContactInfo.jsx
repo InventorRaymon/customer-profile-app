@@ -15,7 +15,11 @@ const ClientContactInfo = () => {
     const [isContactModalOpen, setIsContactModalOpen] = useState('hidden');
     const [onEditMode, setOnEditMode] = useState('hidden');
     const [isEdit, setIsEdit] = useState(false);
+      const [initialData, setInitialData] = useState("");
+  const [contact, setContact] = useState('');
+  const [foundContact, setFoundContact] = useState(contactsData);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [userDropdown, setUserDropdown] = useState('hidden');
     const [inputValue, setInputValue] = useState({
         contactPerson: "",
         position: "",
@@ -43,52 +47,6 @@ const ClientContactInfo = () => {
         profileImage
     } = inputValue;
 
-    const dummyArray = [
-        {
-            contactPerson: "Koala a",
-            position: "dev",
-            department: "dev",
-            emailAddress: "johnraymonm@gmail.com",
-            nickname: "koa",
-            birthdate: "09/15/1996",
-            contactNumber: "09664268092",
-            contactNumber2: "09664268092",
-            contactNumber3: "09664268092",
-            profileImage: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png",
-            Id: "12345",
-            clientId: clientId
-        },
-        {
-            contactPerson: "Koala a",
-            position: "dev",
-            department: "dev",
-            emailAddress: "johnraymonm@gmail.com",
-            nickname: "koa",
-            birthdate: "09/15/1996",
-            contactNumber: "09664268092",
-            contactNumber2: "09664268092",
-            contactNumber3: "09664268092",
-            profileImage: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png",
-            Id: "12345",
-            clientId: clientId
-        },
-        {
-            contactPerson: "Koala a",
-            position: "dev",
-            department: "dev",
-            emailAddress: "johnraymonm@gmail.com",
-            nickname: "koa",
-            birthdate: "09/15/1996",
-            contactNumber: "09664268092",
-            contactNumber2: "09664268092",
-            contactNumber3: "09664268092",
-            profileImage: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png",
-            Id: "12345",
-            clientId: clientId
-        }
-    ]
-
-
 
     const getContactList = async () => {
         try {
@@ -114,6 +72,9 @@ const ClientContactInfo = () => {
 
     useEffect(() => {
         getContactList();
+        if(initialData == ""){
+            setFoundContact(contactsData)
+          }
     }, [contactsData]);
 
     const handleAddContactOpen = () => {
@@ -326,7 +287,7 @@ const ClientContactInfo = () => {
         const parentElement = e.target.closest("#parentElement");
         const contactId = parentElement.getAttribute('data-key');
 
-        for (let index in contactsData) {
+        for(let index in contactsData) {
             let contactInfo = contactsData[index];
             if (contactInfo.Id === contactId) {
                 setSelectedImage(contactInfo.ProfileImage)
@@ -365,7 +326,7 @@ const ClientContactInfo = () => {
         const parentElement = e.target.closest("#parentElement");
         const contactId = parentElement.getAttribute('data-key');
         const allElements = document.getElementsByName("hide-show");
-        for (let index in allElements) {
+        for(let index in allElements) {
             if (allElements[index].id === contactId) {
                 if (allElements[index].getAttribute('class') !== null) {
                     allElements[index].removeAttribute("class")
@@ -395,14 +356,44 @@ const ClientContactInfo = () => {
         })
     }
 
+    const handleUserDropdown = () => {
+        if (userDropdown === 'hidden') {
+            setUserDropdown('block');
+        } else {
+            setUserDropdown('hidden');
+        }
+    }
+
+    const handleSearchBar = (e) => {
+        const searchInput = e.target.value;
+        setInitialData(searchInput);
+        if (searchInput !== '' && searchInput !== undefined) {
+          const results = contactsData.filter((user) => {
+                if(user.ContactPerson !== undefined && user.ContactPerson !== ""){
+                    return user.ContactPerson.toLowerCase().startsWith(searchInput.toLowerCase());
+                }
+          });
+          setFoundContact(results);
+        } else {
+          setFoundContact(contactsData);
+        }
+    
+        setContact(searchInput);
+      }
+
+
     return (
         <>
-            <div class="font-[sans-serif] text-[#333] bg-gray-50 p-4">
-                <div class="max-w-5xl max-sm:max-w-sm mx-auto">
-                    <header class='shadow-md font-[sans-serif] tracking-wide relative z-50'>
-                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90%'>
-
-                            <div className="flex flex-col lg:flex-row items-center justify-between w-full" >
+            <div className="font-[sans-serif] text-[#333] bg-gray-50 p-4">
+                <div className="max-w-5xl max-sm:max-w-sm mx-auto">
+                    {/* <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
+                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[560px] lg:h-[560px] xl:h-[80px]'>
+                        <div className="flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
+                                    </svg>
+                                </div>
+                            <div className="flex-col lg:flex-row items-center justify-between w-full hidden sm:hidden md:hidden lg:flex xl:flex" >
                                 <div className="cursor-pointer flex items-center mb-2 lg:mb-0" onClick={() => navigate("/landing")}>
                                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" className='shrink w-55 h-14 mr-4' />
                                     <span className="font-bold text-3xl text-white max-md:mt-10">
@@ -410,11 +401,6 @@ const ClientContactInfo = () => {
                                     </span>
                                 </div>
                                 <h2 className="text-2xl font-semibold flex-center text-white mb-2 lg:mb-0">Client Contacts</h2>
-                                <div class="flex items-center"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7" />
-                                </svg>
-                                    {/* <span class="text-sm font-medium text-white">copy</span> */}
-                                    </div>
                                 <a href="javascript:void(0)"
                                     onClick={handleLogOut}
                                     className="cursor-pointer border-solid border-2 text-white hover:text-slate-600 text-sm flex items-center hover:bg-blue-50 rounded px-2 py-2 transition-all">
@@ -428,20 +414,122 @@ const ClientContactInfo = () => {
                                 </a>
                             </div>
                         </section>
-                    </header>
+                    </header> */}
+                    {/* <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
+                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[80px] lg:h-[80px] xl:h-[80px]'>
+                            <div className="lg:hidden flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
+                                </svg>
+                            </div>
+                            <div className="flex flex-row-reverse lg:flex-row items-center justify-between w-full" >
+                                <div className="items-center mb-2 lg:mb-0 hidden sm:hidden md:hidden lg:flex xl:flex" >
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" className='shrink w-55 h-14 mr-4' />
+                                    <span className="font-bold text-3xl text-white max-md:mt-10">
+                                        COSMOHUB
+                                    </span>
+                                </div>
+                                <div className='text-sm flex items-center rounded transition-all'>
+                                    <div className='flex items-center max-sm:ml-auto space-x-6'>
+                                        <ul>
+                                            <li
+                                                className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                                                    viewBox="0 0 512 512">
+                                                    <path
+                                                        d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
+                                                        data-original="#000000" />
+                                                </svg>
+                                                <div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[180px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
+                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400">User Settings</h6>
+                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={handleLogOut}>Logout</h6>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </header> */}
+                    <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
+                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[80px] lg:h-[80px] xl:h-[80px]'>
 
-                    {/* <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
-                        <div class="max-w-5xl max-sm:max-w-sm mx-auto">
+                            <div className="flex justify-between items-center w-full">
+                                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
+                                    </svg>
+                                </div>
+                                <div className="flex items-center">
+                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" className='shrink w-55 h-14 mr-4 hidden sm:hidden md:block lg:block xl:block' />
+                                    <span className="font-bold text-3xl text-white hidden sm:block md:block lg:block xl:block">
+                                        COSMOHUB
+                                    </span>
+                                </div>
+                                <div className='text-sm flex items-center rounded transition-all'>
+                                    <div className='flex items-center space-x-6'>
+                                        <ul>
+                                            <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                                                    viewBox="0 0 512 512">
+                                                    <path
+                                                        d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
+                                                        data-original="#000000" />
+                                                </svg>
+                                                <div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[180px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
+                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400">User Settings</h6>
+                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={handleLogOut}>Logout</h6>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+                    </header>
+                    <div className='justify-end text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex' onClick={() => navigate("/landing")}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                            <path fillRule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+                        </svg>
+                        <p>back to the clients page</p>
+                    </div>
+                    <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full'>
+
+            <div className='flex items-center'>
+              <div
+                  className=" border-2 bg-gray-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-gray-400 mr-3">
+                    <path
+                      d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
+                    </path>
+                  </svg>
+                  <input type='text' value={contact} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />        
+                
+                </div>
+              <button type="button"
+                onClick={handleAddContactOpen}
+                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
+                  <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
+                </svg>
+                Add Client
+              </button>
+            </div>
+          </div>
+
+                    {/* <div className="font-[sans-serif] text-[#333] bg-gray-50 p-2">
+                        <div className="max-w-5xl max-sm:max-w-sm mx-auto">
                             <button type="button"
                                 onClick={handleAddContactOpen}
-                                class="m-10 px-4 py-2.5 flex items-center text-[#fff] rounded-full text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" class="mr-2" viewBox="0 0 6.35 6.35">
-                                    <path fill-rule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paint-order="stroke fill markers" />
+                                className="m-10 px-4 py-2.5 flex items-center text-[#fff] rounded-full text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
+                                    <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
                                 </svg>
                                 Add Contact
                             </button>
 
-                            <div class="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12">
+                            <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12">
 
                                 {contactsData && contactsData.map((contactInfo) => {
                                     // console.log(contactInfo)
@@ -465,22 +553,22 @@ const ClientContactInfo = () => {
                                             <div
                                                 key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement"
                                                 onClick={handleOpenInfo}
-                                                class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
-                                                <div class="mt-2 mb-2 h-[220px]">
+                                                className="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
+                                                <div className="mt-2 mb-2 h-[220px]">
                                                     <div className='shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)]'>
-                                                        <div class="bg-white py-4 px-2 rounded-md ">
+                                                        <div className="bg-white py-4 px-2 rounded-md ">
 
-                                                            <img src={contactInfo.ProfileImage} alt='Img Error' class="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
-                                                            <p class="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
-                                                            <p class="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
-                                                            <p class="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
+                                                            <img src={contactInfo.ProfileImage} alt='Img Error' className="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
+                                                            <p className="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
+                                                            <p className="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
+                                                            <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
                                                         
-                                                            <div name="hide-show" id={contactInfo.Id} class="mt-4 hidden">
+                                                            <div name="hide-show" id={contactInfo.Id} className="mt-4 hidden">
 
-                                                                <form class="font-[sans-serif] m-6 max-w-4xl mx-auto">
-                                                                    <div class="grid sm:grid-cols-2 gap-10">
-                                                                        <div class="relative flex items-center sm:col-span-2">
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                                                <form className="font-[sans-serif] m-6 max-w-4xl mx-auto">
+                                                                    <div className="grid sm:grid-cols-2 gap-10">
+                                                                        <div className="relative flex items-center sm:col-span-2">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                                                                 Fullname</label>
                                                                             <input type="text" placeholder={contactInfo.ContactPerson}
                                                                                 onChange={handleOnChange}
@@ -488,8 +576,8 @@ const ClientContactInfo = () => {
                                                                                 value={contactInfo.ContactPerson}
                                                                                 disabled
                                                                                 autoComplete='off'
-                                                                                class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                                                                className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                                                                 viewBox="0 0 24 24">
                                                                                 <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                                                                 <path
@@ -497,9 +585,9 @@ const ClientContactInfo = () => {
                                                                                     data-original="#000000"></path>
                                                                             </svg>
                                                                         </div>
-                                                                        <div class="relative flex items-center ">
+                                                                        <div className="relative flex items-center ">
 
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                                                                 Nickname</label>
                                                                             <input type="text" placeholder={contactInfo.Nickname}
                                                                                 onChange={handleOnChange}
@@ -507,8 +595,8 @@ const ClientContactInfo = () => {
                                                                                 value={contactInfo.Nickname}
                                                                                 disabled
                                                                                 autoComplete='off'
-                                                                                class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                                                                className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                                                                 viewBox="0 0 24 24">
                                                                                 <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                                                                 <path
@@ -516,8 +604,8 @@ const ClientContactInfo = () => {
                                                                                     data-original="#000000"></path>
                                                                             </svg>
                                                                         </div>
-                                                                        <div class="relative flex items-center">
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                                                        <div className="relative flex items-center">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                                                                 Position</label>
                                                                             <input type="text" placeholder={contactInfo.Position}
                                                                                 name='position'
@@ -525,8 +613,8 @@ const ClientContactInfo = () => {
                                                                                 onChange={handleOnChange}
                                                                                 disabled
                                                                                 autoComplete='off'
-                                                                                class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                                                                className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                                                                 viewBox="0 0 24 24">
                                                                                 <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                                                                 <path
@@ -534,8 +622,8 @@ const ClientContactInfo = () => {
                                                                                     data-original="#000000"></path>
                                                                             </svg>
                                                                         </div>
-                                                                        <div class="relative flex items-center">
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                                                        <div className="relative flex items-center">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                                                                 Birth Date</label>
 
                                                                             <input
@@ -546,18 +634,18 @@ const ClientContactInfo = () => {
                                                                                 disabled
                                                                                 value={formattedBirthday}
                                                                                 onChange={handleOnChange}
-                                                                                class="px-3 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                                className="px-3 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
                                                                         </div>
-                                                                        <div class="relative flex items-center">
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Department</label>
+                                                                        <div className="relative flex items-center">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Department</label>
                                                                             <input type="text" placeholder={contactInfo.Department}
                                                                                 name='department'
                                                                                 value={contactInfo.Department}
                                                                                 onChange={handleOnChange}
                                                                                 disabled
                                                                                 autoComplete='off'
-                                                                                class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                                                                className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                                                                 viewBox="0 0 24 24">
                                                                                 <path
                                                                                     d="M20.48 8.301A9.217 9.217 0 0 1 21.25 12c0 5.105-4.145 9.25-9.25 9.25S2.75 17.105 2.75 12 6.895 2.75 12 2.75a.75.75 0 0 0 0-1.5C6.067 1.25 1.25 6.067 1.25 12S6.067 22.75 12 22.75 22.75 17.933 22.75 12c0-1.529-.32-2.983-.896-4.301a.75.75 0 0 0-1.374.602z"
@@ -570,8 +658,8 @@ const ClientContactInfo = () => {
                                                                                     data-original="#000000" />
                                                                             </svg>
                                                                         </div>
-                                                                        <div class="relative flex items-center sm:col-span-2">
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                                                        <div className="relative flex items-center sm:col-span-2">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                                                                 Contact No.</label>
                                                                             <input type="text" placeholder={contactInfo.ContactNumber}
                                                                                 onChange={handleOnChange}
@@ -579,26 +667,26 @@ const ClientContactInfo = () => {
                                                                                 value={`${contactInfo.ContactNumber}, ${contactInfo.ContactNumber2}, ${contactInfo.ContactNumber3}`}
                                                                                 disabled
                                                                                 autoComplete='off'
-                                                                                class="truncate px-1 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                                className="truncate px-1 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
                                                                         </div>
-                                                                        <div class="relative flex items-center sm:col-span-2">
-                                                                            <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
+                                                                        <div className="relative flex items-center sm:col-span-2">
+                                                                            <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
                                                                             <input type="email" placeholder={contactInfo.EmailAddress}
                                                                                 onChange={handleOnChange}
                                                                                 value={contactInfo.EmailAddress}
                                                                                 name='emailAddress'
                                                                                 disabled
                                                                                 autoComplete='off'
-                                                                                class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                                                                className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                                                                 viewBox="0 0 682.667 682.667">
                                                                                 <defs>
                                                                                     <clipPath id="a" clipPathUnits="userSpaceOnUse">
                                                                                         <path d="M0 512h512V0H0Z" data-original="#000000"></path>
                                                                                     </clipPath>
                                                                                 </defs>
-                                                                                <g clip-path="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                                                                                    <path fill="none" stroke-miterlimit="10" stroke-width="40"
+                                                                                <g clipPath="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
+                                                                                    <path fill="none" strokeMiterlimit="10" strokeWidth="40"
                                                                                         d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
                                                                                         data-original="#000000"></path>
                                                                                     <path
@@ -611,18 +699,18 @@ const ClientContactInfo = () => {
 
 
                                                                     </div>
-                                                                    <div class="mt-4 font-[sans-serif] w-max mx-auto bg-gray-100 border divide-x divide-white flex rounded overflow-hidden">
+                                                                    <div className="mt-4 font-[sans-serif] w-max mx-auto bg-gray-100 border divide-x divide-white flex rounded overflow-hidden">
                                                                         <button type="button"
                                                                             onClick={handleEditMode}
-                                                                            class="px-4 py-2.5 flex items-center text-[#333] text-sm font-semibold outline-none hover:bg-gray-300 transition-all">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" class="mr-2" viewBox="0 0 24 24">
+                                                                            className="px-4 py-2.5 flex items-center text-[#333] text-sm font-semibold outline-none hover:bg-gray-300 transition-all">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 24 24">
                                                                                 <path d="m20 8.6-8.38 8.38c-.29.29-.67.47-1.08.51l-2.93.27H7.5c-.33 0-.65-.13-.88-.37-.26-.26-.39-.63-.36-1l.27-2.93c.04-.41.22-.79.51-1.08L15.4 4zm1.94-5.83-.71-.71a2.758 2.758 0 0 0-3.89 0l-.88.88 4.6 4.6.88-.88a2.732 2.732 0 0 0 0-3.88zm-1.19 16.24V13.2c0-.41-.34-.75-.75-.75s-.75.34-.75.75v5.81c0 1.24-1.01 2.25-2.25 2.25H5c-1.24 0-2.25-1.01-2.25-2.25V7c0-1.24 1.01-2.25 2.25-2.25h5.81c.41 0 .75-.34.75-.75s-.34-.75-.75-.75H5C2.93 3.25 1.25 4.93 1.25 7v12c0 2.07 1.68 3.75 3.75 3.75h12c2.07 0 3.75-1.68 3.75-3.75z" data-original="#000000" />
                                                                             </svg>
                                                                             Edit
                                                                         </button>
                                                                         <button type="button"
                                                                             onClick={handleDeleteContact}
-                                                                            class="px-4 py-2.5 flex items-center text-[#333] text-sm font-semibold outline-none hover:bg-gray-300 transition-all">
+                                                                            className="px-4 py-2.5 flex items-center text-[#333] text-sm font-semibold outline-none hover:bg-gray-300 transition-all">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" width="14px" fill="#000000" viewBox="0 0 320.591 320.591">
                                                                                 <path
                                                                                     d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
@@ -648,19 +736,10 @@ const ClientContactInfo = () => {
 
                         </div>
                     </div> */}
-                    <div class="font-[sans-serif] text-[#333] bg-gray-50 p-2">
-                        <div class="max-w-5xl max-sm:max-w-sm mx-auto">
-                            <button type="button"
-                                onClick={handleAddContactOpen}
-                                class="m-10 px-4 py-2.5 flex items-center text-[#fff] rounded-full text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" class="mr-2" viewBox="0 0 6.35 6.35">
-                                    <path fill-rule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paint-order="stroke fill markers" />
-                                </svg>
-                                Add Contact
-                            </button>
-
-                            <div class="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12">
-                                {contactsData && contactsData.map((contactInfo) => {
+                    <div className="rounded-lg font-[sans-serif] text-[#333] bg-slate-50 p-2 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] mt-4">
+                        <div className="max-w-5xl max-sm:max-w-sm mx-auto">
+                            <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12 ">
+                                {foundContact && foundContact.map((contactInfo) => {
                                     let formattedBirthday;
                                     if (contactInfo !== undefined) {
                                         if (contactInfo.Birthday !== undefined) {
@@ -680,23 +759,23 @@ const ClientContactInfo = () => {
                                         <div
                                             key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement"
                                             onClick={handleOpenInfo}
-                                            class="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
-                                            <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start">
-                                                <div class="mt-2 mb-2 lg:mb-0 lg:mr-4 h-[220px]">
+                                            className="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
+                                            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start">
+                                                <div className="mt-2 mb-2 lg:mb-0 lg:mr-4 h-[220px]">
                                                     <div className='shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)]'>
-                                                        <div class="bg-white py-4 px-2 rounded-md">
-                                                            <img src={contactInfo.ProfileImage} alt='Img Error' class="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
+                                                        <div className="bg-white py-4 px-2 rounded-md">
+                                                            <img src={contactInfo.ProfileImage} alt='Img Error' className="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="flex flex-col justify-center">
-                                                    <p class="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
-                                                    <p class="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
-                                                    <p class="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
+                                                <div className="flex flex-col justify-center">
+                                                    <p className="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
+                                                    <p className="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
+                                                    <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
                                                 </div>
                                             </div>
                                             {/* Additional content */}
-                                            <div name="hide-show" id={contactInfo.Id} class="mt-4 hidden">
+                                            <div name="hide-show" id={contactInfo.Id} className="mt-4 hidden">
                                                 {/* Your form content */}
                                             </div>
                                         </div>
@@ -707,11 +786,11 @@ const ClientContactInfo = () => {
                     </div>
 
                     <div
-                        class={isContactModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
-                        <div class="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
-                            <div class="flex items-center pb-3 border-b text-black">
-                                <h3 class="text-xl font-bold flex-1">Add Contact</h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
+                        className={isContactModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
+                        <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
+                            <div className="flex items-center pb-3 border-b text-black">
+                                <h3 className="text-xl font-bold flex-1">Add Contact</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
                                     onClick={handlContactMocalClose}
                                     viewBox="0 0 320.591 320.591">
                                     <path
@@ -723,7 +802,7 @@ const ClientContactInfo = () => {
                                 </svg>
                             </div>
 
-                            <form onSubmit={handleAddContact} class="font-[sans-serif] m-6 max-w-4xl mx-auto">
+                            <form onSubmit={handleAddContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
                                     <div className='flex flex-col items-center bg-white py-4 px-2 rounded-md hover:scale-110 transition-all duration-500'>
                                         <img
@@ -737,26 +816,26 @@ const ClientContactInfo = () => {
                                 )}
 
 
-                                <div class="font-[sans-serif] max-w-md mx-auto m-5">
-                                    <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
+                                <div className="font-[sans-serif] max-w-md mx-auto m-5">
+                                    <label className="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                                     <input type="file"
                                         onChange={e => handleFileRead(e)}
                                         accept="image/png, image/gif, image/jpeg"
-                                        class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
-                                    <p class="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+                                        className="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
+                                    <p className="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
                                 </div>
 
-                                <div class="grid sm:grid-cols-2 gap-10">
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                <div className="grid sm:grid-cols-2 gap-10">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Fullname</label>
                                         <input type="text" placeholder="Enter full name"
                                             onChange={handleOnChange}
                                             name='contactPerson'
                                             value={contactPerson}
                                             autoComplete='off'
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                             <path
@@ -764,17 +843,17 @@ const ClientContactInfo = () => {
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
+                                    <div className="relative flex items-center">
 
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Nickname</label>
                                         <input type="text" placeholder="Enter full name"
                                             onChange={handleOnChange}
                                             name='nickname'
                                             value={nickname}
                                             autoComplete='off'
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                             <path
@@ -782,16 +861,16 @@ const ClientContactInfo = () => {
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Position</label>
                                         <input type="text" placeholder="Enter company position"
                                             name='position'
                                             value={position}
                                             onChange={handleOnChange}
                                             autoComplete='off'
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                             <path
@@ -799,8 +878,8 @@ const ClientContactInfo = () => {
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Birth Date</label>
 
                                         <input
@@ -809,18 +888,18 @@ const ClientContactInfo = () => {
                                             value={birthdate}
                                             onChange={handleOnChange}
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Department</label>
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Department</label>
                                         <input type="text" placeholder="Enter department"
                                             name='department'
                                             value={department}
                                             onChange={handleOnChange}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <path
                                                 d="M20.48 8.301A9.217 9.217 0 0 1 21.25 12c0 5.105-4.145 9.25-9.25 9.25S2.75 17.105 2.75 12 6.895 2.75 12 2.75a.75.75 0 0 0 0-1.5C6.067 1.25 1.25 6.067 1.25 12S6.067 22.75 12 22.75 22.75 17.933 22.75 12c0-1.529-.32-2.983-.896-4.301a.75.75 0 0 0-1.374.602z"
@@ -833,8 +912,8 @@ const ClientContactInfo = () => {
                                                 data-original="#000000" />
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Contact No. 1</label>
                                         <input type="number" placeholder="Enter phone no."
                                             onChange={handleOnChange}
@@ -842,15 +921,15 @@ const ClientContactInfo = () => {
                                             value={contactNumber}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg fill="#bbb" className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
                                             <path
                                                 d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Contact No. 2</label>
                                         <input type="number" placeholder="Enter phone no."
                                             onChange={handleOnChange}
@@ -858,15 +937,15 @@ const ClientContactInfo = () => {
                                             name='contactNumber2'
                                             autoComplete='off'
                                             // required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg fill="#bbb" className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
                                             <path
                                                 d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Contact No. 3</label>
                                         <input type="number" placeholder="Enter phone no."
                                             onChange={handleOnChange}
@@ -874,31 +953,31 @@ const ClientContactInfo = () => {
                                             value={contactNumber3}
                                             autoComplete='off'
                                             // required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg fill="#bbb" className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
                                             <path
                                                 d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center sm:col-span-2">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
+                                    <div className="relative flex items-center sm:col-span-2">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
                                         <input type="email" placeholder="Enter email"
                                             onChange={handleOnChange}
                                             value={emailAddress}
                                             name='emailAddress'
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 682.667 682.667">
                                             <defs>
                                                 <clipPath id="a" clipPathUnits="userSpaceOnUse">
                                                     <path d="M0 512h512V0H0Z" data-original="#000000"></path>
                                                 </clipPath>
                                             </defs>
-                                            <g clip-path="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                                                <path fill="none" stroke-miterlimit="10" stroke-width="40"
+                                            <g clipPath="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
+                                                <path fill="none" strokeMiterlimit="10" strokeWidth="40"
                                                     d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
                                                     data-original="#000000"></path>
                                                 <path
@@ -909,16 +988,16 @@ const ClientContactInfo = () => {
                                     </div>
                                 </div>
                                 <button type="submit"
-                                    class="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
+                                    className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
                             </form>
                         </div>
                     </div>
                     <div
-                        class={onEditMode + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
-                        <div class="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
-                            <div class="flex items-center pb-3 border-b text-black">
-                                <h3 class="text-xl font-bold flex-1">Edit Contact</h3>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
+                        className={onEditMode + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
+                        <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
+                            <div className="flex items-center pb-3 border-b text-black">
+                                <h3 className="text-xl font-bold flex-1">Edit Contact</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
                                     onClick={handleEditMocalClose}
                                     viewBox="0 0 320.591 320.591">
                                     <path
@@ -930,9 +1009,9 @@ const ClientContactInfo = () => {
                                 </svg>
                             </div>
 
-                            <div class="font-[sans-serif]">
+                            <div className="font-[sans-serif]">
                             </div>
-                            <form onSubmit={handleEditContact} class="font-[sans-serif] m-6 max-w-4xl mx-auto">
+                            <form onSubmit={handleEditContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
                                     <div className='flex flex-col items-center bg-white py-4 px-2 rounded-md hover:scale-110 transition-all duration-500'>
                                         <img
@@ -944,18 +1023,18 @@ const ClientContactInfo = () => {
                                         <button className='mt-2 hover:text-red-500' onClick={() => setSelectedImage(null)}>Remove</button>
                                     </div>
                                 )}
-                                <div class="font-[sans-serif] max-w-md mx-auto m-5">
-                                    <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
+                                <div className="font-[sans-serif] max-w-md mx-auto m-5">
+                                    <label className="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                                     <input type="file"
                                         onChange={e => handleFileRead(e)}
                                         accept="image/png, image/gif, image/jpeg"
-                                        class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
-                                    <p class="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+                                        className="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
+                                    <p className="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
                                 </div>
 
-                                <div class="grid sm:grid-cols-2 gap-10">
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                <div className="grid sm:grid-cols-2 gap-10">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Fullname</label>
                                         <input type="text" placeholder="Enter full name"
                                             onChange={handleOnChange}
@@ -963,8 +1042,8 @@ const ClientContactInfo = () => {
                                             value={contactPerson}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                             <path
@@ -972,9 +1051,9 @@ const ClientContactInfo = () => {
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
+                                    <div className="relative flex items-center">
 
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Nickname</label>
                                         <input type="text" placeholder="Enter full name"
                                             onChange={handleOnChange}
@@ -982,8 +1061,8 @@ const ClientContactInfo = () => {
                                             value={nickname}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                             <path
@@ -991,8 +1070,8 @@ const ClientContactInfo = () => {
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Position</label>
                                         <input type="text" placeholder="Enter company position"
                                             name='position'
@@ -1000,8 +1079,8 @@ const ClientContactInfo = () => {
                                             onChange={handleOnChange}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                             <path
@@ -1009,8 +1088,8 @@ const ClientContactInfo = () => {
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Birth Date</label>
 
                                         <input
@@ -1021,8 +1100,8 @@ const ClientContactInfo = () => {
                                             value={birthdate}
                                             onChange={handleOnChange}
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        {/* <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        {/* <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                     viewBox="0 0 24 24">
                                     <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                                     <path
@@ -1030,16 +1109,16 @@ const ClientContactInfo = () => {
                                         data-original="#000000"></path>
                                 </svg> */}
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Department</label>
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Department</label>
                                         <input type="text" placeholder="Enter department"
                                             name='department'
                                             value={department}
                                             onChange={handleOnChange}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 24 24">
                                             <path
                                                 d="M20.48 8.301A9.217 9.217 0 0 1 21.25 12c0 5.105-4.145 9.25-9.25 9.25S2.75 17.105 2.75 12 6.895 2.75 12 2.75a.75.75 0 0 0 0-1.5C6.067 1.25 1.25 6.067 1.25 12S6.067 22.75 12 22.75 22.75 17.933 22.75 12c0-1.529-.32-2.983-.896-4.301a.75.75 0 0 0-1.374.602z"
@@ -1052,8 +1131,8 @@ const ClientContactInfo = () => {
                                                 data-original="#000000" />
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Contact No. 1</label>
                                         <input type="number" placeholder="Enter phone no."
                                             onChange={handleOnChange}
@@ -1061,15 +1140,15 @@ const ClientContactInfo = () => {
                                             value={contactNumber}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg fill="#bbb" className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
                                             <path
                                                 d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Contact No. 2</label>
                                         <input type="number" placeholder="Enter phone no."
                                             onChange={handleOnChange}
@@ -1077,15 +1156,15 @@ const ClientContactInfo = () => {
                                             name='contactNumber2'
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg fill="#bbb" className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
                                             <path
                                                 d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                                    <div className="relative flex items-center">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                                             Contact No. 3</label>
                                         <input type="number" placeholder="Enter phone no."
                                             onChange={handleOnChange}
@@ -1093,31 +1172,31 @@ const ClientContactInfo = () => {
                                             value={contactNumber3}
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg fill="#bbb" class="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg fill="#bbb" className="w-[18px] h-[18px] absolute right-4" viewBox="0 0 64 64">
                                             <path
                                                 d="m52.148 42.678-6.479-4.527a5 5 0 0 0-6.963 1.238l-1.504 2.156c-2.52-1.69-5.333-4.05-8.014-6.732-2.68-2.68-5.04-5.493-6.73-8.013l2.154-1.504a4.96 4.96 0 0 0 2.064-3.225 4.98 4.98 0 0 0-.826-3.739l-4.525-6.478C20.378 10.5 18.85 9.69 17.24 9.69a4.69 4.69 0 0 0-1.628.291 8.97 8.97 0 0 0-1.685.828l-.895.63a6.782 6.782 0 0 0-.63.563c-1.092 1.09-1.866 2.472-2.303 4.104-1.865 6.99 2.754 17.561 11.495 26.301 7.34 7.34 16.157 11.9 23.011 11.9 1.175 0 2.281-.136 3.29-.406 1.633-.436 3.014-1.21 4.105-2.302.199-.199.388-.407.591-.67l.63-.899a9.007 9.007 0 0 0 .798-1.64c.763-2.06-.007-4.41-1.871-5.713z"
                                                 data-original="#000000"></path>
                                         </svg>
                                     </div>
-                                    <div class="relative flex items-center sm:col-span-2">
-                                        <label class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
+                                    <div className="relative flex items-center sm:col-span-2">
+                                        <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Email</label>
                                         <input type="email" placeholder="Enter email"
                                             onChange={handleOnChange}
                                             value={emailAddress}
                                             name='emailAddress'
                                             autoComplete='off'
                                             required
-                                            class="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" class="w-[18px] h-[18px] absolute right-4"
+                                            className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-slate-500 rounded outline-none" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                                             viewBox="0 0 682.667 682.667">
                                             <defs>
                                                 <clipPath id="a" clipPathUnits="userSpaceOnUse">
                                                     <path d="M0 512h512V0H0Z" data-original="#000000"></path>
                                                 </clipPath>
                                             </defs>
-                                            <g clip-path="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                                                <path fill="none" stroke-miterlimit="10" stroke-width="40"
+                                            <g clipPath="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
+                                                <path fill="none" strokeMiterlimit="10" strokeWidth="40"
                                                     d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
                                                     data-original="#000000"></path>
                                                 <path
@@ -1128,13 +1207,13 @@ const ClientContactInfo = () => {
                                     </div>
                                 </div>
                                 <button type="submit"
-                                    class="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
+                                    className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
                             </form>
                         </div>
                     </div>
-                    {/* <footer class="bg-gray-100 font-[sans-serif]">
-    <div class="py-8 px-4 sm:px-12">
-        <p class='text-center text-gray-700 text-base'>Copyright © 2024 Cosmotech All Rights Reserved.</p>
+                    {/* <footer className="bg-gray-100 font-[sans-serif]">
+    <div className="py-8 px-4 sm:px-12">
+        <p className='text-center text-gray-700 text-base'>Copyright © 2024 Cosmotech All Rights Reserved.</p>
     </div>
 </footer> */}
                 </div>
