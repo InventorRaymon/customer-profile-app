@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 
 const LandingPage = () => {
 
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const token = "12345"
   const navigate = useNavigate();
   const [clientData, setClientData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -23,6 +24,22 @@ const LandingPage = () => {
   });
 
   const { clientid, clientname, clientaddress } = inputValue;
+
+  const dummyArr = [
+    {
+      Value: "123",
+      Text: "Raymon pogi",
+      // clientaddress: "address ni raymon",
+    },
+    {
+      Value: "123",
+      Text: "Raymon pogi",
+    },
+    {
+      Valu: "123",
+      Text: "Raymon pogi",
+    }
+  ]
 
   const getClientList = async () => {
     try {
@@ -44,6 +61,7 @@ const LandingPage = () => {
     if(initialData == "" || initialData == undefined){
       setFoundClient(clientData)
     }
+    setFoundClient(dummyArr)
   }, [clientData]);
 
   const handleAddModalOpen = () => {
@@ -119,32 +137,39 @@ const LandingPage = () => {
 
   const handleUpdateClient = async (e) => {
     e.preventDefault();
-
+    console.log("Raymon")
     const parentElement = e.target.closest("#parentElement");
     const clientId = parentElement.getAttribute('data-key');
-    try {
-      const { data } = await axios.get(
-        `${base_url}/GetClientInfo/` + clientId,
-        {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }
-      );
-      const { ReturnMsg, ClientProfile } = data;
-      if (ReturnMsg === "Success") {
+    
+    const dummyArrUpdate = {
+      ClientId: "1234",
+      ClientName: "Raymon",
+      ClientAddress: "asdfasfasf address"
+    }
+    
+    // try {
+      // const { data } = await axios.get(
+      //   `${base_url}/GetClientInfo/` + clientId,
+      //   {
+      //     headers: {
+      //       'Authorization': 'Bearer ' + token
+      //     }
+      //   }
+      // );
+      // const { ReturnMsg, ClientProfile } = data;
+      // if (ReturnMsg === "Success") {
         setIsClientModalOpen('block');
         setInputValue({
           ...inputValue,
-          clientid: ClientProfile.ClientId,
-          clientname: ClientProfile.ClientName,
-          clientaddress: ClientProfile.ClientAddress
+          clientid: dummyArrUpdate.ClientId,
+          clientname: dummyArrUpdate.ClientName,
+          clientaddress: dummyArrUpdate.ClientAddress
         });
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    //   } else {
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   const handleOpenClientInfo = async (e) => {
@@ -442,6 +467,7 @@ const LandingPage = () => {
             </thead>
             <tbody className="whitespace-nowrap divide-y divide-gray-200 border-l-2 border-r-2 border-b-2">
               {foundClient && foundClient.length > 0? foundClient.map((clientInfo) => {
+                // console.log(clientInfo)
                 return (
                   <tr className='hover:bg-blue-50' key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value}>
                     <td className="px-6 py-4 text-sm">
