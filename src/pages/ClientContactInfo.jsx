@@ -7,8 +7,8 @@ import Swal from 'sweetalert2';
 const ClientContactInfo = () => {
     const state = useLocation().state;
     const navigate = useNavigate();
-    const clientId = state.clientId;
-    // const clientId = "1234";
+    // const clientId = state.clientId;
+    const clientId = "1234";
 
     const token = localStorage.getItem("token");
     const [contactsData, setContactsData] = useState([]);
@@ -47,27 +47,68 @@ const ClientContactInfo = () => {
         profileImage
     } = inputValue;
 
+    const dummyArray = [
+        {
+            ContactPerson: "Raymon",
+            Position: "Raymon",
+            Department: "Raymon",
+            EmailAddress: "Raymon",
+            Nickname: "Raymon",
+            Birthdate: "",
+            ContactNumber: "099664268092",
+            ContactNumber2: "099664268092",
+            ContactNumber3: "099664268092",
+            ProfileImage: "Raymon",
+            ClientId: clientId
+        },
+        {
+            ContactPerson: "Raymon",
+            Position: "Raymon",
+            Department: "Raymon",
+            EmailAddress: "Raymon",
+            Nickname: "Raymon",
+            Birthdate: "Raymon",
+            ContactNumber: "099664268092",
+            ContactNumber2: "099664268092",
+            ContactNumber3: "099664268092",
+            ProfileImage: "Raymon",
+            ClientId: clientId
+        },
+        {
+            ContactPerson: "Raymon",
+            Position: "Raymon",
+            Department: "Raymon",
+            EmailAddress: "Raymon",
+            Nickname: "Raymon",
+            Birthdate: "Raymon",
+            ContactNumber: "099664268092",
+            ContactNumber2: "099664268092",
+            ContactNumber3: "099664268092",
+            ProfileImage: "Raymon",
+            ClientId: clientId
+        }
+    ]
 
     const getContactList = async () => {
-        try {
-            const { data } = await axios.get(
-                `${base_url}/GetAllCustomerList/${clientId}`,
-                {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                }
-            );
-            const { CustomerList, ReturnMsg } = data;
-            setContactsData(CustomerList);
-            if (ReturnMsg === "Success") {
-                setContactsData(CustomerList);
-            } else {
-                console.log(ReturnMsg);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     const { data } = await axios.get(
+        //         `${base_url}/GetAllCustomerList/${clientId}`,
+        //         {
+        //             headers: {
+        //                 'Authorization': 'Bearer ' + token
+        //             }
+        //         }
+        //     );
+        //     const { CustomerList, ReturnMsg } = data;
+        //     setContactsData(CustomerList);
+        //     if (ReturnMsg === "Success") {
+        //         setContactsData(CustomerList);
+        //     } else {
+        //         console.log(ReturnMsg);
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        // }
     };
 
     useEffect(() => {
@@ -75,6 +116,7 @@ const ClientContactInfo = () => {
         if(initialData == ""){
             setFoundContact(contactsData)
           }
+          setFoundContact(dummyArray)
     }, [contactsData]);
 
     const handleAddContactOpen = () => {
@@ -323,7 +365,7 @@ const ClientContactInfo = () => {
     }
 
     const handleOpenInfo = (e) => {
-        const parentElement = e.target.closest("#parentElement");
+        const parentElement = e.target.closest("#menuOpen");
         const contactId = parentElement.getAttribute('data-key');
         const allElements = document.getElementsByName("hide-show");
         for(let index in allElements) {
@@ -386,71 +428,6 @@ const ClientContactInfo = () => {
         <>
             <div className="font-[sans-serif] text-[#333] bg-gray-50 p-4">
                 <div className="max-w-5xl max-sm:max-w-sm mx-auto">
-                    {/* <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
-                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[560px] lg:h-[560px] xl:h-[80px]'>
-                        <div className="flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
-                                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
-                                    </svg>
-                                </div>
-                            <div className="flex-col lg:flex-row items-center justify-between w-full hidden sm:hidden md:hidden lg:flex xl:flex" >
-                                <div className="cursor-pointer flex items-center mb-2 lg:mb-0" onClick={() => navigate("/landing")}>
-                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" className='shrink w-55 h-14 mr-4' />
-                                    <span className="font-bold text-3xl text-white max-md:mt-10">
-                                        COSMOHUB
-                                    </span>
-                                </div>
-                                <h2 className="text-2xl font-semibold flex-center text-white mb-2 lg:mb-0">Client Contacts</h2>
-                                <a href="javascript:void(0)"
-                                    onClick={handleLogOut}
-                                    className="cursor-pointer border-solid border-2 text-white hover:text-slate-600 text-sm flex items-center hover:bg-blue-50 rounded px-2 py-2 transition-all">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-4 h-4 mr-2"
-                                        viewBox="0 0 6.35 6.35">
-                                        <path
-                                            d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
-                                            data-original="#000000" />
-                                    </svg>
-                                    <span>Logout</span>
-                                </a>
-                            </div>
-                        </section>
-                    </header> */}
-                    {/* <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
-                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[80px] lg:h-[80px] xl:h-[80px]'>
-                            <div className="lg:hidden flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
-                                <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
-                                </svg>
-                            </div>
-                            <div className="flex flex-row-reverse lg:flex-row items-center justify-between w-full" >
-                                <div className="items-center mb-2 lg:mb-0 hidden sm:hidden md:hidden lg:flex xl:flex" >
-                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" className='shrink w-55 h-14 mr-4' />
-                                    <span className="font-bold text-3xl text-white max-md:mt-10">
-                                        COSMOHUB
-                                    </span>
-                                </div>
-                                <div className='text-sm flex items-center rounded transition-all'>
-                                    <div className='flex items-center max-sm:ml-auto space-x-6'>
-                                        <ul>
-                                            <li
-                                                className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
-                                                    viewBox="0 0 512 512">
-                                                    <path
-                                                        d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
-                                                        data-original="#000000" />
-                                                </svg>
-                                                <div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[180px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
-                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400">User Settings</h6>
-                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={handleLogOut}>Logout</h6>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </header> */}
                     <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[80px] lg:h-[80px] xl:h-[80px]'>
 
@@ -488,12 +465,12 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <div className='justify-end text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex' onClick={() => navigate("/landing")}>
+                    {/* <div className='justify-end text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                             <path fillRule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
                         </svg>
                         <p>back to the clients page</p>
-                    </div>
+                    </div> */}
                     <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full'>
 
             <div className='flex items-center'>
@@ -736,7 +713,7 @@ const ClientContactInfo = () => {
 
                         </div>
                     </div> */}
-                    <div className="rounded-lg font-[sans-serif] text-[#333] bg-slate-50 p-2 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] mt-4">
+                    <div className=" font-[sans-serif] text-[#333] bg-slate-50 p-2 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] mt-4">
                         <div className="max-w-5xl max-sm:max-w-sm mx-auto">
                             <div className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-8 text-center mt-12 ">
                                 {foundContact && foundContact.map((contactInfo) => {
@@ -756,29 +733,73 @@ const ClientContactInfo = () => {
                                     }
 
                                     return (
-                                        <div
-                                            key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement"
-                                            onClick={handleOpenInfo}
-                                            className="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
-                                            <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start">
-                                                <div className="mt-2 mb-2 lg:mb-0 lg:mr-4 h-[220px]">
-                                                    <div className='shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)]'>
-                                                        <div className="bg-white py-4 px-2 rounded-md">
-                                                            <img src={contactInfo.ProfileImage} alt='Img Error' className="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
-                                                        </div>
-                                                    </div>
+//                                         <div
+//                                             key={contactInfo.Id} data-key={contactInfo.Id} id="parentElement"
+//                                             onClick={handleOpenInfo}
+//                                             className="bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer">
+//                                             <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start">
+//                                                 <div className="mt-2 mb-2 lg:mb-0 lg:mr-4 h-[220px]">
+//                                                         <div className="bg-white py-4 px-2 rounded-md">
+//                                                             <img src={contactInfo.ProfileImage} alt='Img Error' className="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
+//                                                     </div>
+//                                                 </div>
+//                                                 <div className="flex flex-row-reverse"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+//   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+// </svg>
+// </div>
+//                                                 <div className="flex flex-col justify-start">
+                                                    
+//                                                     <p className="text-[15px] text-[#333] font-bold mt-4 truncate">{contactInfo.ContactPerson}</p>
+//                                                     <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.EmailAddress}</p>
+//                                                     <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
+//                                                     <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Position}</p>
+//                                                     <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Department}</p>
+//                                                     <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Birthdate}</p>
+//                                                     <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Nickname}</p>
+                                                    
+//                                                 </div>
+//                                             </div>
+//                                             {/* Additional content */}
+//                                             <div name="hide-show" id={contactInfo.Id} className="mt-4 hidden">
+//                                                 {/* Your form content */}
+//                                             </div>
+//                                         </div>
+<div
+    id="parentElement"
+    className="relative bg-white shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-lg hover:scale-105 transition-all duration-500 cursor-pointer"
+>
+    <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start">
+        <div className="mt-2 mb-2 lg:mb-0 lg:mr-4 h-[220px]">
+            <div className="bg-white py-4 px-2 rounded-md">
+                <img src={contactInfo.ProfileImage} alt='Img Error' className="w-36 h-36 rounded-md inline-block border-solid border-2 border-slate-400" />
+            </div>
+        </div>
+        <div className="flex flex-col justify-start">
+            <p className="text-[15px] text-[#333] font-bold mt-4 truncate">{contactInfo.ContactPerson}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.EmailAddress}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Position}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Department}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.Birthdate}</p>
+            <p className="text-xs text-gray-500 mt-0.5 mb-4 truncate">{contactInfo.Nickname}</p>
+        </div>
+    </div>
+    {/* Ellipsis icon */}
+    <div className="absolute top-0 right-0 m-2" onClick={handleOpenInfo} key={contactInfo.Id} data-key={contactInfo.Id} id="menuOpen">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
+        </svg>
+        <div className={"block z-50 shadow-md bg-white p-3 w-[20px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-6 rounded-md justify-start"}>
+                                                    <h6 className="font-semibold cursor-pointer hover:bg-slate-200">Edit</h6>
+                                                    <h6 className="font-semibold cursor-pointer hover:bg-red-200" onClick={handleLogOut}>Remove</h6>
                                                 </div>
-                                                <div className="flex flex-col justify-center">
-                                                    <p className="text-[15px] text-[#333] font-bold">{contactInfo.ContactPerson}</p>
-                                                    <p className="text-xs text-gray-500 mt-0.5">{contactInfo.EmailAddress}</p>
-                                                    <p className="text-xs text-gray-500 mt-0.5 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : "No Added Contact No."}</p>
-                                                </div>
-                                            </div>
-                                            {/* Additional content */}
-                                            <div name="hide-show" id={contactInfo.Id} className="mt-4 hidden">
-                                                {/* Your form content */}
-                                            </div>
-                                        </div>
+    </div>
+    {/* Additional content */}
+    <div name="hide-show" id={contactInfo.Id} className="mt-4 hidden">
+    
+    </div>
+</div>
+
                                     );
                                 })}
                             </div>
