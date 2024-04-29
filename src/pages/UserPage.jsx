@@ -4,10 +4,9 @@ import axios from "axios";
 import { base_url } from '../routes/urlHandler';
 import Swal from 'sweetalert2';
 
-const LandingPage = () => {
+const UserPage = () => {
 
   const token = localStorage.getItem("token");
-  // const token = "12345"
   const navigate = useNavigate();
   const [clientData, setClientData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -17,29 +16,13 @@ const LandingPage = () => {
   const [userDropdown, setUserDropdown] = useState('hidden');
   const [isModalOpen, setIsModalOpen] = useState('hidden');
   const [isClientModalOpen, setIsClientModalOpen] = useState('hidden');
-
-  const [addErrorHandler, setAddErrorHandler] = useState('hidden');
-  const [changePassModal, setChangePassModal] = useState('hidden');
-  const [passwordType, setPasswordType] = useState('password');
-  const [showHide, setShowHide] = useState("SHOW");
-  const [passwordTypeNew, setPasswordTypeNew] = useState('password');
-  const [showHideNew, setShowHideNew] = useState("SHOW");
-  const [changePassErrorHandler, setChangePassErrorHandler] = useState('hidden');
-
   const [inputValue, setInputValue] = useState({
     clientid: "",
     clientname: "",
-    clientaddress: ""
-
+    clientaddress: "",
   });
-  const [changepassInput, setChangepassInput] = useState({
-    newpassword: "",
-    confirmpassword: ""
-  })
-  const { newpassword, confirmpassword } = changepassInput;
 
   const { clientid, clientname, clientaddress } = inputValue;
-
 
   const dummyArr = [
     {
@@ -56,28 +39,6 @@ const LandingPage = () => {
       Text: "Raymon pogi",
     }
   ]
-
-  const handleShowPass = (e) => {
-    const passName = e.target.getAttribute("name");
-    if (passName === "newpassword") {
-      if (passwordTypeNew === 'password') {
-        setShowHideNew("HIDE");
-        setPasswordTypeNew('text')
-      } else {
-        setShowHideNew("SHOW")
-        setPasswordTypeNew('password')
-      }
-    } else {
-      if (passwordType === 'password') {
-        setShowHide("HIDE");
-        setPasswordType('text')
-      } else {
-        setShowHide("SHOW")
-        setPasswordType('password')
-      }
-    }
-
-  }
 
   const getClientList = async () => {
     try {
@@ -96,7 +57,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     getClientList();
-    if (initialData == "" || initialData == undefined) {
+    if(initialData == "" || initialData == undefined){
       setFoundClient(clientData)
     }
   }, [clientData]);
@@ -144,15 +105,14 @@ const LandingPage = () => {
           setIsModalOpen('hidden');
         })
       } else {
-        setAddErrorHandler('block');
-        // Swal.fire({
-        //   title: "Client Add Failed ",
-        //   text: "Client name already exist!",
-        //   confirmButtonColor: "#334155",
-        //   color: "#334155",
-        // }).then(() => {
-        //   // setIsModalOpen('hidden');
-        // })
+        Swal.fire({
+          title: "Client Add Failed ",
+          text: "Client name already exist!",
+          confirmButtonColor: "#334155",
+          color: "#334155",
+        }).then(() => {
+          // setIsModalOpen('hidden');
+        })
       }
     } catch (error) {
       console.log(error);
@@ -164,7 +124,6 @@ const LandingPage = () => {
       clientaddress: ""
     });
   };
-
   const handleOnChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
@@ -174,26 +133,17 @@ const LandingPage = () => {
     });
   };
 
-  const handleOnChangePass = (e) => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    setChangepassInput({
-      ...changepassInput,
-      [name]: value,
-    });
-  };
-
   const handleUpdateClient = async (e) => {
     e.preventDefault();
     const parentElement = e.target.closest("#parentElement");
     const clientId = parentElement.getAttribute('data-key');
-
+    
     const dummyArrUpdate = {
       ClientId: "1234",
       ClientName: "Raymon",
       ClientAddress: "asdfasfasf address"
     }
-
+    
     try {
       const { data } = await axios.get(
         `${base_url}/GetClientInfo/` + clientId,
@@ -236,39 +186,6 @@ const LandingPage = () => {
 
   }
 
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios.post(
-        `${base_url}/ChangesPassword`,
-        {
-          ...changepassInput,
-        },
-        {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }
-      );
-      const { ReturnMsg } = data;
-
-      if (ReturnMsg === "Success") {
-        Swal.fire({
-          title: "Password Updated",
-          text: "Successfuly updated password!",
-          confirmButtonColor: "#334155",
-          color: "#334155",
-        }).then(() => {
-          setChangePassModal('hidden');
-        })
-      } else {
-        setChangePassErrorHandler('block')
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
     const tokenUpdate = localStorage.getItem("token");
@@ -288,7 +205,7 @@ const LandingPage = () => {
       if (ReturnMsg === "Success") {
         Swal.fire({
           title: "Client Updated",
-          text: "Successfuly updated client!",
+          text: "Successfuly updated  client!",
           confirmButtonColor: "#334155",
           color: "#334155",
         }).then(() => {
@@ -303,14 +220,14 @@ const LandingPage = () => {
 
   const handleLogOut = () => {
     Swal.fire({
-      title: "Confirm Log Out",
+      title: "Log Out",
       text: "Are you sure you want to Log Out?",
       confirmButtonColor: "#334155",
       showCancelButton: true,
       color: "#334155",
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate("/");
+        navigate("/login");
         localStorage.removeItem("token");
       }
     })
@@ -364,17 +281,7 @@ const LandingPage = () => {
                           data-original="#000000" />
                       </svg>
                       <div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[180px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
-                        <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
-                          navigate("/users",
-                            {
-                              state: {
-                                clientid
-                              }
-                            }
-                          );
-                        }}>User Settings</h6>
-                        <hr class="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2 dark:bg-gray-700" />
-                        <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => { setChangePassModal('block') }}>Change Password</h6>
+                        <h6 className="font-semibold cursor-pointer hover:text-slate-400">User Settings</h6>
                         <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={handleLogOut}>Logout</h6>
                       </div>
                     </li>
@@ -438,15 +345,11 @@ const LandingPage = () => {
             </div>
             <div className="m-10">
               <form onSubmit={handleAddClient} className="space-y-6 px-4 max-w-sm mx-auto font-[sans-serif]">
-                <div className={`${addErrorHandler} mt-2 bg-red-100 text-red-800 w-[360px] p-4 rounded-md relative`} role="alert">
-                  <strong className="font-bold text-base">Client Add Failed!</strong>
-                  <span className="block text-sm sm:inline max-sm:mt-1 max-sm:ml-0 mx-4">Client name already exist.</span>
-                </div>
                 <div className="flex items-center">
                   <label className="text-gray-400 w-36 text-sm">Client :</label>
                   <input
                     type="text"
-                    // id="clientname"
+                    id="clientname"
                     name="clientname"
                     placeholder="Enter clients name"
                     value={clientname}
@@ -459,7 +362,7 @@ const LandingPage = () => {
                   <label className="text-gray-400 w-36 text-sm">Address :</label>
                   <input
                     type="text"
-                    // id="clientaddress"
+                    id="clientaddress"
                     name="clientaddress"
                     placeholder="Enter clients address"
                     value={clientaddress}
@@ -495,7 +398,7 @@ const LandingPage = () => {
                   <label className="text-gray-400 w-36 text-sm">Client :</label>
                   <input
                     type="text"
-                    // id="clientname"
+                    id="clientname"
                     name="clientname"
                     placeholder="Enter clients name"
                     value={clientname}
@@ -508,7 +411,7 @@ const LandingPage = () => {
                   <label className="text-gray-400 w-36 text-sm">Address :</label>
                   <input
                     type="text"
-                    // id="clientaddress"
+                    id="clientaddress"
                     name="clientaddress"
                     placeholder="Enter clients address"
                     value={clientaddress}
@@ -523,85 +426,21 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <div
-          className={changePassModal + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
-          <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
-            <div className="flex items-center pb-3 border-b text-black">
-              <h3 className="text-xl font-bold flex-1">Change Password</h3>
-              <svg onClick={() => { setChangePassModal('hidden') }} xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
-                viewBox="0 0 320.591 320.591">
-                <path
-                  d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
-                  data-original="#000000"></path>
-                <path
-                  d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z"
-                  data-original="#000000"></path>
-              </svg>
-            </div>
-            <div className="m-10">
-              <form onSubmit={handleChangePassword} className="space-y-6 px-4 max-w-sm mx-auto font-[sans-serif]">
-                <div className={`${changePassErrorHandler} mt-2 bg-red-100 text-red-800 w-[360px] p-4 rounded-md relative`} role="alert">
-                  <strong className="font-bold text-base">Change Password Failed!</strong>
-                  <span className="block text-sm sm:inline max-sm:mt-1 max-sm:ml-0 mx-4">Confirmed password doesnt match the new password.</span>
-                </div>
-                <div className="flex items-center">
-                  <label className="text-gray-400 w-44 text-sm">New Password :</label>
-                  <input
-                    type={passwordTypeNew}
-                    id="newpassword"
-                    name="newpassword"
-                    placeholder="Enter new password"
-                    value={newpassword}
-                    required
-                    onChange={handleOnChangePass}
-                    autoComplete='off'
-                    className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
-                  <div className="my-auto text-xs leading-6 text-right text-neutral-400">
-                    <a className="font-bold text-neutral-800">
-                      <label className="cursor-pointer" name="newpassword" onClick={handleShowPass} htmlFor="check">{showHideNew}</label>
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <label className="text-gray-400 w-44 text-sm">Confirm Password :</label>
-                  <input
-                    type={passwordType}
-                    id="confirmpassword"
-                    name="confirmpassword"
-                    placeholder="Enter confirmed password"
-                    value={confirmpassword}
-                    required
-                    onChange={handleOnChangePass}
-                    autoComplete='off'
-                    className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
-                  <div className="my-auto text-xs leading-6 text-right text-neutral-400">
-                    <a className="font-bold text-neutral-800">
-                      <label className="cursor-pointer" name="confirmpassword" onClick={handleShowPass} htmlFor="check">{showHide}</label>
-                    </a>
-                  </div>
-                </div>
-
-                <button type="submit"
-                  className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</button>
-              </form>
-            </div>
-          </div>
-        </div>
         <div className='w-full overflow-x-auto mt-10'>
           {/* <header className='flex shadow-md bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50'> */}
           <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full'>
 
             <div className='flex items-center'>
               <div
-                className=" border-2 bg-gray-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-gray-400 mr-3">
-                  <path
-                    d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
-                  </path>
-                </svg>
-                <input type='text' value={client} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
-
-              </div>
+                  className=" border-2 bg-gray-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-gray-400 mr-3">
+                    <path
+                      d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
+                    </path>
+                  </svg>
+                  <input type='text' value={client} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />        
+                
+                </div>
               <button type="button"
                 onClick={handleAddModalOpen}
                 className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
@@ -624,7 +463,7 @@ const LandingPage = () => {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap divide-y divide-gray-200 border-l-2 border-r-2 border-b-2">
-              {foundClient && foundClient.length > 0 ? foundClient.map((clientInfo) => {
+              {foundClient && foundClient.length > 0? foundClient.map((clientInfo) => {
                 // console.log(clientInfo)
                 return (
                   <tr className='hover:bg-blue-50' key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value}>
@@ -646,15 +485,37 @@ const LandingPage = () => {
                       </button>
                     </td>
                   </tr>
+                  // <div key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value} className="bg-gradient-to-r from-slate-200 to-slate-500 cursor-pointer rounded-md hover:scale-105 transition-all duration-500 mt-1">
+                  //   <div className="flex flex-col justify-between items-start sm:flex-row sm:items-center border-dotted border-2 border-slate-600">
+                  //     <h1 className="text-md font-semibold px-4 sm:px-6 truncate sm:w-2/3 lg:px-4">{clientInfo.Text}</h1>
+                  //     <div className='flex justify-end sm:flex-row sm:w-1/3 sm:px-4'>
+                  //       <button
+                  //         type="button"
+                  //         onClick={handleUpdateClient}
+                  //         className="m-1 px-3 py-2 rounded text-white text-xs sm:text-sm tracking-wider font-semibold border-none outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-500">
+                  //         <span className="sm:hidden">Update</span>
+                  //         <span className="hidden sm:inline">Update info</span>
+                  //       </button>
+                  //       <button
+                  //         type="button"
+                  //         onClick={handleOpenClientInfo}
+                  //         className="m-1 px-3 py-2 rounded text-white text-xs sm:text-sm tracking-wider font-semibold border-none outline-none bg-slate-700 hover:bg-slate-700 active:bg-slate-500">
+                  //         <span className="sm:hidden">Open</span>
+                  //         <span className="hidden sm:inline">Open Contact info</span>
+                  //       </button>
+                  //     </div>
+                  //   </div>
+                  //   <p id="childElement" className="hidden">{clientInfo.Value}</p>
+                  // </div>
                 )
 
               }) :
-                <tr className='hover:bg-blue-50'>
-                  <td className="px-6 py-4 text-sm">
-                    No Client Found.
-                  </td>
-                </tr>
-              }
+              <tr>
+              <td className="px-6 py-4 text-sm">
+              No Client Found.
+            </td>
+            </tr>
+                }
             </tbody>
           </table>
         </div>
@@ -665,4 +526,4 @@ const LandingPage = () => {
   )
 }
 
-export default LandingPage
+export default UserPage
