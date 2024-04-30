@@ -57,7 +57,7 @@ const UserPage = () => {
 
   useEffect(() => {
     getClientList();
-    if(initialData == "" || initialData == undefined){
+    if (initialData == "" || initialData == undefined) {
       setFoundClient(clientData)
     }
   }, [clientData]);
@@ -137,13 +137,13 @@ const UserPage = () => {
     e.preventDefault();
     const parentElement = e.target.closest("#parentElement");
     const clientId = parentElement.getAttribute('data-key');
-    
+
     const dummyArrUpdate = {
       ClientId: "1234",
       ClientName: "Raymon",
       ClientAddress: "asdfasfasf address"
     }
-    
+
     try {
       const { data } = await axios.get(
         `${base_url}/GetClientInfo/` + clientId,
@@ -291,7 +291,14 @@ const UserPage = () => {
             </div>
           </section>
         </header>
-
+        <div className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
+            <path
+              d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
+              data-original="#000000" />
+          </svg>
+          <p>back to the clients page</p>
+        </div>
         {showModal ? (
           <>
             <div
@@ -432,15 +439,15 @@ const UserPage = () => {
 
             <div className='flex items-center'>
               <div
-                  className=" border-2 bg-gray-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-gray-400 mr-3">
-                    <path
-                      d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
-                    </path>
-                  </svg>
-                  <input type='text' value={client} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />        
-                
-                </div>
+                className=" border-2 bg-gray-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-gray-400 mr-3">
+                  <path
+                    d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
+                  </path>
+                </svg>
+                <input type='text' value={client} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
+
+              </div>
               <button type="button"
                 onClick={handleAddModalOpen}
                 className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
@@ -463,7 +470,7 @@ const UserPage = () => {
               </tr>
             </thead>
             <tbody className="whitespace-nowrap divide-y divide-gray-200 border-l-2 border-r-2 border-b-2">
-              {foundClient && foundClient.length > 0? foundClient.map((clientInfo) => {
+              {foundClient && foundClient.length > 0 ? foundClient.map((clientInfo) => {
                 // console.log(clientInfo)
                 return (
                   <tr className='hover:bg-blue-50' key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value}>
@@ -510,12 +517,12 @@ const UserPage = () => {
                 )
 
               }) :
-              <tr>
-              <td className="px-6 py-4 text-sm">
-              No Client Found.
-            </td>
-            </tr>
-                }
+                <tr>
+                  <td className="px-6 py-4 text-sm">
+                    No Client Found.
+                  </td>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
