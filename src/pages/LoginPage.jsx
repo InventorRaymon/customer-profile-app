@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { base_url } from '../routes/urlHandler';
+import BackgroundImg from '../../src/images/8.png'
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -97,51 +98,140 @@ const LoginPage = () => {
         );
     }
 
+    const myStyle = {
+        backgroundImage: `url(${BackgroundImg})`,
+        height: "100vh",
+        marginTop: "-70px",
+        fontSize: "50px",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+    };
+
 
     return (
-        <div className="font-sans text-[#333] bg-gray-50 p-4">
-            <div className="max-w-full mx-auto">
-                <div className="flex flex-col md:flex-row md:space-x-5">
-                    <div className="md:w-1/2">
-                        <div className="px-px w-full text-center">
-                            <div className="flex overflow-hidden relative flex-col w-full max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[300px] sm:h-[4vh] md:h-[560px] lg:h-[560px] xl:h-[560px]">
-                                {/* <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/fd9a211f424de7005b3462a65a7e3c70ad79833b2a345223dc6805aa0d720d6b?apiKey=966c510a434d496c8209492887da4d0c&" alt="" className="object-cover absolute inset-0 size-full mt-10 blur-2xl" /> */}
-                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d95a1b51139ebb63c90dd07fe1c74cb68c608f487830ce20a96be3c54ebc6034?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
-                                <div className="flex-auto my-auto">
-                                    <span className="font-bold text-3xl text-white max-md:mt-10">COSMOHUB</span>
-                                </div>
-                                {/* <h1 className="relative mt-96 mb-10 text-4xl font-black leading-10 text-white max-md:mt-10">
-                             Partnership for Business Growth
-                        </h1> */}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="md:w-1/2">
-                        <main className="flex flex-col items-center justify-center mt-10">
-                            {/* <Header /> */}
-                            <h2 className=" text-2xl font-black leading-10 text-center text-neutral-800">
-                                WELCOME BACK EXCLUSIVE MEMBER
-                            </h2>
-                            <p className="mt-8 text-base leading-7 text-center uppercase text-neutral-700">
-                                LOG IN TO CONTINUE
-                            </p>
+        // <div className="font-sans text-[#333] bg-gray-50 p-4">
+        //     <div className="max-w-full mx-auto">
+        //         <div className="flex md:flex-row md:space-x-5">
+        //             <div className="md:w-1/2">
+        //                 <div className="px-px w-full text-center">
+        //                     <div className="flex overflow-hidden relative flex-col w-full max-md:px-5 max-md:max-w-full bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[300px] sm:h-[4vh] md:h-[580px] lg:h-[570px] xl:h-[560px]">
+        //                         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/d95a1b51139ebb63c90dd07fe1c74cb68c608f487830ce20a96be3c54ebc6034?apiKey=966c510a434d496c8209492887da4d0c&" alt="Partnership for Business Growth logo" className="self-center mt-14 max-w-full aspect-[4.35] w-[232px] max-md:mt-10" />
+        //                         <div className="flex-auto my-auto">
+        //                             <span className="font-bold text-3xl text-white max-md:mt-10">COSMOHUB</span>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div className="md:w-1/2">
+        //                 <main className="flex flex-col items-center justify-center mt-10">
+        //                     {/* <Header /> */}
+        //                     <h2 className=" text-2xl font-black leading-10 text-center text-neutral-800">
+        //                         WELCOME BACK EXCLUSIVE MEMBER
+        //                     </h2>
+        //                     <p className="mt-8 text-base leading-7 text-center uppercase text-neutral-700">
+        //                         LOG IN TO CONTINUE
+        //                     </p>
 
-                            <form onSubmit={handleSubmit} className="max-w-[420px] mx-auto">
-                                <div className={`${errorHandler} mt-2 bg-red-100 text-red-800 w-[380px] p-4 rounded-md relative`} role="alert">
+        //                     <form onSubmit={handleSubmit} className="max-w-[420px] mx-auto">
+        //                         <div className={`${errorHandler} mt-2 bg-red-100 text-red-800 w-[380px] p-4 rounded-md relative`} role="alert">
+        //                             <strong className="font-bold text-base">Invalid Login!</strong>
+        //                             <span className="block text-sm sm:inline max-sm:mt-1 max-sm:ml-0 mx-4">Incorrect username or password.</span>
+        //                         </div>
+        //                         <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[380px] max-md:mt-10">
+        //                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
+        //                             <label for="username" className="sr-only">username</label>
+        //                             <input className="flex-auto my-auto bg-transparent border-none focus:outline-none" type="username" id="username" name="username" value={username} required onChange={handleOnChange} placeholder="username" />
+        //                         </div>
+        //                         <div className="border-color red">
+        //                             <div className="flex gap-5 justify-between px-5 py-6 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[380px]">
+        //                                 <div className="flex gap-3 text-base leading-7 text-neutral-700">
+        //                                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
+        //                                     <label for="userpass" className="sr-only">userpass</label>
+        //                                     <input className="flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
+        //                                 </div>
+        //                                 <div className="my-auto text-xs leading-6 text-right text-neutral-400">
+        //                                     <a className="font-bold text-neutral-800">
+        //                                         <label className="cursor-pointer" onClick={handleShowPass} for="check">{showHide}</label>
+        //                                     </a>
+        //                                 </div>
+        //                             </div>
+        //                         </div>
+        //                         <button type="submit" className="flex gap-5 px-9 py-5 mt-5 max-w-full text-base leading-7 text-white bg-slate-800 w-[380px] max-md:px-5">
+        //                             <span className="flex-auto my-auto">Proceed to my Account</span>
+        //                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
+        //                         </button>
+        //                     </form>
+        //                     {/* <div className="mt-12 text-sm leading-6 text-right text-black cursor-pointer">
+        //                 Having Issues with your Account?
+        //             </div> */}
+        //                 </main>
+        //             </div>
+        //         </div>
+        //     </div>
+        // </div>
+        <section id="content" class="content bg-slate-200">
+            <div class="min-h-screen flex flex-col items-center justify-center">
+                <div class="w-[350px] max-w-md">
+                    <div class="bg-white shadow-xl rounded-lg">
+                        <div class="px-4 py-8">
+
+                            <div class="text-center">
+                                <h1 class="text-lg font-bold">Account Login</h1>
+                                <p className='text-sm'>Sign In to your account</p>
+                            </div>
+
+                            {/* <form class="mt-4" action="index.html">
+
+                                <div class="mb-4">
+                                    <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-slate-500" placeholder="Username" autofocus />
+                                </div>
+                                <div className="border-color red">
+                                     <div className="flex gap-5 justify-between px-6 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[420px]">
+                                         <div className="flex gap-3 text-base leading-7 text-neutral-700">
+                                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
+                                             <label for="userpass" className="sr-only">userpass</label>
+                                             <input className="flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
+                                         </div>
+                                         <div className="my-auto text-xs leading-6 text-right text-neutral-400">
+                                            <a className="font-bold text-neutral-800">
+                                                 <label className="cursor-pointer" onClick={handleShowPass} for="check">{showHide}</label>
+                                            </a>
+                                        </div>
+                                     </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <input type="password" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-slate-500" placeholder="Password" />
+                                </div>
+
+                                <div class="flex items-center mb-4">
+                                    <input id="_dm-loginCheck" class="form-checkbox rounded" type="checkbox" />
+                                    <label for="_dm-loginCheck" class="ml-2">Remember me</label>
+                                </div>
+
+                                <div class="mt-5">
+                                    <button class="w-full px-4 py-2 bg-slate-500 text-white font-semibold rounded-md hover:bg-blue-600" type="submit">Sign In</button>
+                                </div>
+                            </form> */}
+                            <div className="flex justify-center">
+                            <form onSubmit={handleSubmit} className="max-w-[280px] mx-auto">
+                                <div className={`${errorHandler} mt-2 bg-red-100 text-red-800 w-[280px] p-4 rounded-md relative`} role="alert">
                                     <strong className="font-bold text-base">Invalid Login!</strong>
                                     <span className="block text-sm sm:inline max-sm:mt-1 max-sm:ml-0 mx-4">Incorrect username or password.</span>
                                 </div>
-                                <div className="flex gap-3 px-5 py-6 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[380px] max-md:mt-10">
+                                <div className={errorHandler === 'hidden'? "mt-14" : ""}>
+                                </div>
+                                <div className="rounded-md flex gap-3 px-2 py-2 mt-4 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[300px] max-md:mt-10 shadow-lg">
                                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
                                     <label for="username" className="sr-only">username</label>
-                                    <input className="flex-auto my-auto bg-transparent border-none focus:outline-none" type="username" id="username" name="username" value={username} required onChange={handleOnChange} placeholder="username" />
+                                    <input autoComplete='off' className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type="username" id="username" name="username" value={username} required onChange={handleOnChange} placeholder="username" />
                                 </div>
                                 <div className="border-color red">
-                                    <div className="flex gap-5 justify-between px-5 py-6 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[380px]">
+                                    <div className="rounded-md flex justify-between px-2 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[300px] shadow-lg ">
                                         <div className="flex gap-3 text-base leading-7 text-neutral-700">
                                             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
                                             <label for="userpass" className="sr-only">userpass</label>
-                                            <input className="flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
+                                            <input className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
                                         </div>
                                         <div className="my-auto text-xs leading-6 text-right text-neutral-400">
                                             <a className="font-bold text-neutral-800">
@@ -150,19 +240,43 @@ const LoginPage = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" className="flex gap-5 px-9 py-5 mt-5 max-w-full text-base leading-7 text-white bg-slate-800 w-[380px] max-md:px-5">
-                                    <span className="flex-auto my-auto">Proceed to my Account</span>
+                                <button type="submit" className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
+                                    <span className="flex-auto my-auto">Sign In</span>
                                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
                                 </button>
                             </form>
-                            {/* <div className="mt-12 text-sm leading-6 text-right text-black cursor-pointer">
-                        Having Issues with your Account?
-                    </div> */}
-                        </main>
+                            </div>
+                            
+
+                            {/* <div class="flex justify-between mt-4">
+                                <a href="../../front-pages/password-reminder/" class="text-slate-500 hover:underline">Forgot password ?</a>
+                                <a href="../../front-pages/register/" class="text-slate-500 hover:underline">Create a new account</a>
+                            </div>
+
+                            <div class="flex items-center justify-between border-t border-gray-300 pt-3 mt-3">
+                                <h5>Login with</h5>
+
+                                <div class="flex ms-3">
+                                    <a href="#" class="btn btn-primary btn-icon btn-hover text-inherit">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-info btn-icon btn-hover text-inherit">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-danger btn-icon btn-hover text-inherit">
+                                        <i class="fab fa-google-plus-g"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-warning btn-icon btn-hover text-inherit">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                </div>
+                            </div> */}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
 
     )
 }
