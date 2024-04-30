@@ -373,7 +373,7 @@ const LandingPage = () => {
                             }
                           );
                         }}>User Settings</h6>
-                        <hr class="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2 dark:bg-gray-700" />
+                        <hr className="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2 dark:bg-gray-700" />
                         <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => { setChangePassModal('block') }}>Change Password</h6>
                         <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={handleLogOut}>Logout</h6>
                       </div>
