@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { base_url } from '../routes/urlHandler';
-import BackgroundImg from '../../src/images/8.png'
+import BackgroundImg2 from '../../src/images/img_bg.jpg';
+import BackgroundImg1 from '../../src/images/BG-HOME.png';
+import Logo from '../../src/images/logo.png'
+import ReactLoading from 'react-loading';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -13,7 +16,11 @@ const LoginPage = () => {
     const [passwordType, setPasswordType] = useState('password');
     const [showHide, setShowHide] = useState("SHOW");
     const [errorHandler, setErrorHandler] = useState('hidden');
+    const [loadingDone, setLoadingDone] = useState(undefined);
+    const [submitClick, setSubmitClick] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(false);
     const { username, userpass } = inputValue;
+    let width, height;
 
     const handleOnChange = (e) => {
         e.preventDefault();
@@ -34,8 +41,18 @@ const LoginPage = () => {
         }
     }
 
+    useEffect(() => {
+
+        window.onresize = window.onload = function () {
+            width = this.innerWidth;
+            height = this.innerHeight;
+            setScreenWidth(width);
+        }
+    }, [width])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitClick(true);
         try {
             const { data } = await axios.post(
                 `${base_url}/Postlogin`,
@@ -46,9 +63,11 @@ const LoginPage = () => {
             );
 
             const { ReturnMsg, UserInfo } = data;
+            console.log(ReturnMsg)
             if (ReturnMsg === "Success") {
                 localStorage.setItem("token", UserInfo.UserPass);
                 setTimeout(() => {
+                    setLoadingDone(true)
                     navigate("/landing",
                         {
                             state: {
@@ -56,9 +75,10 @@ const LoginPage = () => {
                             }
                         }
                     );
-                }, 1000);
-            } else {
-                setErrorHandler('block')
+                }, 2000);
+            } else if (ReturnMsg === "Invalid Username or Password") {
+                setSubmitClick(false);
+                setErrorHandler('block');
             }
         } catch (error) {
             console.log(error);
@@ -98,16 +118,12 @@ const LoginPage = () => {
         );
     }
 
-    const myStyle = {
-        backgroundImage: `url(${BackgroundImg})`,
-        height: "100vh",
-        marginTop: "-70px",
-        fontSize: "50px",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-    };
-
-
+    // const myStyle = {
+    //     backgroundImage: `url(${BackgroundImg})`,
+    //     // height: "100vh",
+    //     // backgroundSize: "cover",
+    //     // backgroundRepeat: "no-repeat",
+    // };
     return (
         // <div className="font-sans text-[#333] bg-gray-50 p-4">
         //     <div className="max-w-full mx-auto">
@@ -169,12 +185,18 @@ const LoginPage = () => {
         //         </div>
         //     </div>
         // </div>
-        <section id="content" class="content bg-slate-200">
-            <div class="min-h-screen flex flex-col items-center justify-center">
-                <div class="w-[350px] max-w-md">
+        <section id="content" >
+            <img src={screenWidth >= 1280? BackgroundImg1 : BackgroundImg2} alt="" className='z-0 absolute h-full w-full' />
+
+            {/* <div class="z-10 relative min-h-screen flex flex-col items-center justify-center"> */}
+
+                <div class="ml-24 min-h-screen relative flex flex-col items-start justify-center">
+
+                <img src={Logo} alt="" className='h-[35px] relative'/>
+                {/* <img src={Logo} alt="" className='h-[35px] relative right-[80px] bottom-[10px]' /> */}
+                <div class="w-[320px] max-w-md">
                     <div class="bg-white shadow-xl rounded-lg">
                         <div class="px-4 py-8">
-
                             <div class="text-center">
                                 <h1 class="text-lg font-bold">Account Login</h1>
                                 <p className='text-sm'>Sign In to your account</p>
@@ -213,40 +235,47 @@ const LoginPage = () => {
                                     <button class="w-full px-4 py-2 bg-slate-500 text-white font-semibold rounded-md hover:bg-blue-600" type="submit">Sign In</button>
                                 </div>
                             </form> */}
+
                             <div className="flex justify-center">
-                            <form onSubmit={handleSubmit} className="max-w-[280px] mx-auto">
-                                <div className={`${errorHandler} mt-2 bg-red-100 text-red-800 w-[280px] p-4 rounded-md relative`} role="alert">
-                                    <strong className="font-bold text-base">Invalid Login!</strong>
-                                    <span className="block text-sm sm:inline max-sm:mt-1 max-sm:ml-0 mx-4">Incorrect username or password.</span>
-                                </div>
-                                <div className={errorHandler === 'hidden'? "mt-14" : ""}>
-                                </div>
-                                <div className="rounded-md flex gap-3 px-2 py-2 mt-4 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[300px] max-md:mt-10 shadow-lg">
-                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
-                                    <label for="username" className="sr-only">username</label>
-                                    <input autoComplete='off' className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type="username" id="username" name="username" value={username} required onChange={handleOnChange} placeholder="username" />
-                                </div>
-                                <div className="border-color red">
-                                    <div className="rounded-md flex justify-between px-2 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[300px] shadow-lg ">
-                                        <div className="flex gap-3 text-base leading-7 text-neutral-700">
-                                            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
-                                            <label for="userpass" className="sr-only">userpass</label>
-                                            <input className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
-                                        </div>
-                                        <div className="my-auto text-xs leading-6 text-right text-neutral-400">
-                                            <a className="font-bold text-neutral-800">
-                                                <label className="cursor-pointer" onClick={handleShowPass} for="check">{showHide}</label>
-                                            </a>
+                                <form onSubmit={handleSubmit} className="max-w-[280px] mx-auto">
+                                    <div className={`${errorHandler} mt-2 bg-red-100 text-red-800 w-[280px] p-2 rounded-md relative`} role="alert">
+                                        <strong className="font-bold text-base">Invalid Login!</strong>
+                                        <span className="block text-sm sm:inline max-sm:mt-1 max-sm:ml-0 mx-4">Incorrect username or password.</span>
+                                    </div>
+                                    <div className={errorHandler === 'hidden' ? "mt-14" : ""}>
+                                    </div>
+                                    <div className="rounded-md flex gap-3 px-2 py-2 mt-4 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-neutral-500 text-neutral-700 w-[300px] max-md:mt-10 shadow-lg">
+                                        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
+                                        <label for="username" className="sr-only">username</label>
+                                        <input autoComplete='off' className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type="username" id="username" name="username" value={username} required onChange={handleOnChange} placeholder="username" />
+                                    </div>
+                                    <div className="border-color red">
+                                        <div className="rounded-md flex justify-between px-2 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[300px] shadow-lg ">
+                                            <div className="flex gap-3 text-base leading-7 text-neutral-700">
+                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
+                                                <label for="userpass" className="sr-only">userpass</label>
+                                                <input className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
+                                            </div>
+                                            <div className="my-auto text-xs leading-6 text-right text-neutral-400">
+                                                <a className="font-bold text-neutral-800">
+                                                    <label className="cursor-pointer" onClick={handleShowPass} for="check">{showHide}</label>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <button type="submit" className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
-                                    <span className="flex-auto my-auto">Sign In</span>
-                                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
-                                </button>
-                            </form>
+                                    <button type="submit" className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
+                                        <span className="flex-auto my-auto">Sign In</span>
+                                        {
+                                            !loadingDone ? submitClick ? <ReactLoading type="spin" color="#94a3b8" height={30} width={30} />
+                                                :
+                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
+                                                :
+                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
+                                        }
+                                    </button>
+                                </form>
                             </div>
-                            
+
 
                             {/* <div class="flex justify-between mt-4">
                                 <a href="../../front-pages/password-reminder/" class="text-slate-500 hover:underline">Forgot password ?</a>
