@@ -18,7 +18,6 @@ const ClientContactInfo = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [initialData, setInitialData] = useState("");
     const [contact, setContact] = useState('');
-    const [kebabDropdown, setKebabDropdown] = useState('hidden');
     const [foundContact, setFoundContact] = useState(contactsData);
     const [selectedImage, setSelectedImage] = useState(null);
     const [userDropdown, setUserDropdown] = useState('hidden');
@@ -134,10 +133,12 @@ const ClientContactInfo = () => {
     };
 
     useEffect(() => {
-
-        setTimeout(() => {
-            getContactList();
-        }, 2000)
+        if(contactsData.length <= 0){
+            setTimeout(() => {
+                getContactList();
+            }, 2000)
+        }
+        
 
         if (initialData == "") {
             setFoundContact(contactsData)
@@ -238,27 +239,40 @@ const ClientContactInfo = () => {
     }
 
     const handleFileRead = async (e) => {
+        e.preventDefault();
         const file = e.target.files[0];
-        Resizer.imageFileResizer(
-            file,
-            150,
-            150,
-            'JPEG',
-            100,
-            0,
-            (uri) => {
-                setResizeImage(uri)
-            },
-            'base64',
-        );
+        const base64 = await convertBase64(file);
         const removeDataInfo = 'data:image/jpeg;base64,';
-        if (removeDataInfo !== undefined && removeDataInfo !== null) {
-            if (resizeImage !== undefined && resizeImage !== null) {
-                const newBase64 = resizeImage.replace(removeDataInfo, '');
-                setSelectedImage(newBase64);
-                setInputValue({ ...inputValue, "profileImage": newBase64.toString() })
-            }
-        }
+        const showImage = base64.replace(removeDataInfo, '');
+        setSelectedImage(showImage);
+        setInputValue({ ...inputValue, "profileImage": showImage.toString() })
+
+        // if (file !== null && file !== "" && file !== undefined) {
+        //     const imgResize = Resizer.imageFileResizer(
+        //         file,
+        //         150,
+        //         150,
+        //         'JPEG',
+        //         100,
+        //         0,
+        //         (uri) => {
+        //             setTimeout(() => {
+        //                 setResizeImage(uri);
+        //                 return uri;
+        //             },2000)
+                    
+        //         },
+        //         'base64',
+        //     );
+        //     console.log(imgResize)
+            
+        //     if (removeDataInfo !== undefined && removeDataInfo !== null) {
+        //         if (resizeImage !== undefined && resizeImage !== null) {
+        //             const newBase64 = resizeImage.replace(removeDataInfo, '');
+        //             setInputValue({ ...inputValue, "profileImage": newBase64.toString() })
+        //         }
+        //     }
+        // }
     }
 
     const handleOnChange = (e) => {
@@ -270,6 +284,10 @@ const ClientContactInfo = () => {
         });
     };
 
+
+    const handleEditMocalClose = () => {
+        setOnEditMode('hidden');
+    }
 
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -283,11 +301,6 @@ const ClientContactInfo = () => {
             }
         })
     }
-
-    const handleEditMocalClose = () => {
-        setOnEditMode('hidden');
-    }
-
 
 
     const handleAddContact = async (e) => {
@@ -306,21 +319,20 @@ const ClientContactInfo = () => {
             );
             const { ReturnMsg } = data;
             if (ReturnMsg === "Success") {
-
                 Swal.fire({
                     title: "Contact Added",
                     text: "Successfuly added a new contact!",
                     confirmButtonColor: "#334155",
                     color: "#334155",
-                }).then((confirmMsg) => {
-                    if (confirmMsg.isConfirmed) {
+                }).then(() => {
+                    // if (confirmMsg.isConfirmed) {
                         handlContactMocalClose();
                         navigate("/clientcontacts",
                             {
                                 state: { clientId }
                             }
                         );
-                    }
+                    // }
                 })
 
             } else {
@@ -346,7 +358,7 @@ const ClientContactInfo = () => {
 
     const handleEditContact = async (e) => {
         e.preventDefault()
-
+        
         try {
             const { data } = await axios.post(
                 `${base_url}/PostCustomer`,
@@ -537,24 +549,6 @@ const ClientContactInfo = () => {
         }
     }
 
-    const handleOpenInfo = (e) => {
-        const parentElement = e.target.closest("#menuOpen");
-        const contactId = parentElement.getAttribute('data-key');
-        const allElements = document.getElementsByName("hide-show");
-        for (let index in allElements) {
-            if (allElements[index].id === contactId) {
-                if (allElements[index].getAttribute('class') !== null) {
-                    allElements[index].removeAttribute("class")
-                } else {
-                    allElements[index].setAttribute('class', 'mt-4 hidden')
-                }
-            } else {
-                if (allElements[index].id !== undefined) {
-                    allElements[index].setAttribute('class', 'mt-4 hidden')
-                }
-            }
-        }
-    }
 
     const handleOpenKebab = (e) => {
         const contactId = e.target.getAttribute('data-key');
@@ -575,7 +569,7 @@ const ClientContactInfo = () => {
 
         }
     }
-
+    // console.log(selectedImage)
     const handleLogOut = () => {
         Swal.fire({
             title: "Confirm Log Out",
@@ -634,21 +628,18 @@ const ClientContactInfo = () => {
     return (
         <>
             <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-max">
-                <div className="max-w-5xl max-sm:max-w-sm mx-auto">
+                <div className="">
                     <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
-                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[80px] lg:h-[80px] xl:h-[80px]'>
+                        <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
                             <div className="flex justify-between items-center w-full">
-                                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                                     <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                                     </svg>
                                 </div>
                                 <div className="flex items-center">
-                                    <img src={Logo} className='h-[30px] max-sm:hidden' />
-                                    {/* <span className="font-bold text-3xl text-white hidden sm:block md:block lg:block xl:block">
-                                        COSMOHUB
-                                    </span> */}
+                                    <img src={Logo} className='h-[20px] max-sm:hidden' />
                                 </div>
 
                                 <div className='text-sm flex items-center rounded transition-all'>
@@ -703,7 +694,7 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <div className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+                    <div className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
                                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
@@ -764,19 +755,15 @@ const ClientContactInfo = () => {
                                             return (
                                                 <div id="parentElement" key={contactInfo.Id} className="group flex items-center justify-center h-auto relative bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500">
                                                     <div className="flex flex-col items-center">
-                                                        {/* <div className="h-[50px]"> */}
-                                                        <div className="bg-white py-4 px-2 rounded-md mt-7">
+                                                        <div className="bg-white py-4 px-2 rounded-md mt-4">
                                                             <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[100px] h-[100px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
                                                         </div>
-                                                        {/* </div> */}
                                                         <div className="flex flex-col justify-center mb-10">
                                                             <div className="flex items-center justify-center space-x-1">
                                                                 <label className="font-semibold text-md group-hover:text-cyan-500 group-hover:underline group-hover:transition-all">{contactInfo.ContactPerson}</label>
-                                                                {/* <p className="text-lg text-slate-500 truncate">{contactInfo.ContactPerson}</p> */}
                                                             </div>
                                                             <div className="flex items-center justify-center space-x-1">
                                                                 <label className="text-xs text-slate-500">{contactInfo.Position}</label>
-                                                                {/* <p className="text-xs text-slate-500 truncate">{contactInfo.Position}</p> */}
                                                             </div>
                                                             <div className='flex flex-col justify-center items-center'>
                                                                 <div className='grid grid-cols-2'>
@@ -848,7 +835,7 @@ const ClientContactInfo = () => {
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                                         </svg>
 
-                                                        <div name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                                                        <div name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-10 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
                                                             <button onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
@@ -902,8 +889,9 @@ const ClientContactInfo = () => {
 
                             <form onSubmit={handleAddContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
-                                    <div className='flex flex-col items-center bg-white py-4 px-2 rounded-md hover:scale-110 transition-all duration-500'>
+                                    <div className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110 transition-all duration-500'>
                                         <img
+                                            key={selectedImage}
                                             alt="not found"
                                             width={"250px"}
                                             src={"data:image/jpeg;base64," + selectedImage}
@@ -1083,7 +1071,7 @@ const ClientContactInfo = () => {
                                                     d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
                                                     data-original="#000000"></path>
                                                 <path
-                                                    d="M472 274.9V107.999c0-11.027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
+                                                    d="M472 274.9V107.999c0-11.f027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
                                                     data-original="#000000"></path>
                                             </g>
                                         </svg>
@@ -1125,12 +1113,13 @@ const ClientContactInfo = () => {
                             </div>
                             <form onSubmit={handleEditContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
-                                    <div className='flex flex-col items-center bg-white py-4 px-2 rounded-md hover:scale-110 transition-all duration-500'>
+                                    <div className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110 transition-all duration-500'>
                                         <img
+                                            key={selectedImage}
                                             alt="not found"
                                             width={"250px"}
                                             src={"data:image/jpeg;base64," + selectedImage}
-                                            className='w-36 h-36 rounded-sm inline-block'
+                                            className='w-36 h-36 rounded-full'
                                         />
                                         <button className='mt-2 hover:text-red-500' onClick={() => setSelectedImage(null)}>Remove</button>
                                     </div>
