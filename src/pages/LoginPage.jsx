@@ -6,6 +6,7 @@ import BackgroundImg2 from '../../src/images/img_bg.jpg';
 import BackgroundImg1 from '../../src/images/skyscraper.jpg';
 import Logo from '../../src/images/img_logogo.png'
 import ReactLoading from 'react-loading';
+import { motion } from 'framer-motion';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -189,24 +190,24 @@ const LoginPage = () => {
             {/* <img src={screenWidth < 1280? BackgroundImg1 : BackgroundImg2} alt="" className='backdrop-opacity-10 z-0 absolute h-full w-full' /> */}
             <img src={BackgroundImg1} alt="" className='blur-[2px] z-0 absolute h-full w-full' />
 
-            <div class="z-10 relative min-h-screen flex flex-col items-center justify-center">
+            <div className="z-10 relative min-h-screen flex flex-col items-center justify-center">
 
-                {/* <div class="ml-24 min-h-screen relative flex flex-col items-start justify-center"> */}
+                {/* <div className="ml-24 min-h-screen relative flex flex-col items-start justify-center"> */}
 
                 {/* <img src={Logo} alt="" className='h-[35px] relative'/> */}
                 <img src={Logo} alt="" className='h-[35px] relative right-[80px] bottom-[10px]' />
-                <div class="w-[320px] max-w-md">
-                    <div class="bg-white shadow-xl rounded-lg">
-                        <div class="px-4 py-8">
-                            <div class="text-center">
-                                <h1 class="text-lg font-bold">Account Login</h1>
+                <div className="w-[320px] max-w-md">
+                    <div className="bg-white shadow-xl rounded-lg">
+                        <div className="px-4 py-8">
+                            <div className="text-center">
+                                <h1 className="text-lg font-bold">Account Login</h1>
                                 <p className='text-sm'>Sign In to your account</p>
                             </div>
 
-                            {/* <form class="mt-4" action="index.html">
+                            {/* <form className="mt-4" action="index.html">
 
-                                <div class="mb-4">
-                                    <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-slate-500" placeholder="Username" autofocus />
+                                <div className="mb-4">
+                                    <input type="text" className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-slate-500" placeholder="Username" autofocus />
                                 </div>
                                 <div className="border-color red">
                                      <div className="flex gap-5 justify-between px-6 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-neutral-500 w-[420px]">
@@ -223,17 +224,17 @@ const LoginPage = () => {
                                      </div>
                                 </div>
 
-                                <div class="mb-4">
-                                    <input type="password" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-slate-500" placeholder="Password" />
+                                <div className="mb-4">
+                                    <input type="password" className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-slate-500" placeholder="Password" />
                                 </div>
 
-                                <div class="flex items-center mb-4">
-                                    <input id="_dm-loginCheck" class="form-checkbox rounded" type="checkbox" />
-                                    <label for="_dm-loginCheck" class="ml-2">Remember me</label>
+                                <div className="flex items-center mb-4">
+                                    <input id="_dm-loginCheck" className="form-checkbox rounded" type="checkbox" />
+                                    <label for="_dm-loginCheck" className="ml-2">Remember me</label>
                                 </div>
 
-                                <div class="mt-5">
-                                    <button class="w-full px-4 py-2 bg-slate-500 text-white font-semibold rounded-md hover:bg-blue-600" type="submit">Sign In</button>
+                                <div className="mt-5">
+                                    <button className="w-full px-4 py-2 bg-slate-500 text-white font-semibold rounded-md hover:bg-blue-600" type="submit">Sign In</button>
                                 </div>
                             </form> */}
 
@@ -251,47 +252,47 @@ const LoginPage = () => {
                                                 <label for="userpass" className="sr-only">userpass</label>
                                                 <input className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type={passwordType} id="userpass" name="userpass" placeholder="*********" value={userpass} required onChange={handleOnChange} />
                                             </div>
-                                            <div className="my-auto text-xs leading-6 text-right text-neutral-400">
+                                            <motion.div whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.2 }} className="my-auto text-xs leading-6 text-right text-neutral-400">
                                                 <a className="font-bold text-neutral-800">
                                                     <label className="cursor-pointer" onClick={handleShowPass} for="check">{showHide}</label>
                                                 </a>
-                                            </div>
+                                            </motion.div>
                                         </div>
                                         <p className={errorHandler + ' mb-2 text-xs flex flex-row-reverse text-red-400'}>Incorrect username or password</p>
-                                    <button type="submit" className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
+                                    <motion.button type="submit"  whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
                                         <span className="flex-auto my-auto">Sign In</span>
                                         {
                                             !loadingDone ? submitClick ? <ReactLoading type="spin" color="#94a3b8" height={30} width={30} />
                                                 :
-                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
+                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="SignIn icon" className="shrink-0 w-8 aspect-square" />
                                                 :
-                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="Proceed icon" className="shrink-0 w-8 aspect-square" />
+                                                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e9f0ba8961bab4a6601d301bf79dfca9b8ed0f7647684e6050b380c7df8b9e03?apiKey=966c510a434d496c8209492887da4d0c&" alt="SignIn icon" className="shrink-0 w-8 aspect-square" />
                                         }
-                                    </button>
+                                    </motion.button>
                                 </form>
                             </div>
 
 
-                            {/* <div class="flex justify-between mt-4">
-                                <a href="../../front-pages/password-reminder/" class="text-slate-500 hover:underline">Forgot password ?</a>
-                                <a href="../../front-pages/register/" class="text-slate-500 hover:underline">Create a new account</a>
+                            {/* <div className="flex justify-between mt-4">
+                                <a href="../../front-pages/password-reminder/" className="text-slate-500 hover:underline">Forgot password ?</a>
+                                <a href="../../front-pages/register/" className="text-slate-500 hover:underline">Create a new account</a>
                             </div>
 
-                            <div class="flex items-center justify-between border-t border-gray-300 pt-3 mt-3">
+                            <div className="flex items-center justify-between border-t border-gray-300 pt-3 mt-3">
                                 <h5>Login with</h5>
 
-                                <div class="flex ms-3">
-                                    <a href="#" class="btn btn-primary btn-icon btn-hover text-inherit">
-                                        <i class="fab fa-facebook-f"></i>
+                                <div className="flex ms-3">
+                                    <a href="#" className="btn btn-primary btn-icon btn-hover text-inherit">
+                                        <i className="fab fa-facebook-f"></i>
                                     </a>
-                                    <a href="#" class="btn btn-info btn-icon btn-hover text-inherit">
-                                        <i class="fab fa-twitter"></i>
+                                    <a href="#" className="btn btn-info btn-icon btn-hover text-inherit">
+                                        <i className="fab fa-twitter"></i>
                                     </a>
-                                    <a href="#" class="btn btn-danger btn-icon btn-hover text-inherit">
-                                        <i class="fab fa-google-plus-g"></i>
+                                    <a href="#" className="btn btn-danger btn-icon btn-hover text-inherit">
+                                        <i className="fab fa-google-plus-g"></i>
                                     </a>
-                                    <a href="#" class="btn btn-warning btn-icon btn-hover text-inherit">
-                                        <i class="fab fa-instagram"></i>
+                                    <a href="#" className="btn btn-warning btn-icon btn-hover text-inherit">
+                                        <i className="fab fa-instagram"></i>
                                     </a>
                                 </div>
                             </div> */}

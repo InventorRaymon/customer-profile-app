@@ -437,7 +437,7 @@ const ClientContactInfo = () => {
         if (ReturnMsg === "Success") {
             setContactHistory(HistoryList);
             const allElements = document.getElementsByName("historyDropdown");
-            for (let index in allElements) {
+            for(let index in allElements) {
                 const targetElement = allElements[index];
                 if (targetElement.id !== undefined && targetElement.id !== null) {
                     if (contactId == targetElement.id) {
@@ -503,7 +503,7 @@ const ClientContactInfo = () => {
         setOnEditMode('block');
         const contactId = e.target.id;
         const allElements = document.getElementsByName("kebabDropdown");
-        for (let index in allElements) {
+        for(let index in allElements) {
             const targetElement = allElements[index];
             if (targetElement.id !== undefined && targetElement.id !== null) {
                 if (contactId == targetElement.id) {
@@ -513,7 +513,7 @@ const ClientContactInfo = () => {
             }
         }
         closeDropdown(contactId);
-        for (let index in contactsData) {
+        for(let index in contactsData) {
             let contactInfo = contactsData[index];
             if (contactInfo.Id === contactId) {
                 setSelectedImage(contactInfo.ProfileImage)
@@ -553,7 +553,7 @@ const ClientContactInfo = () => {
     const handleOpenKebab = (e) => {
         const contactId = e.target.getAttribute('data-key');
         const allElements = document.getElementsByName("kebabDropdown");
-        for (let index in allElements) {
+        for(let index in allElements) {
             const targetElement = allElements[index];
             if (targetElement.id !== undefined && targetElement.id !== null) {
                 if (contactId == targetElement.id) {
@@ -612,7 +612,7 @@ const ClientContactInfo = () => {
 
     const closeDropdown = ({ contactId }) => {
         const allElements = document.getElementsByName("kebabDropdown");
-        for (let index in allElements) {
+        for(let index in allElements) {
             const targetElement = allElements[index];
             if (targetElement.id !== undefined && targetElement.id !== null) {
                 const elementHidden = "hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
