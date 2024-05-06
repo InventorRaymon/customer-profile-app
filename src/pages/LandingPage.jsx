@@ -9,8 +9,8 @@ import { motion } from 'framer-motion';
 
 const LandingPage = () => {
 
-  // const token = localStorage.getItem("token");
-  const token = "12345"
+  const token = localStorage.getItem("token");
+  // const token = "12345"
   const navigate = useNavigate();
   const [clientData, setClientData] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -85,15 +85,15 @@ const LandingPage = () => {
 
   const getClientList = async () => {
     try {
-      // const { data } = await axios.get(
-      //   `${base_url}/GetAllCLient`,
-      //   {
-      //     headers: {
-      //       'Authorization': 'Bearer ' + token
-      //     }
-      //   });
-      // setClientData(data.SelectListItem);
-      setClientData(dummyArr);
+      const { data } = await axios.get(
+        `${base_url}/GetAllCLient`,
+        {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        });
+      setClientData(data.SelectListItem);
+      // setClientData(dummyArr);
 
       setLoadingDone(true)
     } catch (error) {
@@ -201,41 +201,28 @@ const LandingPage = () => {
 
   const handleUpdateClient = async (e) => {
     e.preventDefault();
-    // const parentElement = e.target.closest("#parentElement");
     const clientId = e.target.id;
 
-    const dummyArrUpdate = {
-      ClientId: "1234",
-      ClientName: "Raymon",
-      ClientAddress: "asdfasfasf address"
-    }
-
     try {
-      // const { data } = await axios.get(
-      //   `${base_url}/GetClientInfo/` + clientId,
-      //   {
-      //     headers: {
-      //       'Authorization': 'Bearer ' + token
-      //     }
-      //   }
-      // );
-      // const { ReturnMsg, ClientProfile } = data;
-      // if (ReturnMsg === "Success") {
-        setIsClientModalOpen('block');
-        // setInputValue({
-        //   ...inputValue,
-        //   clientid: ClientProfile.ClientId,
-        //   clientname: ClientProfile.ClientName,
-        //   clientaddress: ClientProfile.ClientAddress
-        // });
-        setInputValue({
-          ...inputValue,
-          clientid: dummyArrUpdate.ClientId,
-          clientname: dummyArrUpdate.ClientName,
-          clientaddress: dummyArrUpdate.ClientAddress
-        });
-      // } else {
-      // }
+      const { data } = await axios.get(
+        `${base_url}/GetClientInfo/` + clientId,
+        {
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }
+      );
+      const { ReturnMsg, ClientProfile } = data;
+      if (ReturnMsg === "Success") {
+      setIsClientModalOpen('block');
+      setInputValue({
+        ...inputValue,
+        clientid: ClientProfile.ClientId,
+        clientname: ClientProfile.ClientName,
+        clientaddress: ClientProfile.ClientAddress
+      });
+      } else {
+      }
     } catch (error) {
       console.log(error);
     }
@@ -371,10 +358,10 @@ const LandingPage = () => {
           const elementInfo = "flex flex-col p-4 z-50 bg-slate-100 p-2 w-[100px] sm:min-w-[100px] max-sm:min-w-[100px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
           const elementHidden = "hidden flex-col z-50 bg-slate-100 p-2 w-[100px] sm:min-w-[100px] max-sm:min-w-[100px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
           const variantClose = {
-            opacity: 0, x: "-100%"
+            opacity: 0, y: "-100%"
           }
           const variantOpen = {
-            opacity: 1, x: 0
+            opacity: 1, y: 0
           }
           if (elementInfo === targetElement.className) {
             targetElement.setAttribute('class', elementHidden);
@@ -433,7 +420,7 @@ const LandingPage = () => {
                 </div>
               </section>
             </header> */}
-          <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
+          <motion.header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
               <div className="flex justify-between items-center w-full">
@@ -453,14 +440,14 @@ const LandingPage = () => {
                   <div className='flex items-center space-x-6'>
                     <ul>
                       <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                        <motion.svg whileTap={{ scale: 0.5}} whileHover={{ scale: 1.1}} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                        <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
                           viewBox="0 0 512 512">
                           <path
                             d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
                             data-original="#000000" />
                         </motion.svg>
-                        <motion.div animate={userDropdown === 'block'? {opacity: 1, y : 0} : {opacity: 1, y : "100%"}} className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
-                          <motion.h6 whileHover={{scale : 1.1}} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
+                        <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
+                          <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
                             navigate("/users",
                               {
                                 state: {
@@ -475,14 +462,14 @@ const LandingPage = () => {
 
                             User Settings</motion.h6>
                           <hr className="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2" />
-                          <motion.h6 whileHover={{scale : 1.1}}  className="font-semibold cursor-pointer hover:text-slate-400 mt-4" onClick={() => { setChangePassModal('block') }}>
+                          <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400 mt-4" onClick={() => { setChangePassModal('block') }}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" />
                             </svg>
 
                             Change Password</motion.h6>
 
-                          <motion.h6 whileHover={{scale : 1.1}} className="font-semibold cursor-pointer hover:text-red-400 mt-2" onClick={handleLogOut}>
+                          <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-red-400 mt-2" onClick={handleLogOut}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
                             </svg>
@@ -500,7 +487,7 @@ const LandingPage = () => {
 
               </div>
             </section>
-          </header>
+          </motion.header>
           {/* <div className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
@@ -523,10 +510,10 @@ const LandingPage = () => {
 
               </div>
               <motion.button whileHover={{ scale: 1.2 }}
-  whileTap={{ scale: 0.5 }}
-   type="button"
+                whileTap={{ scale: 0.5 }}
+                type="button"
                 onClick={handleAddModalOpen}
-                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
                   <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
                 </svg>
@@ -568,8 +555,7 @@ const LandingPage = () => {
               <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
             </>
           ) : null}
-          <motion.div initial={{ opacity: 0 }}
-  whileInView={{ opacity: 1 }}
+          <div
             className={isModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
               <div className="flex items-center pb-3 border-b text-black">
@@ -622,9 +608,8 @@ const LandingPage = () => {
                 </form>
               </div>
             </div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0 }}
-  whileInView={{ opacity: 1 }}
+          </div>
+          <div
             className={isClientModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
               <div className="flex items-center pb-3 border-b text-black">
@@ -667,12 +652,12 @@ const LandingPage = () => {
                       autoComplete='off'
                       className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
                   </div>
-                  <button type="submit"
-                    className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</button>
+                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} type="submit"
+                    className="rounded-md px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                 </form>
               </div>
             </div>
-          </motion.div>
+          </div>
           <div
             className={changePassModal + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
@@ -708,7 +693,7 @@ const LandingPage = () => {
                       className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
                     <div className="my-auto text-xs leading-6 text-right text-neutral-400">
                       <a className="font-bold text-neutral-800">
-                        <label className="cursor-pointer" name="newpassword" onClick={handleShowPass} htmlFor="check">{showHideNew}</label>
+                        <motion.label whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} className="cursor-pointer" name="newpassword" onClick={handleShowPass} htmlFor="check">{showHideNew}</motion.label>
                       </a>
                     </div>
                   </div>
@@ -726,13 +711,13 @@ const LandingPage = () => {
                       className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
                     <div className="my-auto text-xs leading-6 text-right text-neutral-400">
                       <a className="font-bold text-neutral-800">
-                        <label className="cursor-pointer" name="confirmpassword" onClick={handleShowPass} htmlFor="check">{showHide}</label>
+                        <motion.label whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} className="cursor-pointer" name="confirmpassword" onClick={handleShowPass} htmlFor="check">{showHide}</motion.label>
                       </a>
                     </div>
                   </div>
 
-                  <button type="submit"
-                    className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</button>
+                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} type="submit"
+                    className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                 </form>
               </div>
             </div>
@@ -749,28 +734,28 @@ const LandingPage = () => {
 
                   {foundClient && foundClient.length > 0 ? foundClient.map((clientInfo, i) => {
                     return (
-                      <div className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg">
+                      <motion.div whileHover={{ scale: 1.05}} initial={{ opacity: 0, x: "100%" }} whileInView={{ opacity: 1, x: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg">
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
-                        <motion.div whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={clientInfo.Value} data-key={clientInfo.Value}>
+                        <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
+                          <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={clientInfo.Value} data-key={clientInfo.Value}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                          </svg>
+                          </motion.svg>
 
-                          <motion.div name="kebabDropdown" id={clientInfo.Value} className="hidden flex-col z-50 bg-slate-200 p-2 w-[100px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                            <button onClick={handleUpdateClient} id={clientInfo.Value} className="text-xs cursor-pointer hover:text-gray-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
+                          <motion.div initial={{opacity: 0, y: "-100%"}} whileInView={{opacity: 1, y: 0}} name="kebabDropdown" id={clientInfo.Value} className="hidden flex-col z-50 bg-slate-200 p-2 w-[100px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                            <motion.button whileHover={{ scale: 1.1}} whileTap={{ scale: 0.5}} onClick={handleUpdateClient} id={clientInfo.Value} className="text-xs cursor-pointer hover:text-gray-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                               </svg>
                               <span id={clientInfo.Value} className='mt-0.5'>Edit</span>
-                            </button>
-                            <button id={clientInfo.Value} className="text-xs cursor-pointer hover:text-sky-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleOpenClientInfo}>
+                            </motion.button>
+                            <motion.button whileHover={{ scale: 1.1}} whileTap={{ scale: 0.5}} id={clientInfo.Value} className="text-xs cursor-pointer hover:text-sky-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleOpenClientInfo}>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                               </svg>
                               <span id={clientInfo.Value} className='mt-0.5'>Contacts</span>
-                            </button>
+                            </motion.button>
                           </motion.div>
-                        </motion.div>
+                        </div>
                         <div className="relative">
                           <div className="mt-6 pb-6 rounded-b-[--card-border-radius]">
                             <p className="text-gray-700 text-xl dark:text-gray-300">{clientInfo.Text}</p>
@@ -779,7 +764,7 @@ const LandingPage = () => {
                           <div className="flex gap-3 -mb-8 py-4 border-t border-gray-200 dark:border-gray-800">
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     )
 
                   }) :

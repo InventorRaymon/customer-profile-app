@@ -5,7 +5,8 @@ import { base_url } from '../routes/urlHandler';
 import Swal from 'sweetalert2';
 import ReactLoading from 'react-loading';
 import Resizer from 'react-image-file-resizer';
-import Logo from '../images/logo.png'
+import Logo from '../images/logo.png';
+import { motion } from 'framer-motion';
 
 const ClientContactInfo = () => {
     const state = useLocation().state;
@@ -133,12 +134,12 @@ const ClientContactInfo = () => {
     };
 
     useEffect(() => {
-        if(contactsData.length <= 0){
+        if (contactsData.length <= 0) {
             setTimeout(() => {
                 getContactList();
             }, 2000)
         }
-        
+
 
         if (initialData == "") {
             setFoundContact(contactsData)
@@ -241,14 +242,37 @@ const ClientContactInfo = () => {
     const handleFileRead = async (e) => {
         e.preventDefault();
         const file = e.target.files[0];
-        const base64 = await convertBase64(file);
-        const removeDataInfo = 'data:image/jpeg;base64,';
-        const showImage = base64.replace(removeDataInfo, '');
-        setSelectedImage(showImage);
-        setInputValue({ ...inputValue, "profileImage": showImage.toString() })
+        if (file !== null && file !== undefined) {
+            const base64 = await convertBase64(file);
+            if (base64 !== undefined && base64 !== null) {
+                const fileType = base64.split(';')[0].split('/')[1];
+                let removeDataInfo;
+                let showImage;
+                switch (fileType.toLowerCase()) {
+                    case 'jpeg':
+                        removeDataInfo = `data:image/jpeg;base64,`;
+                        showImage = base64.replace(removeDataInfo, '');
+                        break;
+                    case 'png':
+                        removeDataInfo = `data:image/png;base64,`;
+                        showImage = base64.replace(removeDataInfo, '');
+                        break;
+                    case 'jpg':
+                        removeDataInfo = `data:image/jpg;base64,`;
+                        showImage = base64.replace(removeDataInfo, '');
+                        break;
+                    default:
+                        showImage = "invalid file type";
+                }
+                setSelectedImage(showImage);
+                setInputValue({ ...inputValue, "profileImage": showImage.toString() })
+            }
+
+        }
+
 
         // if (file !== null && file !== "" && file !== undefined) {
-        //     const imgResize = Resizer.imageFileResizer(
+        //     const imgResize = Resizer.imageFileResizer(s
         //         file,
         //         150,
         //         150,
@@ -260,12 +284,12 @@ const ClientContactInfo = () => {
         //                 setResizeImage(uri);
         //                 return uri;
         //             },2000)
-                    
+
         //         },
         //         'base64',
         //     );
         //     console.log(imgResize)
-            
+
         //     if (removeDataInfo !== undefined && removeDataInfo !== null) {
         //         if (resizeImage !== undefined && resizeImage !== null) {
         //             const newBase64 = resizeImage.replace(removeDataInfo, '');
@@ -326,12 +350,13 @@ const ClientContactInfo = () => {
                     color: "#334155",
                 }).then(() => {
                     // if (confirmMsg.isConfirmed) {
-                        handlContactMocalClose();
-                        navigate("/clientcontacts",
-                            {
-                                state: { clientId }
-                            }
-                        );
+                    handlContactMocalClose();
+                    window.location.reload();
+                    navigate("/clientcontacts",
+                        {
+                            state: { clientId }
+                        }
+                    );
                     // }
                 })
 
@@ -358,7 +383,7 @@ const ClientContactInfo = () => {
 
     const handleEditContact = async (e) => {
         e.preventDefault()
-        
+
         try {
             const { data } = await axios.post(
                 `${base_url}/PostCustomer`,
@@ -437,7 +462,7 @@ const ClientContactInfo = () => {
         if (ReturnMsg === "Success") {
             setContactHistory(HistoryList);
             const allElements = document.getElementsByName("historyDropdown");
-            for(let index in allElements) {
+            for (let index in allElements) {
                 const targetElement = allElements[index];
                 if (targetElement.id !== undefined && targetElement.id !== null) {
                     if (contactId == targetElement.id) {
@@ -484,12 +509,16 @@ const ClientContactInfo = () => {
                         text: "Successfuly deleted contact!",
                         confirmButtonColor: "#334155",
                         color: "#334155",
-                    }).then(() => {
-                        navigate("/clientcontacts",
-                            {
-                                state: { clientId }
-                            }
-                        );
+                    }).then((input) => {
+
+                        if (input.isConfirmed) {
+                            window.location.reload();
+                            navigate("/clientcontacts",
+                                {
+                                    state: { clientId }
+                                }
+                            );
+                        }
                     })
                 }
             }
@@ -497,13 +526,12 @@ const ClientContactInfo = () => {
         })
     }
 
-
     const handleEditMode = async (e) => {
         e.preventDefault();
         setOnEditMode('block');
         const contactId = e.target.id;
         const allElements = document.getElementsByName("kebabDropdown");
-        for(let index in allElements) {
+        for (let index in allElements) {
             const targetElement = allElements[index];
             if (targetElement.id !== undefined && targetElement.id !== null) {
                 if (contactId == targetElement.id) {
@@ -513,7 +541,7 @@ const ClientContactInfo = () => {
             }
         }
         closeDropdown(contactId);
-        for(let index in contactsData) {
+        for (let index in contactsData) {
             let contactInfo = contactsData[index];
             if (contactInfo.Id === contactId) {
                 setSelectedImage(contactInfo.ProfileImage)
@@ -553,7 +581,7 @@ const ClientContactInfo = () => {
     const handleOpenKebab = (e) => {
         const contactId = e.target.getAttribute('data-key');
         const allElements = document.getElementsByName("kebabDropdown");
-        for(let index in allElements) {
+        for (let index in allElements) {
             const targetElement = allElements[index];
             if (targetElement.id !== undefined && targetElement.id !== null) {
                 if (contactId == targetElement.id) {
@@ -612,7 +640,7 @@ const ClientContactInfo = () => {
 
     const closeDropdown = ({ contactId }) => {
         const allElements = document.getElementsByName("kebabDropdown");
-        for(let index in allElements) {
+        for (let index in allElements) {
             const targetElement = allElements[index];
             if (targetElement.id !== undefined && targetElement.id !== null) {
                 const elementHidden = "hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
@@ -633,11 +661,11 @@ const ClientContactInfo = () => {
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
                             <div className="flex justify-between items-center w-full">
-                                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                <motion.div whileHover={{ x: 5}} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                                     <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                                     </svg>
-                                </div>
+                                </motion.div>
                                 <div className="flex items-center">
                                     <img src={Logo} className='h-[20px] max-sm:hidden' />
                                 </div>
@@ -646,14 +674,14 @@ const ClientContactInfo = () => {
                                     <div className='flex items-center space-x-6'>
                                         <ul>
                                             <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                                                <motion.svg whileHover={{ scale: 1.1}} whileTap={{ scale: 0.5}} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
                                                     viewBox="0 0 512 512">
                                                     <path
                                                         d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
                                                         data-original="#000000" />
-                                                </svg>
-                                                <div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
-                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
+                                                </motion.svg>
+                                                <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
+                                                    <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
                                                         navigate("/users",
                                                             {
                                                                 state: {
@@ -666,26 +694,26 @@ const ClientContactInfo = () => {
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
                                                         </svg>
 
-                                                        User Settings</h6>
+                                                        User Settings</motion.h6>
                                                     <hr className="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2" />
-                                                    <h6 className="font-semibold cursor-pointer hover:text-slate-400 mt-4" onClick={() => { setChangePassModal('block') }}>
+                                                    <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400 mt-4" onClick={() => { setChangePassModal('block') }}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" />
                                                         </svg>
 
-                                                        Change Password</h6>
+                                                        Change Password</motion.h6>
 
-                                                    <h6 className="font-semibold cursor-pointer hover:text-red-400 mt-2" onClick={handleLogOut}>
+                                                    <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-red-400 mt-2" onClick={handleLogOut}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1 0 12.728 0M12 3v9" />
                                                         </svg>
 
                                                         Logout
-                                                    </h6>
+                                                    </motion.h6>
 
 
 
-                                                </div>
+                                                </motion.div>
                                             </li>
                                         </ul>
                                     </div>
@@ -694,14 +722,14 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <div className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+                    <motion.div whileHover={{ x: 10}}  className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
                                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
                                 data-original="#000000" />
                         </svg>
                         <p>back to the clients page</p>
-                    </div>
+                    </motion.div>
                     <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full'>
 
                         <div className='flex items-center'>
@@ -715,21 +743,21 @@ const ClientContactInfo = () => {
                                 <input type='text' value={contact} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
 
                             </div>
-                            <button type="button"
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5}} type="button"
                                 onClick={handleAddContactOpen}
-                                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
+                                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                                <motion.svg whileHover={{rotate: 180}} xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
                                     <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
-                                </svg>
+                                </motion.svg>
                                 Add Contact
-                            </button>
+                            </motion.button>
                         </div>
                     </div>
                     {
                         !loadingDone ? (
-                            <div className='flex justify-center bg-slate-100 h-screen'>
+                            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className='flex justify-center bg-slate-100 h-screen'>
                                 <ReactLoading type="cylon" color="#94a3b8" height={100} width={100} delay={800} />
-                            </div>
+                            </motion.div>
                         ) : (
                             <div className=" font-[sans-serif] text-[#333] mt-4">
                                 <div className="max-w-5xl max-sm:max-w-sm mx-auto">
@@ -753,7 +781,8 @@ const ClientContactInfo = () => {
                                             }
 
                                             return (
-                                                <div id="parentElement" key={contactInfo.Id} className="group flex items-center justify-center h-auto relative bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500">
+                                                <motion.div initial={{ opacity: 0, x: "100%" }} whileInView={{ opacity: 1, x: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500 w-full">
+                                                    <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                                                     <div className="flex flex-col items-center">
                                                         <div className="bg-white py-4 px-2 rounded-md mt-4">
                                                             <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[100px] h-[100px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
@@ -831,26 +860,26 @@ const ClientContactInfo = () => {
                                                     </div> */}
                                                     {/* Ellipsis icon */}
                                                     <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
+                                                        <motion.svg whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                                        </svg>
+                                                        </motion.svg>
 
                                                         <div name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-10 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                                                            <button onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
+                                                            <motion.button whileHover={{ scale: 1.1 }} onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                                                 </svg>
                                                                 <span id={contactInfo.Id} className='mt-1'>Edit</span>
-                                                            </button>
-                                                            <button id={contactInfo.Id} className="text-sm cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteContact}>
+                                                            </motion.button>
+                                                            <motion.button whileHover={{ scale: 1.1 }} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteContact}>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                                 </svg>
                                                                 <span id={contactInfo.Id} className='mt-1'>Remove</span>
-                                                            </button>
+                                                            </motion.button>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </motion.div>
 
 
                                             )
@@ -870,7 +899,7 @@ const ClientContactInfo = () => {
 
 
 
-                    <div
+                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                         className={isContactModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
                         <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
                             <div className="flex items-center pb-3 border-b text-black">
@@ -894,8 +923,8 @@ const ClientContactInfo = () => {
                                             key={selectedImage}
                                             alt="not found"
                                             width={"250px"}
-                                            src={"data:image/jpeg;base64," + selectedImage}
-                                            className='w-36 h-36 rounded-sm inline-block'
+                                            src={`data:image/${'jpeg' || 'png' || 'jpg'};base64,` + selectedImage}
+                                            className='w-36 h-36 rounded-full inline-block'
                                         />
                                         <button className='mt-2 hover:text-red-500' onClick={() => setSelectedImage(null)}>Remove</button>
                                     </div>
@@ -903,12 +932,12 @@ const ClientContactInfo = () => {
 
 
                                 <div className="font-[sans-serif] max-w-md mx-auto m-5">
-                                    <label className="text-base text-slate-500 font-semibold mb-2 block">Upload file</label>
+                                    <label className="text-md text-slate-500 font-semibold mb-2 block">Upload file</label>
                                     <input type="file"
                                         onChange={e => handleFileRead(e)}
                                         accept="image/png, image/gif, image/jpeg"
                                         className="w-full text-slate-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-slate-100 file:hover:bg-slate-200 file:text-slate-500 rounded" />
-                                    <p className="text-xs text-slate-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+                                    <p className="text-xs text-slate-400 mt-2">PNG, JPG and JPEG are Allowed.</p>
                                 </div>
 
                                 <div className="grid sm:grid-cols-2 gap-10">
@@ -1059,21 +1088,8 @@ const ClientContactInfo = () => {
                                             autoComplete='off'
                                             required
                                             className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
-                                            viewBox="0 0 682.667 682.667">
-                                            <defs>
-                                                <clipPath id="a" clipPathUnits="userSpaceOnUse">
-                                                    <path d="M0 512h512V0H0Z" data-original="#000000"></path>
-                                                </clipPath>
-                                            </defs>
-                                            <g clipPath="url(#a)" transform="matrix(1.33 0 0 -1.33 0 682.667)">
-                                                <path fill="none" strokeMiterlimit="10" strokeWidth="40"
-                                                    d="M452 444H60c-22.091 0-40-17.909-40-40v-39.446l212.127-157.782c14.17-10.54 33.576-10.54 47.746 0L492 364.554V404c0 22.091-17.909 40-40 40Z"
-                                                    data-original="#000000"></path>
-                                                <path
-                                                    d="M472 274.9V107.999c0-11.f027-8.972-20-20-20H60c-11.028 0-20 8.973-20 20V274.9L0 304.652V107.999c0-33.084 26.916-60 60-60h392c33.084 0 60 26.916 60 60v196.653Z"
-                                                    data-original="#000000"></path>
-                                            </g>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="#bbb" class="w-[16px] h-[16px] absolute right-4">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                                         </svg>
                                     </div>
                                     <div className="relative flex items-center sm:col-span-2">
@@ -1087,12 +1103,12 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <button type="submit"
-                                    className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
+                                <motion.button whileHover={{ scale: 1.1}} whileTap={{ scale: 0.5}} type="submit"
+                                    className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
-                    </div>
-                    <div
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                         className={onEditMode + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
                         <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
                             <div className="flex items-center pb-3 border-b text-black">
@@ -1118,7 +1134,7 @@ const ClientContactInfo = () => {
                                             key={selectedImage}
                                             alt="not found"
                                             width={"250px"}
-                                            src={"data:image/jpeg;base64," + selectedImage}
+                                            src={`data:image/${'jpeg' || 'png' || 'jpg'};base64,` + selectedImage}
                                             className='w-36 h-36 rounded-full'
                                         />
                                         <button className='mt-2 hover:text-red-500' onClick={() => setSelectedImage(null)}>Remove</button>
@@ -1312,11 +1328,11 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <button type="submit"
-                                    className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</button>
+                                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} type="submit"
+                                    className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
-                    </div>
+                    </motion.div>
                     <div
                         className={changePassModal + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
                         <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
