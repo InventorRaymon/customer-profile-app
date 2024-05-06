@@ -65,8 +65,10 @@ const LoginPage = () => {
             );
 
             const { ReturnMsg, UserInfo } = data;
+            console.log(data)
             if (ReturnMsg === "Success") {
                 localStorage.setItem("token", UserInfo.UserPass);
+                localStorage.setItem("userType", UserInfo.UserType);
                 setTimeout(() => {
                     setLoadingDone(true);
                     navigate("/landing",

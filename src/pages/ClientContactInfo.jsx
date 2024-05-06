@@ -661,11 +661,11 @@ const ClientContactInfo = () => {
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
                             <div className="flex justify-between items-center w-full">
-                                <motion.div whileHover={{ x: 5}} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                                     <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                                     </svg>
-                                </motion.div>
+                                </div>
                                 <div className="flex items-center">
                                     <img src={Logo} className='h-[20px] max-sm:hidden' />
                                 </div>
@@ -674,12 +674,12 @@ const ClientContactInfo = () => {
                                     <div className='flex items-center space-x-6'>
                                         <ul>
                                             <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                                                <motion.svg whileHover={{ scale: 1.1}} whileTap={{ scale: 0.5}} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
                                                     viewBox="0 0 512 512">
                                                     <path
                                                         d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
                                                         data-original="#000000" />
-                                                </motion.svg>
+                                                </svg>
                                                 <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
                                                     <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
                                                         navigate("/users",
@@ -722,14 +722,14 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <motion.div whileHover={{ x: 10}}  className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+                    <div className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
                                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
                                 data-original="#000000" />
                         </svg>
                         <p>back to the clients page</p>
-                    </motion.div>
+                    </div>
                     <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full'>
 
                         <div className='flex items-center'>
@@ -746,9 +746,9 @@ const ClientContactInfo = () => {
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5}} type="button"
                                 onClick={handleAddContactOpen}
                                 className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
-                                <motion.svg whileHover={{rotate: 180}} xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
                                     <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
-                                </motion.svg>
+                                </svg>
                                 Add Contact
                             </motion.button>
                         </div>
@@ -779,10 +779,10 @@ const ClientContactInfo = () => {
                                                     }
                                                 }
                                             }
-
+                                            
                                             return (
-                                                <motion.div initial={{ opacity: 0, x: "100%" }} whileInView={{ opacity: 1, x: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500 w-full">
-                                                    <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
+                                                <motion.div initial={{ opacity: 1, y: 0 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500 w-full">
+                                                                            <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                                                     <div className="flex flex-col items-center">
                                                         <div className="bg-white py-4 px-2 rounded-md mt-4">
                                                             <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[100px] h-[100px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
