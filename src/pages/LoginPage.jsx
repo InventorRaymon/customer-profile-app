@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { base_url } from '../routes/urlHandler';
-import BackgroundImg2 from '../../src/images/imgBg2.png';
+import BackgroundImg2 from '../../src/images/backgroundImg.png';
 import BackgroundImg1 from '../../src/images/imgBg1.png';
 import Logo from '../../src/images/img_logogo.png'
 import ReactLoading from 'react-loading';

@@ -5,11 +5,12 @@ import { base_url } from '../routes/urlHandler';
 import Swal from 'sweetalert2';
 import ReactLoading from 'react-loading';
 import Resizer from 'react-image-file-resizer';
-import Logo from '../images/logo.png';
+import Logo from '../images/img_logogo.png';
 import { motion } from 'framer-motion';
 
 const ClientContactInfo = () => {
     const state = useLocation().state;
+    const userType = localStorage.getItem("userType")
     const navigate = useNavigate();
     const clientId = state.clientId;
     const token = localStorage.getItem("token");
@@ -121,6 +122,7 @@ const ClientContactInfo = () => {
                 }
             );
             const { CustomerList, ReturnMsg } = data;
+            // console.log(data)
             setContactsData(CustomerList);
             if (ReturnMsg === "Success") {
                 setContactsData(CustomerList);
@@ -420,11 +422,12 @@ const ClientContactInfo = () => {
                         profileImage: ""
                     })
                     handleEditMocalClose();
-                    navigate("/clientcontacts",
-                        {
-                            state: { clientId }
-                        }
-                    );
+                    window.location.reload();
+                    // navigate("/clientcontacts",
+                    //     {
+                    //         state: { clientId }
+                    //     }
+                    // );
                 })
             } else {
             }
@@ -655,22 +658,22 @@ const ClientContactInfo = () => {
 
     return (
         <>
-            <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-max">
+            <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-screen">
                 <div className="">
                     <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
                             <div className="flex justify-between items-center w-full">
-                                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                                     <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                                     </svg>
-                                </div>
+                                </motion.div>
                                 <div className="flex items-center">
                                     <img src={Logo} className='h-[20px] max-sm:hidden' />
                                 </div>
 
-                                <div className='text-sm flex items-center rounded transition-all'>
+                                <div className='text-sm flex items-center rounded'>
                                     <div className='flex items-center space-x-6'>
                                         <ul>
                                             <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
@@ -680,14 +683,14 @@ const ClientContactInfo = () => {
                                                         d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
                                                         data-original="#000000" />
                                                 </svg>
-                                                <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
-                                                    <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
+                                                <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
+                                                    <motion.h6 whileHover={{ scale: 1.1 }} className={userType == 1 ? "font-semibold cursor-pointer hover:text-slate-400" : "hidden m-0 p-0 "} onClick={() => {
                                                         navigate("/users",
-                                                            {
-                                                                state: {
-                                                                    clientId
-                                                                }
-                                                            }
+                                                            // {
+                                                            //     state: {
+                                                            //         clientid
+                                                            //     }
+                                                            // }
                                                         );
                                                     }}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
@@ -695,8 +698,8 @@ const ClientContactInfo = () => {
                                                         </svg>
 
                                                         User Settings</motion.h6>
-                                                    <hr className="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2" />
-                                                    <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400 mt-4" onClick={() => { setChangePassModal('block') }}>
+                                                    <hr className={userType == 1 ? "w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2" : "hidden"} />
+                                                    <motion.h6 whileHover={{ scale: 1.1 }} className={`font-semibold cursor-pointer hover:text-slate-400 ${userType == 1 ? "mt-4" : null}`} onClick={() => { setChangePassModal('block') }}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" />
                                                         </svg>
@@ -722,19 +725,19 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <div className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+                    <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
                                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
                                 data-original="#000000" />
                         </svg>
                         <p>back to the clients page</p>
-                    </div>
+                    </motion.div>
                     <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full mt-7'>
 
                         <div className='flex items-center'>
                             <div
-                                className=" border-2 bg-slate-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full transition-all">
+                                className=" border-2 bg-slate-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-slate-400 mr-3">
                                     <path
                                         d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
@@ -743,7 +746,7 @@ const ClientContactInfo = () => {
                                 <input type='text' value={contact} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
 
                             </div>
-                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8}} type="button"
+                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8 }} type="button"
                                 onClick={handleAddContactOpen}
                                 className="h-[40px] w-[220px] max-sm:w-[260px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
@@ -779,10 +782,10 @@ const ClientContactInfo = () => {
                                                     }
                                                 }
                                             }
-                                            
+
                                             return (
-                                                <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500 w-full">
-                                                                            <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
+                                                <motion.div initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 w-full">
+                                                    <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                                                     <div className="flex flex-col items-center">
                                                         <div className="bg-white py-4 px-2 rounded-md mt-4">
                                                             <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[100px] h-[100px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
@@ -800,27 +803,27 @@ const ClientContactInfo = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1 mt-5">
-                                                                <label className="text-xs text-slate-500">Department:</label>
-                                                                <p className="text-xs text-slate-500 truncate">{contactInfo.Department}</p>
+                                                                <label className="sm:text-xs text-md text-slate-500">Department:</label>
+                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.Department}</p>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1">
-                                                                <label className="text-xs text-slate-500">Email:</label>
-                                                                <p className="text-xs text-slate-500 truncate">{contactInfo.EmailAddress}</p>
+                                                                <label className="sm:text-xs text-md text-slate-500">Email:</label>
+                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.EmailAddress}</p>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1">
-                                                                <label className="text-xs text-slate-500">Nickname:</label>
-                                                                <p className="text-xs text-slate-500 truncate">{contactInfo.Nickname}</p>
+                                                                <label className="sm:text-xs text-md text-slate-500">Nickname:</label>
+                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.Nickname}</p>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1">
-                                                                <label className="text-xs text-slate-500">Birthdate:</label>
-                                                                <p className="text-xs text-slate-500 truncate">{formattedBirthday}</p>
+                                                                <label className="sm:text-xs text-md text-slate-500">Birthdate:</label>
+                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{formattedBirthday}</p>
                                                             </div>
                                                             <div className="flex-col items-start justify-start space-x-1">
-                                                                <label className="text-xs text-slate-500">Contact Number:
+                                                                <label className="sm:text-xs text-md text-slate-500">Contact Number:
                                                                     <div className='flex flex-col justify-end'>
-                                                                        <p className="font-normal text-xs text-slate-500 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : "No Added Contact No."}</p>
-                                                                        <p className="font-normal text-xs text-slate-500 truncate">{contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : ""}</p>
-                                                                        <p className="font-normal text-xs text-slate-500 truncate">{contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : ""}</p>
+                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : "No Added Contact No."}</p>
+                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : ""}</p>
+                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : ""}</p>
                                                                         <div onClick={handleViewHistory} id={contactInfo.Id} className="font-semibold relative m-2 flex items-center justify-center rounded-md cursor-pointer">
                                                                             (View History)
                                                                             <div name="historyDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute top-5 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
@@ -828,13 +831,13 @@ const ClientContactInfo = () => {
                                                                                     contactHistory.length > 0 ? contactHistory.map((history) => {
                                                                                         return (
                                                                                             <div className="flex items-center justify-center space-x-1" key={contactInfo.contactId}>
-                                                                                                <label className="text-xs text-slate-500">{history.ContactNumber}</label>
-                                                                                                <p className="text-xs text-slate-500">{history.LastModifiedDesc}</p>
+                                                                                                <label className="sm:text-xs text-md text-slate-500">{history.ContactNumber}</label>
+                                                                                                <p className="sm:text-xs text-md text-slate-500">{history.LastModifiedDesc}</p>
                                                                                             </div>
                                                                                         )
                                                                                     })
                                                                                         :
-                                                                                        <p className="font-normal text-xs text-slate-500 truncate">"No Contact History."</p>
+                                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">"No Contact History."</p>
                                                                                 }
                                                                             </div>
                                                                         </div>
@@ -848,19 +851,19 @@ const ClientContactInfo = () => {
                                                     {/* <div className='flex flex-col items-center mt-8'>
                                                         <div className='flex flex-col justify-start'>
                                                             <div className="flex items-center justify-center space-x-1">
-                                                                <label className="text-xs text-slate-500">Sales in charge:</label>
-                                                                <p className="text-xs text-slate-500 truncate">{contactInfo.SalesPerson}</p>
+                                                                <label className="sm:text-xs text-md text-slate-500">Sales in charge:</label>
+                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.SalesPerson}</p>
                                                             </div>
                                                             <div className="flex items-center mt-0.5">
-                                                                <label className="text-xs text-slate-500">Description:</label>
+                                                                <label className="sm:text-xs text-md text-slate-500">Description:</label>
                                                             </div>
                                                             <input placeholder={contactInfo.Remarks == "" ? "No remarks added." : contactInfo.Remarks} disabled
                                                                 className="truncate mt-0.5 p-4 bg-white max-w-md mx-auto w-[300px] sm:w-[300px] md:w-[300px] lg:w-[350px] xl:w-[350px] block text-sm border mb-5 border-slate-300 outline-slate-700 rounded" rows="2"></input>
                                                         </div>
                                                     </div> */}
                                                     {/* Ellipsis icon */}
-                                                    <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
-                                                        <motion.svg whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
+                                                    <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
+                                                        <motion.svg whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                                         </motion.svg>
 
@@ -918,7 +921,7 @@ const ClientContactInfo = () => {
 
                             <form onSubmit={handleAddContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
-                                    <div className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110 transition-all duration-500'>
+                                    <motion.div whileHover={{scale : 1.1}} className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110'>
                                         <img
                                             key={selectedImage}
                                             alt="not found"
@@ -927,7 +930,7 @@ const ClientContactInfo = () => {
                                             className='w-36 h-36 rounded-full inline-block'
                                         />
                                         <button className='mt-2 hover:text-red-500' onClick={() => setSelectedImage(null)}>Remove</button>
-                                    </div>
+                                    </motion.div>
                                 )}
 
 
@@ -1103,7 +1106,7 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={{ scale: 1.08}} whileTap={{ scale: 0.5}} type="submit"
+                                <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.5 }} type="submit"
                                     className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
@@ -1129,7 +1132,7 @@ const ClientContactInfo = () => {
                             </div>
                             <form onSubmit={handleEditContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
-                                    <div className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110 transition-all duration-500'>
+                                    <motion.div whileHover={{scale : 1.1}} className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110'>
                                         <img
                                             key={selectedImage}
                                             alt="not found"
@@ -1138,7 +1141,7 @@ const ClientContactInfo = () => {
                                             className='w-36 h-36 rounded-full'
                                         />
                                         <button className='mt-2 hover:text-red-500' onClick={() => setSelectedImage(null)}>Remove</button>
-                                    </div>
+                                    </motion.div>
                                 )}
                                 <div className="font-[sans-serif] max-w-md mx-auto m-5">
                                     <label className="text-base text-slate-500 font-semibold mb-2 block">Upload file</label>
@@ -1391,7 +1394,7 @@ const ClientContactInfo = () => {
                                         </div>
                                     </div>
 
-                                    <motion.button whileHover={{ scale : 1.08}} whileTap={{ scale : 0.8 }} type="submit"
+                                    <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.8 }} type="submit"
                                         className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                                 </form>
                             </div>

@@ -4,7 +4,7 @@ import axios from "axios";
 import { base_url } from '../routes/urlHandler';
 import Swal from 'sweetalert2';
 import ReactLoading from 'react-loading';
-import Logo from '../images/logo.png';
+import Logo from '../images/img_logogo.png';
 import { motion } from 'framer-motion';
 
 const UserPage = () => {
@@ -264,29 +264,24 @@ const UserPage = () => {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     const userId = e.target.id;
-    // try {
-    //   const { data } = await axios.get(
-    //     `${base_url}/GetUserInfo/` + userId,
-    //     {
-    //       headers: {
-    //         'Authorization': 'Bearer ' + token
-    //       }
-    //     }
-    //   );
-    //   const { ReturnMsg, UserProfile } = data;
-    //   if (ReturnMsg === "Success") {
-    //     setIsUserModalOpen('block');
-    //     setInputValue({
-    //       ...inputValue,
-    //       userid: UserProfile.UserId,
-    //       username: UserProfile.UserName,
-    //       useraddress: UserProfile.UserAddress
-    //     });
-    //   } else {
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    for(let i in userData){
+      const data = userData[i];
+      if(data.EmployeeId === userId){
+        setInputValue({
+          ...inputValue,
+          employeeno: data.EmployeeId,
+          position: data.PositionName,
+          firstname: data.FirstName,
+          middlename: data.MiddleName,
+          lastname: data.LastName,
+          department: data.DepartmnentName,
+          username: data.UserName,
+          password: data.Password,
+          confirmpassword: data.ConfirmPassword
+        });
+      }
+    }
+        setIsUserModalOpen('block');
   }
 
   const handleDeleteUser = async (e) => {
@@ -335,7 +330,7 @@ const UserPage = () => {
 
     })
   }
-
+  // console.log(userData)
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
@@ -371,7 +366,7 @@ const UserPage = () => {
 
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
-    const tokenUpdate = localStorage.getItem("token");
+    console.log(inputValue)
     try {
       const { data } = await axios.post(
         `${base_url}/PostUser`,
@@ -380,22 +375,23 @@ const UserPage = () => {
         },
         {
           headers: {
-            'Authorization': 'Bearer ' + tokenUpdate
+            'Authorization': 'Bearer ' + token
           }
         }
       );
       const { ReturnMsg } = data;
-      if (ReturnMsg === "Success") {
-        Swal.fire({
-          title: "User Updated",
-          text: "Successfuly updated user!",
-          confirmButtonColor: "#334155",
-          color: "#334155",
-        }).then(() => {
-          setIsUserModalOpen('hidden');
-        })
+      console.log(data)
+      // if (ReturnMsg === "Success") {
+      //   Swal.fire({
+      //     title: "User Updated",
+      //     text: "Successfuly updated user!",
+      //     confirmButtonColor: "#334155",
+      //     color: "#334155",
+      //   }).then(() => {
+      //     setIsUserModalOpen('hidden');
+      //   })
 
-      }
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -447,7 +443,7 @@ const UserPage = () => {
       const targetElement = allElements[index];
       if (targetElement.id !== undefined && targetElement.id !== null) {
         if (contactId == targetElement.id) {
-          const elementInfo = "flex flex-col p-4 z-50 bg-slate-100 p-2 w-[100px] sm:min-w-[100px] max-sm:min-w-[100px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
+          const elementInfo = "flex flex-col p-4 z-50 bg-slate-100 p-2 w-[150px] sm:min-w-[100px] max-sm:min-w-[100px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
           const elementHidden = "hidden flex-col z-50 bg-slate-100 p-2 w-[100px] sm:min-w-[100px] max-sm:min-w-[100px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
           const variantClose = {
             opacity: 0, y: "-100%"
@@ -466,20 +462,20 @@ const UserPage = () => {
       }
     }
   }
-  console.log(employeeNoErr)
+
   return (
     <>
-      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-screen">
+      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-full">
         <div className="">
           <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
               <div className="flex justify-between items-center w-full">
-                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
+                <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                   <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                   </svg>
-                </div>
+                </motion.div>
                 <div className="flex items-center">
                   <img src={Logo} className='h-[20px] max-sm:hidden' />
                 </div>
@@ -488,12 +484,12 @@ const UserPage = () => {
                   <div className='flex items-center space-x-6'>
                     <ul>
                       <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                        <motion.svg whileHover={{ scale : 1.08}} whileTap={{ scale: 0.8}} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
                           viewBox="0 0 512 512">
                           <path
                             d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
                             data-original="#000000" />
-                        </svg>
+                        </motion.svg>
                         <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
                           <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => { setChangePassModal('block') }}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
@@ -521,14 +517,14 @@ const UserPage = () => {
               </div>
             </section>
           </header>
-          <div className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+          <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
               <path
                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
                 data-original="#000000" />
             </svg>
             <p>back to the clients page</p>
-          </div>
+          </motion.div>
           <div className='flex flex-wrap items-center justify-end px-10 py-3 relative lg:gap-y-4 max-sm:gap-x-4 gap-y-6 w-full mt-7'>
 
             <div className='flex items-center'>
@@ -542,8 +538,8 @@ const UserPage = () => {
                 <input type='text' value={user} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
 
               </div>
-              <motion.button whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.5 }}
+              <motion.button whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.8 }}
                 type="button"
                 onClick={handleAddModalOpen}
                 className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
@@ -566,21 +562,23 @@ const UserPage = () => {
                         Users Contact Persons
                       </h3>
                     </div>
-                    <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                      <button
+                    <div  className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                      <motion.button
+                      whileHover={{ scale : 1.08}} whileTap={{ scale: 0.08}}
                         className="text-slate-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={() => setShowModal(false)}
                       >
                         Close
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
+                      whileHover={{ scale : 1.08}} whileTap={{ scale: 0.08}}
                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={() => setShowModal(false)}
                       >
                         Add Contact
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 </div>
@@ -643,7 +641,7 @@ const UserPage = () => {
               </div>
             </div>
           </motion.div> */}
-          {/* <motion.div initial={{ opacity: 0 }}
+          <motion.div initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             className={isUserModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
@@ -660,39 +658,211 @@ const UserPage = () => {
                 </svg>
               </div>
               <div className="m-10">
-                <form onSubmit={handleSubmitUpdate} className="space-y-6 px-4 max-w-sm mx-auto font-[sans-serif]">
-                  <div className="flex items-center">
-                    <label className="text-gray-400 w-36 text-sm">User :</label>
-                    <input
-                      type="text"
-                      // id="username"
-                      name="username"
-                      placeholder="Enter users name"
+              <form onSubmit={handleSubmitUpdate} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
+                <div className="grid sm:grid-cols-2 gap-10">
+                  <div className="relative flex items-center">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Employee No.</label>
+                    <input type="number" placeholder="Enter employee number"
+                      onChange={handleOnChange}
+                      name='employeeno'
+                      value={employeeno}
+                      autoComplete='off'
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${employeeNoErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                    <label className={employeeNoErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {employeeNoErr !== "" ? employeeNoErr : null}</label>
+                  </div>
+                  <div className="relative flex items-center">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Position</label>
+                    <input type="text" placeholder="Enter company position"
+                      name='position'
+                      value={position}
+                      onChange={handleOnChange}
+                      autoComplete='off'
+                      // required
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+
+                  </div>
+                  <div className="relative flex items-center">
+
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Firstname</label>
+                    <input type="text" placeholder="Enter first name"
+                      onChange={handleOnChange}
+                      name='firstname'
+                      value={firstname}
+                      autoComplete='off'
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${firstnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                    <label className={firstnameErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {firstnameErr !== "" ? firstnameErr : null}</label>
+                  </div>
+                  <div className="relative flex items-center">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Middlename</label>
+                    <input type="text" placeholder="Enter middle name"
+                      name='middlename'
+                      value={middlename}
+                      onChange={handleOnChange}
+                      autoComplete='off'
+                      // required
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                  </div>
+                  <div className="relative flex items-center">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Lastname</label>
+                    <input type="text" placeholder="Enter last name"
+                      name='lastname'
+                      value={lastname}
+                      onChange={handleOnChange}
+                      autoComplete='off'
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${lastnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                    <label className={lastnameErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {lastnameErr !== "" ? lastnameErr : null}</label>
+                  </div>
+                  <div className="relative flex items-center">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Department</label>
+                    <input type="text" placeholder="Enter department"
+                      name='department'
+                      value={department}
+                      onChange={handleOnChange}
+                      autoComplete='off'
+                      // required
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                  </div>
+                  <div className="relative flex items-center sm:col-span-2">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Username</label>
+                    <input type="text" placeholder="Enter user name"
+                      name='username'
                       value={username}
-                      required
                       onChange={handleOnChange}
                       autoComplete='off'
-                      className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${usernameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                    <label className={usernameErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {usernameErr !== "" ? usernameErr : null}</label>
                   </div>
-                  <div className="flex items-center">
-                    <label className="text-gray-400 w-36 text-sm">Address :</label>
-                    <input
-                      type="text"
-                      // id="useraddress"
-                      name="useraddress"
-                      placeholder="Enter users address"
-                      value={useraddress}
-                      required
+
+                  <div className="relative flex items-center sm:col-span-2">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Password</label>
+                    <input type="password" placeholder="Enter password"
+                      name='password'
+                      value={password}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${passwordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                    <label className={passwordErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {passwordErr !== "" ? passwordErr : null}</label>
                   </div>
-                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} type="submit"
-                    className="rounded-md px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
-                </form>
+                  <div className="mb-9 relative flex items-center sm:col-span-2">
+                    <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
+                      Confirm Password</label>
+                    <input type="password" placeholder="Enter confirm password"
+                      name='confirmpassword'
+                      value={confirmpassword}
+                      onChange={handleOnChange}
+                      autoComplete='off'
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${confirmPasswordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
+                      viewBox="0 0 24 24">
+                      <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                      <path
+                        d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                        data-original="#000000"></path>
+                    </svg>
+                    <label className={confirmPasswordErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {confirmPasswordErr !== "" ? confirmPasswordErr : null}</label>
+                  </div>
+                </div>
+                <div className={addErrorHandler + ` flex justify-center items-center m-1 font-medium py-1 px-2 rounded-md text-red-700 bg-red-100 border border-red-300`}>
+                  <div slot="avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-alert-octagon w-5 h-5 mx-2">
+                      <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                  </div>
+                  <div className="text-sm font-normal  max-w-full flex-initial">
+                    {errorMsg}
+                  </div>
+                  <div className="flex flex-auto flex-row-reverse">
+                    <div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-x cursor-pointer hover:text-red-400 rounded-full w-5 h-5 ml-2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8 }} type="submit"
+                  className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600 mt-5">Submit</motion.button>
+              </form>
               </div>
             </div>
-          </motion.div> */}
+          </motion.div>
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
             className={isModalOpen + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
@@ -973,14 +1143,14 @@ const UserPage = () => {
                     </div>
                   </div>
 
-                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} type="submit"
+                  <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.8 }} type="submit"
                     className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                 </form>
               </div>
             </div>
           </motion.div>
           {!loadingDone ? (
-            <div className='flex items-start justify-center bg-slate-100 h-full'>
+            <div className='flex items-start justify-center bg-slate-100 h-screen'>
               <ReactLoading type="cylon" color="#94a3b8" height={100} width={100} delay={800} />
             </div>
           ) : (
@@ -993,19 +1163,19 @@ const UserPage = () => {
                     return (
                       <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={userInfo.EmployeeId}>
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
-                        <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
-                          <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={userInfo.EmployeeId} data-key={userInfo.EmployeeId}>
+                        <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
+                          <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={userInfo.EmployeeId} data-key={userInfo.EmployeeId}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                           </motion.svg>
 
-                          <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={userInfo.EmployeeId} className="hidden flex-col z-50 bg-slate-200 p-2 w-[100px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} onClick={handleUpdateUser} id={userInfo.EmployeeId} className="text-xs cursor-pointer hover:text-gray-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
+                          <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={userInfo.EmployeeId} className="hidden flex-col z-50 bg-slate-200 p-2 w-[150px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                            <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.8 }} onClick={handleUpdateUser} id={userInfo.EmployeeId} className="text-xs cursor-pointer hover:text-gray-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                               </svg>
                               <span id={userInfo.EmployeeId} className='mt-0.5'>Edit</span>
                             </motion.button>
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} id={userInfo.EmployeeId} className="text-xs cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteUser}>
+                            <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.8 }} id={userInfo.EmployeeId} className="text-xs cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteUser}>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                               </svg>
@@ -1016,7 +1186,7 @@ const UserPage = () => {
                         </div>
                         <div className="relative">
                           <div className="mt-6 pb-6 rounded-b-[--card-border-radius]">
-                            <p className="text-gray-700 text-xl dark:text-gray-300">{userInfo.LNameFName}</p>
+                            <p className="text-gray-700 text-xl dark:text-gray-300 truncate">{userInfo.LNameFName}</p>
                             <p className="text-xs text-gray-700 dark:text-gray-300">{userInfo.UserRoleDesc}</p>
                           </div>
                           <div className="flex gap-3 -mb-8 py-4 border-t border-gray-200 dark:border-gray-800">
@@ -1026,7 +1196,7 @@ const UserPage = () => {
                     )
 
                   }) :
-                    <div className='flex items-start justify-start hover:bg-blue-50 bg-slate-100 h-full w-screen'>
+                    <div className='flex items-start justify-start hover:bg-blue-50 bg-slate-100 h-screen w-screen'>
                       <div className="px-2 py-2 text-sm">
                         No User Found.
                       </div>

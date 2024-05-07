@@ -4,7 +4,7 @@ import axios from "axios";
 import { base_url } from '../routes/urlHandler';
 import Swal from 'sweetalert2';
 import ReactLoading from 'react-loading';
-import Logo from '../images/logo.png';
+import Logo from '../images/img_logogo.png';
 import { motion } from 'framer-motion';
 
 const LandingPage = () => {
@@ -121,6 +121,7 @@ const LandingPage = () => {
 
   const handleAddModalClose = () => {
     setIsModalOpen('hidden');
+    setAddErrorHandler('hidden');
   }
 
   const handleUpdateClientClose = () => {
@@ -130,7 +131,9 @@ const LandingPage = () => {
       clientname: "",
       clientaddress: ""
     });
+    setAddErrorHandler('hidden');
     setIsClientModalOpen('hidden');
+    closeDropdown("");
   }
 
   const handleAddClient = async (e) => {
@@ -203,12 +206,6 @@ const LandingPage = () => {
   const handleUpdateClient = async (e) => {
     e.preventDefault();
     const clientId = e.target.id;
-
-    // const dummyArrUpdate = {
-    //   ClientId: "1234",
-    //   ClientName: "Raymon",
-    //   ClientAddress: "asdfasfasf address"
-    // }
 
     try {
       const { data } = await axios.get(
@@ -348,6 +345,22 @@ const LandingPage = () => {
       setUserDropdown('hidden');
     }
   }
+
+  const closeDropdown = ({ contactId }) => {
+    const allElements = document.getElementsByName("kebabDropdown");
+    for (let index in allElements) {
+        const targetElement = allElements[index];
+        
+        if (targetElement.id !== undefined && targetElement.id !== null) {
+            const elementHidden = "hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
+            if (contactId == targetElement.id) {
+                targetElement.setAttribute('class', elementHidden);
+            } else {
+              targetElement.setAttribute('class', "hidden");
+            }
+        }
+    }
+}
 
   const handleSearchBar = (e) => {
     const searchInput = e.target.value;
@@ -529,7 +542,7 @@ const LandingPage = () => {
                 whileTap={{ scale: 0.5 }}
                 type="button"
                 onClick={handleAddModalOpen}
-                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none transition-all bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
                   <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
                 </svg>
@@ -620,7 +633,7 @@ const LandingPage = () => {
                       onChange={handleOnChange}
                       className="px-2 py-2 w-full border-b-2 focus:border-slate-700 outline-none text-sm bg-white" />
                   </div>
-                  <motion.button whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} type="submit"
+                  <motion.button whileTap={{ scale: 0.8 }} whileHover={{ scale: 1.08 }} type="submit"
                     className="rounded-md px-6 py-2 w-full bg-slate-700 text-sm text-white hover:bg-slate-400 mx-auto block">Submit</motion.button>
                 </form>
               </div>
@@ -632,7 +645,7 @@ const LandingPage = () => {
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
               <div className="flex items-center pb-3 border-b text-black">
                 <h3 className="text-xl font-bold flex-1">Update Client</h3>
-                <svg onClick={handleUpdateClientClose} xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
+                <svg onClick={(e) => handleUpdateClientClose(e)} xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
                   viewBox="0 0 320.591 320.591">
                   <path
                     d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
@@ -759,8 +772,8 @@ const LandingPage = () => {
                     return (
                       <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={clientInfo.Value}>
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
-                        <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={clientInfo.Value} data-key={clientInfo.Value}>
+                        <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={clientInfo.Value} data-key={clientInfo.Value}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                           </svg>
 
