@@ -189,7 +189,7 @@ const LoginPage = () => {
         //     </div>
         // </div>
         <section id="content" >
-            <img src={screenWidth <= 430? BackgroundImg1 : BackgroundImg2} alt="" className='blur-[2px] backdrop-opacity-10 z-0 absolute h-full w-full' />
+            <img src={screenWidth <= 1000? BackgroundImg1 : BackgroundImg2} alt="" className='backdrop-opacity-10 z-0 absolute h-full w-full' />
             {/* <img src={BackgroundImg1} alt="" className='blur-[2px] z-0 absolute h-full w-full max-sm:object-scale-down' /> */}
 
             <div className="z-10 relative min-h-screen flex flex-col items-center justify-center">

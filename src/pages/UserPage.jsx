@@ -22,7 +22,6 @@ const UserPage = () => {
   const [isUserModalOpen, setIsUserModalOpen] = useState('hidden');
 
   const [addErrorHandler, setAddErrorHandler] = useState('hidden');
-  const [errorMsg, setErrorMsg] = useState('');
   const [changePassModal, setChangePassModal] = useState('hidden');
   const [passwordType, setPasswordType] = useState('password');
   const [showHide, setShowHide] = useState("SHOW");
@@ -30,6 +29,14 @@ const UserPage = () => {
   const [showHideNew, setShowHideNew] = useState("SHOW");
   const [changePassErrorHandler, setChangePassErrorHandler] = useState('hidden');
   const [loadingDone, setLoadingDone] = useState(undefined);
+  const [employeeNoErr, setEmployeeNoErr] = useState("");
+  const [firstnameErr, setFirstnameErr] = useState("");
+  const [lastnameErr, setLastnameErr] = useState("");
+  const [usernameErr, setUsernameErr] = useState("");
+  const [passwordErr, setPasswordErr] = useState("");
+  const [confirmPasswordErr, setConfirmPasswordErr] = useState("");
+  const [errorMsg, setErrorMsg] = useState("")
+
 
   const [inputValue, setInputValue] = useState({
     employeeno: "",
@@ -41,14 +48,13 @@ const UserPage = () => {
     username: "",
     password: "",
     confirmpassword: ""
-
   });
+
   const [changepassInput, setChangepassInput] = useState({
     newpassword: "",
     confirmchangepassword: ""
   })
   const { newpassword, confirmchangepassword } = changepassInput;
-
   const { employeeno, position, firstname, middlename, lastname, department, username, password, confirmpassword } = inputValue;
 
 
@@ -124,6 +130,7 @@ const UserPage = () => {
     // console.log(userData)
   }, [userData]);
 
+  // console.log(token)
   const handleAddModalOpen = () => {
     setIsModalOpen('block');
   }
@@ -157,7 +164,7 @@ const UserPage = () => {
           }
         }
       );
-      const { ReturnMsg } = data;
+      const { ReturnMsg, ResultList } = data;
       if (ReturnMsg === "Success") {
         Swal.fire({
           title: "User Added",
@@ -169,17 +176,30 @@ const UserPage = () => {
           window.location.reload();
         })
       } else {
-        console.log(data)
-        setAddErrorHandler('block');
-        setErrorMsg(ReturnMsg)
-        // Swal.fire({
-        //   title: "User Add Failed ",
-        //   text: "User name already exist!",
-        //   confirmButtonColor: "#334155",
-        //   color: "#334155",
-        // }).then(() => {
-        //   // setIsModalOpen('hidden');
-        // })
+        if (ReturnMsg === "Fail") {
+          for (let index in ResultList) {
+            const errorData = ResultList[index];
+            if (errorData.ValidationKey === "EmployeeNo") {
+              setEmployeeNoErr(errorData.ValidationMsg)
+            } else if (errorData.ValidationKey === "FirstName") {
+              setFirstnameErr(errorData.ValidationMsg)
+
+            } else if (errorData.ValidationKey === "LastName") {
+              setLastnameErr(errorData.ValidationMsg)
+
+            } else if (errorData.ValidationKey === "UserName") {
+              setUsernameErr(errorData.ValidationMsg)
+
+            } else if (errorData.ValidationKey === "Password") {
+              setPasswordErr(errorData.ValidationMsg)
+            } else if (errorData.ValidationKey === "ConfirmPassword") {
+              setConfirmPasswordErr(errorData.ValidationMsg)
+            }
+          }
+        } else if (ReturnMsg === "Username already exists") {
+          setAddErrorHandler('block');
+          setErrorMsg(ReturnMsg);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -198,10 +218,24 @@ const UserPage = () => {
     });
   };
 
+  // console.log(userData)
   const handleOnChange = (e) => {
     e.preventDefault();
     if (addErrorHandler === 'block') {
       setAddErrorHandler('hidden')
+    }
+    if (employeeNoErr !== "") {
+      setEmployeeNoErr("");
+    } else if (firstnameErr !== "") {
+      setFirstnameErr("")
+    } else if (lastnameErr !== "") {
+      setLastnameErr("")
+    } else if (usernameErr !== "") {
+      setUsernameErr("")
+    } else if (passwordErr !== "") {
+      setPasswordErr("")
+    } else if (confirmPasswordErr !== "") {
+      setConfirmPasswordErr("")
     }
     const { name, value } = e.target;
     setInputValue({
@@ -222,30 +256,30 @@ const UserPage = () => {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     const userId = e.target.id;
-
-    try {
-      const { data } = await axios.get(
-        `${base_url}/GetUserInfo/` + userId,
-        {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }
-      );
-      const { ReturnMsg, UserProfile } = data;
-      if (ReturnMsg === "Success") {
-        setIsUserModalOpen('block');
-        setInputValue({
-          ...inputValue,
-          userid: UserProfile.UserId,
-          username: UserProfile.UserName,
-          useraddress: UserProfile.UserAddress
-        });
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(userId)
+    // try {
+    //   const { data } = await axios.get(
+    //     `${base_url}/GetUserInfo/` + userId,
+    //     {
+    //       headers: {
+    //         'Authorization': 'Bearer ' + token
+    //       }
+    //     }
+    //   );
+    //   const { ReturnMsg, UserProfile } = data;
+    //   if (ReturnMsg === "Success") {
+    //     setIsUserModalOpen('block');
+    //     setInputValue({
+    //       ...inputValue,
+    //       userid: UserProfile.UserId,
+    //       username: UserProfile.UserName,
+    //       useraddress: UserProfile.UserAddress
+    //     });
+    //   } else {
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   const handleDeleteUser = async (e) => {
@@ -428,17 +462,17 @@ const UserPage = () => {
 
   return (
     <>
-      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-screen">
+      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-full">
         <div className="">
           <motion.header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
               <div className="flex justify-between items-center w-full">
-                {/* <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
+                <div className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[35px] cursor-pointer" onClick={() => navigate("/landing")} >
                   <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                   </svg>
-                </div> */}
+                </div>
                 <div className="flex items-center">
                   <img src={Logo} className='h-[20px]' />
                   {/* <span className="font-bold text-3xl text-white hidden sm:block md:block lg:block xl:block">
@@ -524,8 +558,8 @@ const UserPage = () => {
                 type="button"
                 onClick={handleAddModalOpen}
                 className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 float-start mr-3">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 float-start mr-3">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
                 </svg>
                 Add User
               </motion.button>
@@ -697,8 +731,8 @@ const UserPage = () => {
                       name='employeeno'
                       value={employeeno}
                       autoComplete='off'
-                      required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${employeeNoErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -706,6 +740,8 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+                    <label className={employeeNoErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {employeeNoErr !== "" ? employeeNoErr : null}</label>
                   </div>
                   <div className="relative flex items-center">
                     <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
@@ -715,7 +751,7 @@ const UserPage = () => {
                       value={position}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
+                      // required
                       className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
@@ -724,6 +760,7 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+
                   </div>
                   <div className="relative flex items-center">
 
@@ -734,7 +771,7 @@ const UserPage = () => {
                       name='firstname'
                       value={firstname}
                       autoComplete='off'
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${firstnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -742,6 +779,8 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+                    <label className={firstnameErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {firstnameErr !== "" ? firstnameErr : null}</label>
                   </div>
                   <div className="relative flex items-center">
                     <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
@@ -751,7 +790,7 @@ const UserPage = () => {
                       value={middlename}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
+                      // required
                       className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
@@ -769,8 +808,8 @@ const UserPage = () => {
                       value={lastname}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${lastnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -778,6 +817,8 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+                    <label className={lastnameErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {lastnameErr !== "" ? lastnameErr : null}</label>
                   </div>
                   <div className="relative flex items-center">
                     <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
@@ -787,7 +828,7 @@ const UserPage = () => {
                       value={department}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
+                      // required
                       className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
@@ -805,8 +846,8 @@ const UserPage = () => {
                       value={username}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${usernameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -814,6 +855,8 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+                    <label className={usernameErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {usernameErr !== "" ? usernameErr : null}</label>
                   </div>
 
                   <div className="relative flex items-center sm:col-span-2">
@@ -824,8 +867,8 @@ const UserPage = () => {
                       value={password}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${passwordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -833,6 +876,8 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+                    <label className={passwordErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {passwordErr !== "" ? passwordErr : null}</label>
                   </div>
                   <div className="mb-9 relative flex items-center sm:col-span-2">
                     <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
@@ -842,8 +887,8 @@ const UserPage = () => {
                       value={confirmpassword}
                       onChange={handleOnChange}
                       autoComplete='off'
-                      required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      // required
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${confirmPasswordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -851,22 +896,24 @@ const UserPage = () => {
                         d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
                         data-original="#000000"></path>
                     </svg>
+                    <label className={confirmPasswordErr !== "" ? `text-[11px] bg-white text-red-500 absolute px-2 top-[40px] left-[18px] font-semibold` : "hidden"}>
+                      {confirmPasswordErr !== "" ? confirmPasswordErr : null}</label>
                   </div>
                 </div>
-                <div class={addErrorHandler + ` flex justify-center items-center m-1 font-medium py-1 px-2 rounded-md text-red-700 bg-red-100 border border-red-300`}>
+                <div className={addErrorHandler + ` flex justify-center items-center m-1 font-medium py-1 px-2 rounded-md text-red-700 bg-red-100 border border-red-300`}>
                   <div slot="avatar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-octagon w-5 h-5 mx-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-alert-octagon w-5 h-5 mx-2">
                       <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                   </div>
-                  <div class="text-sm font-normal  max-w-full flex-initial">
-                    {errorMsg === "Fail"? "Please check your input and try again" : errorMsg}
-                    </div>
-                  <div class="flex flex-auto flex-row-reverse">
+                  <div className="text-sm font-normal  max-w-full flex-initial">
+                    {errorMsg}
+                  </div>
+                  <div className="flex flex-auto flex-row-reverse">
                     <div>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x cursor-pointer hover:text-red-400 rounded-full w-5 h-5 ml-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-x cursor-pointer hover:text-red-400 rounded-full w-5 h-5 ml-2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                       </svg>
@@ -970,8 +1017,8 @@ const UserPage = () => {
                               <span id={userInfo.EmployeeId} className='mt-0.5'>Edit</span>
                             </motion.button>
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} id={userInfo.EmployeeId} className="text-xs cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteUser}>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                               </svg>
 
                               <span id={userInfo.EmployeeId} className='mt-0.5'>Delete</span>
@@ -990,11 +1037,11 @@ const UserPage = () => {
                     )
 
                   }) :
-                    <tr className='flex items-start justify-start hover:bg-blue-50 bg-slate-100 h-screen w-screen'>
-                      <td className="px-2 py-2 text-sm">
+                    <div className='flex items-start justify-start hover:bg-blue-50 bg-slate-100 h-screen w-screen'>
+                      <div className="px-2 py-2 text-sm">
                         No User Found.
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   }
 
                   {/* <table className='min-w-full bg-white font-[sans-serif]'>
