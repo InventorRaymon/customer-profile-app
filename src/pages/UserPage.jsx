@@ -224,18 +224,26 @@ const UserPage = () => {
     if (addErrorHandler === 'block') {
       setAddErrorHandler('hidden')
     }
-    if (employeeNoErr !== "") {
+    const errorMethod = () => {
       setEmployeeNoErr("");
+      setFirstnameErr("");
+      setLastnameErr("");
+      setUsernameErr("");
+      setPasswordErr("");
+      setConfirmPasswordErr("");
+    }
+    if (employeeNoErr !== "") {
+      errorMethod();
     } else if (firstnameErr !== "") {
-      setFirstnameErr("")
+      errorMethod();
     } else if (lastnameErr !== "") {
-      setLastnameErr("")
+      errorMethod();
     } else if (usernameErr !== "") {
-      setUsernameErr("")
+      errorMethod();
     } else if (passwordErr !== "") {
-      setPasswordErr("")
+      errorMethod();
     } else if (confirmPasswordErr !== "") {
-      setConfirmPasswordErr("")
+      errorMethod();
     }
     const { name, value } = e.target;
     setInputValue({
@@ -256,7 +264,6 @@ const UserPage = () => {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     const userId = e.target.id;
-    console.log(userId)
     // try {
     //   const { data } = await axios.get(
     //     `${base_url}/GetUserInfo/` + userId,
@@ -422,7 +429,7 @@ const UserPage = () => {
     setInitialData(searchInput);
     if (searchInput !== '') {
       const results = userData.filter((user) => {
-        return user.Text.toLowerCase().startsWith(searchInput.toLowerCase());
+        return user.LNameFName.toLowerCase().startsWith(searchInput.toLowerCase());
       });
       setFoundUser(results);
     } else {
@@ -459,10 +466,10 @@ const UserPage = () => {
       }
     }
   }
-
+  console.log(employeeNoErr)
   return (
     <>
-      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-full">
+      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-screen">
         <div className="">
           <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
@@ -973,7 +980,7 @@ const UserPage = () => {
             </div>
           </motion.div>
           {!loadingDone ? (
-            <div className='flex items-start justify-center bg-slate-100 h-screen'>
+            <div className='flex items-start justify-center bg-slate-100 h-full'>
               <ReactLoading type="cylon" color="#94a3b8" height={100} width={100} delay={800} />
             </div>
           ) : (
@@ -984,7 +991,7 @@ const UserPage = () => {
 
                   {foundUser && foundUser.length > 0 ? foundUser.map((userInfo, i) => {
                     return (
-                      <motion.div whileHover={{ scale: 1.05 }} initial={{ opacity: 0 }} whileInView={{ opacity: 1, x: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={userInfo.EmployeeId}>
+                      <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={userInfo.EmployeeId}>
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                         <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md bg-slate-100 cursor-pointer" onClick={handleOpenKebab} id="menuOpen">
                           <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6" key={userInfo.EmployeeId} data-key={userInfo.EmployeeId}>
@@ -1019,7 +1026,7 @@ const UserPage = () => {
                     )
 
                   }) :
-                    <div className='flex items-start justify-start hover:bg-blue-50 bg-slate-100 h-screen w-screen'>
+                    <div className='flex items-start justify-start hover:bg-blue-50 bg-slate-100 h-full w-screen'>
                       <div className="px-2 py-2 text-sm">
                         No User Found.
                       </div>

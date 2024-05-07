@@ -306,6 +306,7 @@ const LandingPage = () => {
         }
       );
       const { ReturnMsg } = data;
+      console.log(data)
       if (ReturnMsg === "Success") {
         Swal.fire({
           title: "Client Updated",
@@ -316,6 +317,8 @@ const LandingPage = () => {
           setIsClientModalOpen('hidden');
         })
 
+      } else {
+        setAddErrorHandler("block")
       }
     } catch (error) {
       console.log(error);
@@ -603,7 +606,7 @@ const LandingPage = () => {
                       onChange={handleOnChange}
                       className={`px-2 py-2 w-full border-b-2 ${addErrorHandler === 'hidden' ? 'border-slate-700 focus:border-slate-700' : 'border-red-400 focus:border-red-400'}  outline-none text-sm bg-white`} />
                   </div>
-                  <p className={addErrorHandler + ' text-xs flex flex-row-reverse text-red-400 p-0 m-0'}>Client Name Already Exist</p>
+                  <p className={addErrorHandler + ' text-xs flex flex-row-reverse text-red-400 absolute top-[120px] right-[90px]'}>Client Name Already Exist</p>
                   <div className="flex items-center">
                     <label className="text-gray-400 w-36 text-sm">Address :</label>
                     <input
@@ -652,8 +655,9 @@ const LandingPage = () => {
                       required
                       onChange={handleOnChange}
                       autoComplete='off'
-                      className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
+                      className={`px-2 py-2 w-full border-b-2 ${addErrorHandler === 'hidden' ? 'border-slate-700 focus:border-slate-700' : 'border-red-400 focus:border-red-400'}  outline-none text-sm bg-white`} />
                   </div>
+                  <p className={addErrorHandler + ' text-xs flex flex-row-reverse text-red-400 absolute top-[120px] right-[90px]'}>Client Name Already Exist</p>
                   <div className="flex items-center">
                     <label className="text-gray-400 w-36 text-sm">Address :</label>
                     <input
