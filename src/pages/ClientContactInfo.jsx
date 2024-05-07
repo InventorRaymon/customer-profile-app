@@ -743,7 +743,7 @@ const ClientContactInfo = () => {
                                 <input type='text' value={contact} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
 
                             </div>
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5}} type="button"
+                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8}} type="button"
                                 onClick={handleAddContactOpen}
                                 className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
@@ -781,7 +781,7 @@ const ClientContactInfo = () => {
                                             }
                                             
                                             return (
-                                                <motion.div initial={{ opacity: 1, y: 0 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500 w-full">
+                                                <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 transition-all duration-500 w-full">
                                                                             <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                                                     <div className="flex flex-col items-center">
                                                         <div className="bg-white py-4 px-2 rounded-md mt-4">
@@ -864,20 +864,20 @@ const ClientContactInfo = () => {
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                                         </motion.svg>
 
-                                                        <div name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-10 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                                                            <motion.button whileHover={{ scale: 1.1 }} onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
+                                                        <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-10 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                                                            <motion.button whileHover={{ scale: 1.05 }} onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                                                 </svg>
                                                                 <span id={contactInfo.Id} className='mt-1'>Edit</span>
                                                             </motion.button>
-                                                            <motion.button whileHover={{ scale: 1.1 }} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteContact}>
+                                                            <motion.button whileHover={{ scale: 1.05 }} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteContact}>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                                                                 </svg>
                                                                 <span id={contactInfo.Id} className='mt-1'>Remove</span>
                                                             </motion.button>
-                                                        </div>
+                                                        </motion.div>
                                                     </div>
                                                 </motion.div>
 
@@ -1088,7 +1088,7 @@ const ClientContactInfo = () => {
                                             autoComplete='off'
                                             required
                                             className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="#bbb" class="w-[16px] h-[16px] absolute right-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="#bbb" className="w-[16px] h-[16px] absolute right-4">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                                         </svg>
                                     </div>
@@ -1103,7 +1103,7 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={{ scale: 1.1}} whileTap={{ scale: 0.5}} type="submit"
+                                <motion.button whileHover={{ scale: 1.08}} whileTap={{ scale: 0.5}} type="submit"
                                     className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
@@ -1328,12 +1328,12 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} type="submit"
+                                <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.5 }} type="submit"
                                     className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
                     </motion.div>
-                    <div
+                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                         className={changePassModal + " fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]"}>
                         <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
                             <div className="flex items-center pb-3 border-b text-black">
@@ -1391,12 +1391,12 @@ const ClientContactInfo = () => {
                                         </div>
                                     </div>
 
-                                    <button type="submit"
-                                        className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</button>
+                                    <motion.button whileHover={{ scale : 1.08}} whileTap={{ scale : 0.8 }} type="submit"
+                                        className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </>
