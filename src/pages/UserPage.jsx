@@ -595,7 +595,7 @@ const UserPage = () => {
 
   return (
     <>
-      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-full sm:h-screen">
+      <div className="font-[sans-serif] text-[#333] bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% p-4 h-full">
         <div className="">
           <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
@@ -1344,11 +1344,14 @@ const UserPage = () => {
             </div>
           </motion.div>
           {!loadingDone ? (
-            <div className='flex items-start justify-center bg-slate-100 h-screen'>
+            <div className='flex items-start justify-center bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% h-screen'>
               <ReactLoading type="cylon" color="#94a3b8" height={100} width={100} delay={800} />
             </div>
           ) : (
             <>
+            <section>
+                <div className="text-3xl text-slate-700 ml-4 font-semibold mt-4">Users</div>
+                <div className="text-md text-slate-700 ml-4">Collection of users informations</div>
               <div className='flex items-center justify-center'>
                 <div className='m-4 grid sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-3 w-full'>
                   {/* </header> */}
@@ -1446,6 +1449,7 @@ const UserPage = () => {
 
                 </div>
               </div>
+              </section>
             </>
           )}
         </div>

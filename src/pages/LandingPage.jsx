@@ -11,7 +11,6 @@ const LandingPage = () => {
 
   const token = localStorage.getItem("token");
   const userType = localStorage.getItem("userType")
-  // const token = "12345"
   const navigate = useNavigate();
   const [clientData, setClientData] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -87,15 +86,13 @@ const LandingPage = () => {
   const getClientList = async () => {
     try {
       const { data } = await axios.get(
-        `${base_url}/GetAllCLient`,
+        `${base_url}/GetAllClientDetails`,
         {
           headers: {
             'Authorization': 'Bearer ' + token
           }
         });
-      setClientData(data.SelectListItem);
-      // setClientData(dummyArr);
-
+      setClientData(data.ClientList);
       setLoadingDone(true)
     } catch (error) {
       console.log(error);
@@ -250,7 +247,7 @@ const LandingPage = () => {
           }
         }
       );
-    }, 1000);
+    }, 300);
 
   }
 
@@ -312,6 +309,7 @@ const LandingPage = () => {
           color: "#334155",
         }).then(() => {
           setIsClientModalOpen('hidden');
+          closeDropdown("");
         })
 
       } else {
@@ -367,7 +365,7 @@ const LandingPage = () => {
     setInitialData(searchInput);
     if (searchInput !== '') {
       const results = clientData.filter((user) => {
-        return user.Text.toLowerCase().startsWith(searchInput.toLowerCase());
+        return user.ClientName.toLowerCase().startsWith(searchInput.toLowerCase());
       });
       setFoundClient(results);
     } else {
@@ -406,49 +404,8 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-max">
+      <div className="font-[sans-serif] text-[#333] bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% p-4 h-max">
         <div className="">
-          {/* <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
-              <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-gray-200 border-b bg-white lg:min-h-[80px] max-lg:min-h-[60px] bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to 90% h-[60px] sm:h-[60px] md:h-[80px] lg:h-[80px] xl:h-[80px]'>
-                <div className="flex flex-row-reverse lg:flex-row items-center justify-between w-full" >
-                  <div className="items-center mb-2 lg:mb-0 hidden sm:hidden md:hidden lg:flex xl:flex" >
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/38729f07d05db3f41c27ee156c71cd47b20092f86cd671e4bd60abbf7867104d" alt="logo" className='shrink w-55 h-14 mr-4' />
-                    <span className="font-bold text-3xl text-white max-md:mt-10">
-                      COSMOHUB
-                    </span>
-                  </div>
-                  <div className='text-sm flex items-center rounded px-2 py-2 transition-all'>
-                    <div className='flex items-center max-sm:ml-auto space-x-6'>
-                      <ul>
-                        <li
-                          className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
-                            viewBox="0 0 512 512">
-                            <path
-                              d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
-                              data-original="#000000" />
-                          </svg>
-                          <div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[180px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
-                            <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => {
-                              navigate("/users",
-                                {
-                                  state: {
-                                    clientid
-                                  }
-                                }
-                              );
-                            }}>User Settings</h6>
-                            <hr className="w-43 h-1 mx-auto bg-gray-300 border-0 rounded my-2 dark:bg-gray-700" />
-                            <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => { setChangePassModal('block') }}>Change Password</h6>
-                            <h6 className="font-semibold cursor-pointer hover:text-slate-400" onClick={handleLogOut}>Logout</h6>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            </header> */}
           <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
@@ -517,6 +474,7 @@ const LandingPage = () => {
               </div>
             </section>
           </header>
+          {/* <div className='bg-slate-700 max-sm:rounded-sm rounded-br-[560px] rounded-bl-[560px] h-full bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90%'> */}
           {/* <div className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
@@ -542,7 +500,7 @@ const LandingPage = () => {
                 whileTap={{ scale: 0.5 }}
                 type="button"
                 onClick={handleAddModalOpen}
-                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                className="h-[40px] w-[220px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-white rounded-sm text-sm font-semibold outline-none bg-slate-700 hover:bg-slate-400 active:bg-slate-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
                   <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
                 </svg>
@@ -617,7 +575,7 @@ const LandingPage = () => {
                       required
                       autoComplete='off'
                       onChange={handleOnChange}
-                      className={`px-2 py-2 w-full border-b-2 ${addErrorHandler === 'hidden' ? 'border-slate-700 focus:border-slate-700' : 'border-red-400 focus:border-red-400'}  outline-none text-sm bg-white`} />
+                      className={`px-2 py-2 w-full border-b-2 ${addErrorHandler === 'hidden' ? ' focus:border-slate-700' : 'border-red-400 focus:border-red-400'}  outline-none text-sm bg-white`} />
                   </div>
                   <p className={addErrorHandler + ' text-xs flex flex-row-reverse text-red-400 absolute top-[120px] right-[90px]'}>Client Name Already Exist</p>
                   <div className="flex items-center">
@@ -759,43 +717,46 @@ const LandingPage = () => {
             </div>
           </motion.div>
           {!loadingDone ? (
-            <div className='flex items-start justify-center bg-slate-100 h-screen'>
+            <div className='flex items-start justify-center bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% h-screen'>
               <ReactLoading type="cylon" color="#94a3b8" height={100} width={100} delay={800} />
             </div>
           ) : (
             <>
+            <section>
+                <div className="text-3xl text-slate-700 ml-4 font-semibold mt-4">Clients</div>
+                <div className="text-md text-slate-700 ml-4">Collection of partnered clients informations</div>
               <div className='flex items-center justify-center'>
                 <div className='m-4 grid sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-3 w-full'>
                   {/* </header> */}
 
                   {foundClient && foundClient.length > 0 ? foundClient.map((clientInfo, i) => {
                     return (
-                      <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={clientInfo.Value}>
+                      <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={clientInfo.ClientId}>
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                         <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={clientInfo.Value} data-key={clientInfo.Value}>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={clientInfo.ClientId} data-key={clientInfo.ClientId}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                           </svg>
 
-                          <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={clientInfo.Value} className="hidden flex-col z-50 bg-slate-200 p-2 w-[100px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                            <motion.button whileHover={{scale: 1.05}} whileTap={{ scale: 0.8}} onClick={handleUpdateClient} id={clientInfo.Value} className="text-xs cursor-pointer hover:text-gray-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
+                          <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={clientInfo.ClientId} className="hidden flex-col z-50 bg-slate-200 p-2 w-[100px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                            <motion.button whileHover={{scale: 1.05}} whileTap={{ scale: 0.8}} onClick={handleUpdateClient} id={clientInfo.ClientId} className="text-xs cursor-pointer hover:text-gray-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                               </svg>
-                              <span id={clientInfo.Value} className='mt-0.5'>Edit</span>
+                              <span id={clientInfo.ClientId} className='mt-0.5'>Edit</span>
                             </motion.button>
-                            <motion.button whileHover={{scale: 1.05}} whileTap={{ scale: 0.8}} id={clientInfo.Value} className="text-xs cursor-pointer hover:text-sky-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleOpenClientInfo}>
+                            <motion.button whileHover={{scale: 1.05}} whileTap={{ scale: 0.8}} id={clientInfo.ClientId} className="text-xs cursor-pointer hover:text-sky-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleOpenClientInfo}>
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                               </svg>
-                              <span id={clientInfo.Value} className='mt-0.5'>Contacts</span>
+                              <span id={clientInfo.ClientId} className='mt-0.5'>Contacts</span>
                             </motion.button>
                           </motion.div>
                         </div>
                         <div className="relative">
                           <div className="mt-6 pb-6 rounded-b-[--card-border-radius]">
-                            <p className="text-gray-700 text-xl dark:text-gray-300">{clientInfo.Text}</p>
-                            <p className="text-xs text-gray-700 dark:text-gray-300">Client Address st. Address</p>
+                            <p className="text-gray-700 text-xl max-sm:text-3xl dark:text-gray-300">{clientInfo.ClientName}</p>
+                            <p className="text-xs text-gray-700 max-sm:text-lg dark:text-gray-300">{clientInfo.ClientAddress}</p>
                           </div>
                           <div className="flex gap-3 -mb-8 py-4 border-t border-gray-200 dark:border-gray-800">
                           </div>
@@ -809,6 +770,7 @@ const LandingPage = () => {
                         No Client Found.
                       </div>
                     </div>
+                    
                   }
 
                   {/* <table className='min-w-full bg-white font-[sans-serif]'>
@@ -825,11 +787,11 @@ const LandingPage = () => {
 
                     {foundClient && foundClient.length > 0 ? foundClient.map((clientInfo, i) => {
                       return (
-                        <tr className={i%2 === 0?'hover:bg-slate-200' : 'hover:bg-slate-200 bg-blue-50'} key={clientInfo.Value} id="parentElement" data-key={clientInfo.Value}>
+                        <tr className={i%2 === 0?'hover:bg-slate-200' : 'hover:bg-slate-200 bg-blue-50'} key={clientInfo.ClientId} id="parentElement" data-key={clientInfo.ClientId}>
                           
                           <td className="px-2 py-2 flex items-center justify-between">
                           <div className="px-2 py-2 text-md text-center">
-                            {clientInfo.Text}
+                            {clientInfo.ClientName}
                             </div>
                             <div className=''>
                             <button className="mr-4" title="UpdateClient" onClick={handleUpdateClient}>
@@ -860,10 +822,12 @@ const LandingPage = () => {
 
                 </div>
               </div>
+              </section>
             </>
           )}
         </div>
       </div>
+      {/* </div> */}
     </>
   )
 }

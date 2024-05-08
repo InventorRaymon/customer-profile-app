@@ -242,13 +242,13 @@ const LoginPage = () => {
 
                             <div className="flex justify-center">
                                 <form onSubmit={handleSubmit} className="max-w-[280px] mx-auto">
-                                    <div className={`rounded-md flex gap-3 px-2 py-2 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid border-${errorHandler === 'hidden'? 'neutral' : 'red'}-500 text-neutral-700 w-[300px] max-md:mt-10 shadow-lg`}>
+                                    <div className={`${errorHandler === 'hidden'? 'border-neutral-500':'border-red-500'} rounded-md flex gap-3 px-2 py-2 mt-12 max-w-full text-base leading-7 whitespace-nowrap bg-white border border-solid text-neutral-700 w-[300px] max-md:mt-10 shadow-lg`}>
                                         <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/978da9f7d3913ce0456832f58efe5674d1114328f451a4700571e5971dd0038c?apiKey=966c510a434d496c8209492887da4d0c&" alt="username icon" className="shrink-0 w-6 aspect-square" />
                                         <label for="username" className="sr-only">username</label>
                                         <input autoComplete='off' className="text-sm flex-auto my-auto bg-transparent border-none focus:outline-none" type="username" id="username" name="username" value={username} required onChange={handleOnChange} placeholder="username" />
                                     </div>
                                     <p className={errorHandler + ' text-xs flex flex-row-reverse text-red-400'}>Incorrect username or password</p>
-                                        <div className={`rounded-md flex justify-between px-2 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid border-${errorHandler === 'hidden'? 'neutral':'red'}-500 w-[300px] shadow-lg`}>
+                                        <div className={`${errorHandler === 'hidden'? 'border-neutral-500':'border-red-500'} rounded-md flex justify-between px-2 py-2 mt-5 max-w-full whitespace-nowrap bg-white border border-solid w-[300px] shadow-lg`}>
                                             <div className="flex gap-3 text-base leading-7 text-neutral-700">
                                                 <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9686404333324d9d51b219ae370cc2836d4b29ecd3df9f89d290521db2946d53?apiKey=966c510a434d496c8209492887da4d0c&" alt="userpass icon" className="shrink-0 w-6 aspect-square" />
                                                 <label for="userpass" className="sr-only">userpass</label>
@@ -262,7 +262,7 @@ const LoginPage = () => {
                                         </div>
                                         <p className={errorHandler + ' mb-2 text-xs flex flex-row-reverse text-red-400'}>Incorrect username or password</p>
                                     <motion.button type="submit"  whileTap={{ scale: 0.8 }} whileHover={{ scale: 1.05 }} className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
-                                        <span className="flex-auto my-auto">Sign In</span>
+                                        <span className="flex-auto my-auto ml-8">Sign In</span>
                                         {
                                             !loadingDone ? submitClick ? <ReactLoading type="spin" color="#94a3b8" height={30} width={30} />
                                                 :
