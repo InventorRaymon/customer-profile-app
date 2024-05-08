@@ -32,6 +32,7 @@ const ClientContactInfo = () => {
     const [contactHistory, setContactHistory] = useState('');
     const [loadingDone, setLoadingDone] = useState(undefined);
     const [resizeImage, setResizeImage] = useState(undefined);
+    const [changeInput, setChangeInput] = useState(false);
 
     const [changepassInput, setChangepassInput] = useState({
         newpassword: "",
@@ -304,6 +305,9 @@ const ClientContactInfo = () => {
     const handleOnChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
+        if(value){
+            setChangeInput(true);
+        }
         setInputValue({
             ...inputValue,
             [name]: value,
@@ -658,7 +662,7 @@ const ClientContactInfo = () => {
 
     return (
         <>
-            <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-max">
+            <div className="font-[sans-serif] text-[#333] bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% p-4 h-max">
                 <div className="">
                     <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
@@ -725,7 +729,7 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+                    <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-600' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
                                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
@@ -758,13 +762,16 @@ const ClientContactInfo = () => {
                     </div>
                     {
                         !loadingDone ? (
-                            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className='flex justify-center bg-slate-100 h-screen'>
+                            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} className='flex justify-center bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% h-screen'>
                                 <ReactLoading type="cylon" color="#94a3b8" height={100} width={100} delay={800} />
                             </motion.div>
                         ) : (
-                            <div className=" font-[sans-serif] text-[#333] mt-4">
-                                <div className="max-w-5xl max-sm:max-w-sm mx-auto">
-                                    <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-5 text-center mt-12 ">
+                            <section>
+                <div className="text-3xl text-slate-700 ml-4 font-semibold mt-4">Contacts</div>
+                <div className="text-md text-slate-700 ml-4">Collection of clients contact informations</div>
+                            {/* <div className="font-[sans-serif] text-[#333] mt-4">
+                                <div className="max-w-5xl max-sm:max-w-sm mx-auto"> */}
+                                    <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-5 text-center mt-4">
                                         {foundContact.length > 0 ? foundContact.map((contactInfo) => {
                                             let formattedBirthday;
                                             if (contactInfo !== undefined && contactInfo !== "" && contactInfo !== null) {
@@ -788,14 +795,14 @@ const ClientContactInfo = () => {
                                                     <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                                                     <div className="flex flex-col items-center">
                                                         <div className="bg-white py-4 px-2 rounded-md mt-4">
-                                                            <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[100px] h-[100px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
+                                                            <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
                                                         </div>
                                                         <div className="flex flex-col justify-center mb-10">
                                                             <div className="flex items-center justify-center space-x-1">
-                                                                <label className="font-semibold text-md group-hover:text-cyan-500 group-hover:underline group-hover:transition-all">{contactInfo.ContactPerson}</label>
+                                                                <label className="font-semibold text-md max-sm:text-2xl group-hover:text-cyan-500 group-hover:underline group-hover:transition-all">{contactInfo.ContactPerson}</label>
                                                             </div>
                                                             <div className="flex items-center justify-center space-x-1">
-                                                                <label className="text-xs text-slate-500">{contactInfo.Position}</label>
+                                                                <label className="text-xs max-sm:text-xl text-slate-500">{contactInfo.Position}</label>
                                                             </div>
                                                             <div className='flex flex-col justify-center items-center'>
                                                                 <div className='grid grid-cols-2'>
@@ -803,23 +810,23 @@ const ClientContactInfo = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1 mt-5">
-                                                                <label className="sm:text-xs text-md text-slate-500">Department:</label>
-                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.Department}</p>
+                                                                <label className="sm:text-md text-xs text-slate-500">Department:</label>
+                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.Department}</p>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1">
-                                                                <label className="sm:text-xs text-md text-slate-500">Email:</label>
-                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.EmailAddress}</p>
+                                                                <label className="sm:text-md text-xs text-slate-500">Email:</label>
+                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.EmailAddress}</p>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1">
-                                                                <label className="sm:text-xs text-md text-slate-500">Nickname:</label>
-                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.Nickname}</p>
+                                                                <label className="sm:text-md text-xs text-slate-500">Nickname:</label>
+                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.Nickname}</p>
                                                             </div>
                                                             <div className="flex items-start justify-start space-x-1">
-                                                                <label className="sm:text-xs text-md text-slate-500">Birthdate:</label>
-                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{formattedBirthday}</p>
+                                                                <label className="sm:text-md text-xs text-slate-500">Birthdate:</label>
+                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{formattedBirthday}</p>
                                                             </div>
                                                             <div className="flex-col items-start justify-start space-x-1">
-                                                                <label className="sm:text-xs text-md text-slate-500">Contact Number:
+                                                                <label className="sm:text-md text-xs text-slate-500">Contact Number:
                                                                     <div className='flex flex-col justify-end'>
                                                                         <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : "No Added Contact No."}</p>
                                                                         <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : ""}</p>
@@ -831,8 +838,8 @@ const ClientContactInfo = () => {
                                                                                     contactHistory.length > 0 ? contactHistory.map((history) => {
                                                                                         return (
                                                                                             <div className="flex items-center justify-center space-x-1" key={contactInfo.contactId}>
-                                                                                                <label className="sm:text-xs text-md text-slate-500">{history.ContactNumber}</label>
-                                                                                                <p className="sm:text-xs text-md text-slate-500">{history.LastModifiedDesc}</p>
+                                                                                                <label className="sm:text-md text-xs text-slate-500">{history.ContactNumber}</label>
+                                                                                                <p className="sm:text-md text-xs text-slate-500">{history.LastModifiedDesc}</p>
                                                                                             </div>
                                                                                         )
                                                                                     })
@@ -851,18 +858,18 @@ const ClientContactInfo = () => {
                                                     {/* <div className='flex flex-col items-center mt-8'>
                                                         <div className='flex flex-col justify-start'>
                                                             <div className="flex items-center justify-center space-x-1">
-                                                                <label className="sm:text-xs text-md text-slate-500">Sales in charge:</label>
-                                                                <p className="sm:text-xs text-md text-slate-500 truncate">{contactInfo.SalesPerson}</p>
+                                                                <label className="sm:text-md text-xs text-slate-500">Sales in charge:</label>
+                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.SalesPerson}</p>
                                                             </div>
                                                             <div className="flex items-center mt-0.5">
-                                                                <label className="sm:text-xs text-md text-slate-500">Description:</label>
+                                                                <label className="sm:text-md text-xs text-slate-500">Description:</label>
                                                             </div>
                                                             <input placeholder={contactInfo.Remarks == "" ? "No remarks added." : contactInfo.Remarks} disabled
                                                                 className="truncate mt-0.5 p-4 bg-white max-w-md mx-auto w-[300px] sm:w-[300px] md:w-[300px] lg:w-[350px] xl:w-[350px] block text-sm border mb-5 border-slate-300 outline-slate-700 rounded" rows="2"></input>
                                                         </div>
                                                     </div> */}
                                                     {/* Ellipsis icon */}
-                                                    <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
+                                                    <div className="absolute top-3 right-5 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
                                                         <motion.svg whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                                         </motion.svg>
@@ -894,9 +901,10 @@ const ClientContactInfo = () => {
                                             </div>
                                         }
 
-                                    </div>
-                                </div>
+                                    {/* </div>
+                                </div> */}
                             </div>
+                            </section>
                         )
                     }
 
@@ -1106,7 +1114,7 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.5 }} type="submit"
+                                <motion.button whileHover={changeInput? { scale: 1.08 } : { scale: 1 }} whileTap={changeInput? { scale: 0.5 } : { scale: 1 }} type="submit"
                                     className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
@@ -1331,8 +1339,8 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.5 }} type="submit"
-                                    className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
+                                <motion.button whileHover={changeInput? { scale: 1.08 } : { scale: 1 }} whileTap={changeInput? { scale: 0.5 } : { scale: 1 }} type="submit" disabled={!changeInput}
+                                    className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Update</motion.button>
                             </form>
                         </div>
                     </motion.div>
@@ -1394,7 +1402,7 @@ const ClientContactInfo = () => {
                                         </div>
                                     </div>
 
-                                    <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.8 }} type="submit"
+                                    <motion.button whileHover={changeInput? { scale: 1 } : { scale: 1.08 }} whileTap={changeInput? { scale: 1 } : { scale: 0.5 }} type="submit"
                                         className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                                 </form>
                             </div>
