@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { base_url } from '../routes/urlHandler';
-import BackgroundImg2 from '../../src/images/img_bg.jpg';
-import BackgroundImg1 from '../../src/images/skyscraper.jpg';
+import BackgroundImg2 from '../../src/images/backgroundImg.png';
+import BackgroundImg1 from '../../src/images/imgBg1.png';
 import Logo from '../../src/images/img_logogo.png'
 import ReactLoading from 'react-loading';
 import { motion } from 'framer-motion';
@@ -65,8 +65,10 @@ const LoginPage = () => {
             );
 
             const { ReturnMsg, UserInfo } = data;
+            console.log(data)
             if (ReturnMsg === "Success") {
                 localStorage.setItem("token", UserInfo.UserPass);
+                localStorage.setItem("userType", UserInfo.UserType);
                 setTimeout(() => {
                     setLoadingDone(true);
                     navigate("/landing",
@@ -187,8 +189,8 @@ const LoginPage = () => {
         //     </div>
         // </div>
         <section id="content" >
-            {/* <img src={screenWidth < 1280? BackgroundImg1 : BackgroundImg2} alt="" className='backdrop-opacity-10 z-0 absolute h-full w-full' /> */}
-            <img src={BackgroundImg1} alt="" className='blur-[2px] z-0 absolute h-full w-full' />
+            <img src={screenWidth <= 1000? BackgroundImg1 : BackgroundImg2} alt="" className='backdrop-opacity-10 z-0 absolute h-full w-full' />
+            {/* <img src={BackgroundImg1} alt="" className='blur-[2px] z-0 absolute h-full w-full max-sm:object-scale-down' /> */}
 
             <div className="z-10 relative min-h-screen flex flex-col items-center justify-center">
 
@@ -259,7 +261,7 @@ const LoginPage = () => {
                                             </motion.div>
                                         </div>
                                         <p className={errorHandler + ' mb-2 text-xs flex flex-row-reverse text-red-400'}>Incorrect username or password</p>
-                                    <motion.button type="submit"  whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
+                                    <motion.button type="submit"  whileTap={{ scale: 0.8 }} whileHover={{ scale: 1.05 }} className="rounded-md flex px-2 py-2 mt-8 max-w-full text-base text-white bg-slate-800 w-[300px]">
                                         <span className="flex-auto my-auto">Sign In</span>
                                         {
                                             !loadingDone ? submitClick ? <ReactLoading type="spin" color="#94a3b8" height={30} width={30} />
