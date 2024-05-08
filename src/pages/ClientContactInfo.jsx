@@ -245,6 +245,7 @@ const ClientContactInfo = () => {
     const handleFileRead = async (e) => {
         e.preventDefault();
         const file = e.target.files[0];
+        setChangeInput(true);
         if (file !== null && file !== undefined) {
             const base64 = await convertBase64(file);
             if (base64 !== undefined && base64 !== null) {
@@ -305,7 +306,7 @@ const ClientContactInfo = () => {
     const handleOnChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
-        if(value){
+        if (value) {
             setChangeInput(true);
         }
         setInputValue({
@@ -660,6 +661,19 @@ const ClientContactInfo = () => {
         }
     }
 
+    const capitalizeStr = (string) => {
+        // console.log(string)
+        var splitStr = string.toLowerCase().split(' ');
+        for (var i = 0; i < splitStr.length; i++) {
+            // You do not need to check if i is larger than splitStr length, as your for does that for you
+            // Assign it back to the array
+            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+        }
+        // console.log(splitStr)
+        // Directly return the joined string
+        return splitStr.join(' ');
+    }
+
     return (
         <>
             <div className="font-[sans-serif] text-[#333] bg-gradient-to-r from-slate-200 via-slate-100 via-50% to-slate-200 to-90% p-4 h-max">
@@ -668,7 +682,7 @@ const ClientContactInfo = () => {
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
                             <div className="flex justify-between items-center w-full">
-                                <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
+                                <motion.div whileHover={{ x: 10 }} whileTap={{ x: 0 }} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                                     <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                                     </svg>
@@ -729,7 +743,7 @@ const ClientContactInfo = () => {
                             </div>
                         </section>
                     </header>
-                    <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-600' onClick={() => navigate("/landing")}>
+                    <motion.div whileHover={{ x: 10 }} whileTap={{ x: 0 }} className='justify-start text-xs mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
                             <path
                                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
@@ -741,7 +755,7 @@ const ClientContactInfo = () => {
 
                         <div className='flex items-center'>
                             <div
-                                className=" border-2 bg-slate-50 outline-[#333] focus-within:outline focus-within:bg-transparent flex px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full">
+                                className="flex border-2 bg-slate-50 outline-[#333] focus-within:outline focus-within:bg-transparent px-4 rounded-sm h-10 max-xl:flex max-lg:flex w-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="16px" className="fill-slate-400 mr-3">
                                     <path
                                         d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
@@ -752,7 +766,7 @@ const ClientContactInfo = () => {
                             </div>
                             <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.5 }} type="button"
                                 onClick={handleAddContactOpen}
-                                className="h-[40px] w-[220px] max-sm:w-[260px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
+                                className="flex h-[40px] w-[220px] max-sm:w-[260px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">
                                     <path fillRule="evenodd" d="M3.181.264A2.92 2.92 0 0 0 .264 3.18a2.922 2.922 0 0 0 2.917 2.917A2.92 2.92 0 0 0 6.096 3.18 2.919 2.919 0 0 0 3.18.264zm0 .53A2.38 2.38 0 0 1 5.566 3.18 2.382 2.382 0 0 1 3.18 5.566 2.384 2.384 0 0 1 .794 3.179 2.383 2.383 0 0 1 3.181.794zm-.004 1.057a.265.265 0 0 0-.263.27v.794h-.793a.265.265 0 0 0-.028 0 .266.266 0 0 0 .028.53h.793v.794a.265.265 0 0 0 .531 0v-.793h.794a.265.265 0 0 0 0-.531h-.794v-.794a.265.265 0 0 0-.268-.27z" data-original="#000000" paintOrder="stroke fill markers" />
                                 </svg>
@@ -767,95 +781,97 @@ const ClientContactInfo = () => {
                             </motion.div>
                         ) : (
                             <section>
-                <div className="text-3xl text-slate-700 ml-4 font-semibold mt-4">Contacts</div>
-                <div className="text-md text-slate-700 ml-4">Collection of clients contact informations</div>
-                            {/* <div className="font-[sans-serif] text-[#333] mt-4">
+                                <div className="text-3xl text-slate-700 ml-4 font-semibold mt-4">Contacts</div>
+                                <div className="text-md text-slate-700 ml-4">Collection of clients contact informations</div>
+                                {/* <div className="font-[sans-serif] text-[#333] mt-4">
                                 <div className="max-w-5xl max-sm:max-w-sm mx-auto"> */}
-                                    <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-5 text-center mt-4">
-                                        {foundContact.length > 0 ? foundContact.map((contactInfo) => {
-                                            let formattedBirthday;
-                                            if (contactInfo !== undefined && contactInfo !== "" && contactInfo !== null) {
-                                                if (contactInfo.Birthday !== undefined
-                                                    && contactInfo.Birthday !== null) {
-                                                    const birthdayInfo = contactInfo.Birthday;
+                                <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-5 text-center mt-4">
+                                    {foundContact.length > 0 ? foundContact.map((contactInfo) => {
+                                        let formattedBirthday;
+                                        if (contactInfo !== undefined && contactInfo !== "" && contactInfo !== null) {
+                                            if (contactInfo.Birthday !== undefined
+                                                && contactInfo.Birthday !== null) {
+                                                const birthdayInfo = contactInfo.Birthday;
+                                                const [month, day, year] = birthdayInfo.split("/");
+                                                formattedBirthday = year + "-" + month + "-" + day;
+                                            } else {
+                                                if (contactInfo.birthdate !== undefined
+                                                    && contactInfo.birthdate !== null) {
+                                                    const birthdayInfo = contactInfo.birthdate;
                                                     const [month, day, year] = birthdayInfo.split("/");
                                                     formattedBirthday = year + "-" + month + "-" + day;
-                                                } else {
-                                                    if (contactInfo.birthdate !== undefined
-                                                        && contactInfo.birthdate !== null) {
-                                                        const birthdayInfo = contactInfo.birthdate;
-                                                        const [month, day, year] = birthdayInfo.split("/");
-                                                        formattedBirthday = year + "-" + month + "-" + day;
-                                                    }
                                                 }
                                             }
+                                        }
+                                        const formattedName = capitalizeStr(contactInfo.ContactPerson);
+                                        const formattedPosition = capitalizeStr(contactInfo.Position)
 
-                                            return (
-                                                <motion.div initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 w-full">
-                                                    <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
-                                                    <div className="flex flex-col items-center">
-                                                        <div className="bg-white py-4 px-2 rounded-md mt-4">
-                                                            <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
+                                        return (
+                                            <motion.div initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.1 }} id="parentElement" key={contactInfo.Id} className="relative group overflow-hidden p-8 flex items-center justify-center h-auto bg-white shadow-lg rounded-lg hover:scale-105 w-full">
+                                                <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
+                                                <div className="flex flex-col items-center">
+                                                    <div className="bg-white py-4 px-2 rounded-md mt-4">
+                                                        <img src={"data:image/jpeg;base64," + contactInfo.ProfileImage} alt='Img Error' className="group-hover:transition-all flex-shrink-0 w-[120px] h-[120px] max-sm:w-[90px] max-sm:h-[90px] rounded-full group-hover:outline group-hover:outline-offset-4 outline-cyan-500" />
+                                                    </div>
+                                                    <div className="flex flex-col justify-center mb-10">
+                                                        <div className="flex items-center justify-center space-x-1">
+                                                            <label className="font-semibold text-md max-sm:text-2xl group-hover:text-cyan-500 group-hover:underline group-hover:transition-all">{formattedName}</label>
                                                         </div>
-                                                        <div className="flex flex-col justify-center mb-10">
-                                                            <div className="flex items-center justify-center space-x-1">
-                                                                <label className="font-semibold text-md max-sm:text-2xl group-hover:text-cyan-500 group-hover:underline group-hover:transition-all">{contactInfo.ContactPerson}</label>
-                                                            </div>
-                                                            <div className="flex items-center justify-center space-x-1">
-                                                                <label className="text-xs max-sm:text-xl text-slate-500">{contactInfo.Position}</label>
-                                                            </div>
-                                                            <div className='flex flex-col justify-center items-center'>
-                                                                <div className='grid grid-cols-2'>
+                                                        <div className="flex items-center justify-center space-x-1">
+                                                            <label className="text-xs max-sm:text-xl text-slate-500">{formattedPosition}</label>
+                                                        </div>
+                                                        <div className='flex justify-center items-center mt-4'>
+                                                            <div className='grid grid-cols-2 gap-1'>
+                                                                <div className="flex items-start justify-start space-x-1 sm:col-span-2 md:col-span-2 xl:col-span-2">
+                                                                    <label className="sm:text-md text-xs text-slate-500">Department:</label>
+                                                                    <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.Department}</p>
+                                                                </div>
+                                                                <div className="flex items-start justify-start space-x-1 sm:col-span-2 md:col-span-2 xl:col-span-2">
+                                                                    <label className="sm:text-md text-xs text-slate-500">Email:</label>
+                                                                    <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.EmailAddress}</p>
+                                                                </div>
+                                                                <div className="flex items-start justify-start space-x-1 sm:col-span-2 md:col-span-2 xl:col-span-2">
+                                                                    <label className="sm:text-md text-xs text-slate-500">Nickname:</label>
+                                                                    <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.Nickname}</p>
+                                                                </div>
+                                                                <div className="flex items-start justify-start space-x-1 sm:col-span-2 md:col-span-2 xl:col-span-2">
+                                                                    <label className="sm:text-md text-xs text-slate-500">Birthdate:</label>
+                                                                    <p className="sm:text-md text-xs text-slate-500 truncate">{formattedBirthday}</p>
+                                                                </div>
+                                                                <div className="flex items-center justify-center col-span-2 mt-2">
+                                                                    <label className="sm:text-md text-xs text-slate-500">Contact Number:
+                                                                        <div className='flex flex-col justify-end'>
+                                                                            <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : "No Added Contact No."}</p>
+                                                                            <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : ""}</p>
+                                                                            <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : ""}</p>
+                                                                            <div onClick={handleViewHistory} id={contactInfo.Id} className="font-semibold relative m-2 flex items-center justify-center rounded-md cursor-pointer">
+                                                                                (View History)
+                                                                                <div name="historyDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute top-5 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                                                                                    {
+                                                                                        contactHistory.length > 0 ? contactHistory.map((history) => {
+                                                                                            return (
+                                                                                                <div className="flex items-center justify-center space-x-1" key={contactInfo.contactId}>
+                                                                                                    <label className="sm:text-md text-xs text-slate-500">{history.ContactNumber}</label>
+                                                                                                    <p className="sm:text-md text-xs text-slate-500">{history.LastModifiedDesc}</p>
+                                                                                                </div>
+                                                                                            )
+                                                                                        })
+                                                                                            :
+                                                                                            <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">"No Contact History."</p>
+                                                                                    }
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </label>
 
                                                                 </div>
                                                             </div>
-                                                            <div className="flex items-start justify-start space-x-1 mt-5">
-                                                                <label className="sm:text-md text-xs text-slate-500">Department:</label>
-                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.Department}</p>
-                                                            </div>
-                                                            <div className="flex items-start justify-start space-x-1">
-                                                                <label className="sm:text-md text-xs text-slate-500">Email:</label>
-                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.EmailAddress}</p>
-                                                            </div>
-                                                            <div className="flex items-start justify-start space-x-1">
-                                                                <label className="sm:text-md text-xs text-slate-500">Nickname:</label>
-                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{contactInfo.Nickname}</p>
-                                                            </div>
-                                                            <div className="flex items-start justify-start space-x-1">
-                                                                <label className="sm:text-md text-xs text-slate-500">Birthdate:</label>
-                                                                <p className="sm:text-md text-xs text-slate-500 truncate">{formattedBirthday}</p>
-                                                            </div>
-                                                            <div className="flex-col items-start justify-start space-x-1">
-                                                                <label className="sm:text-md text-xs text-slate-500">Contact Number:
-                                                                    <div className='flex flex-col justify-end'>
-                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber ? contactInfo.ContactNumber : "No Added Contact No."}</p>
-                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber2 ? contactInfo.ContactNumber2 : ""}</p>
-                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">{contactInfo.ContactNumber3 ? contactInfo.ContactNumber3 : ""}</p>
-                                                                        <div onClick={handleViewHistory} id={contactInfo.Id} className="font-semibold relative m-2 flex items-center justify-center rounded-md cursor-pointer">
-                                                                            (View History)
-                                                                            <div name="historyDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute top-5 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                                                                                {
-                                                                                    contactHistory.length > 0 ? contactHistory.map((history) => {
-                                                                                        return (
-                                                                                            <div className="flex items-center justify-center space-x-1" key={contactInfo.contactId}>
-                                                                                                <label className="sm:text-md text-xs text-slate-500">{history.ContactNumber}</label>
-                                                                                                <p className="sm:text-md text-xs text-slate-500">{history.LastModifiedDesc}</p>
-                                                                                            </div>
-                                                                                        )
-                                                                                    })
-                                                                                        :
-                                                                                        <p className="font-normal max-sm:text-md text-xs text-slate-500 truncate">"No Contact History."</p>
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                </label>
-
-                                                            </div>
                                                         </div>
+
                                                     </div>
-                                                    {/* <div className='flex flex-col items-center mt-8'>
+                                                </div>
+                                                {/* <div className='flex flex-col items-center mt-8'>
                                                         <div className='flex flex-col justify-start'>
                                                             <div className="flex items-center justify-center space-x-1">
                                                                 <label className="sm:text-md text-xs text-slate-500">Sales in charge:</label>
@@ -868,42 +884,42 @@ const ClientContactInfo = () => {
                                                                 className="truncate mt-0.5 p-4 bg-white max-w-md mx-auto w-[300px] sm:w-[300px] md:w-[300px] lg:w-[350px] xl:w-[350px] block text-sm border mb-5 border-slate-300 outline-slate-700 rounded" rows="2"></input>
                                                         </div>
                                                     </div> */}
-                                                    {/* Ellipsis icon */}
-                                                    <div className="absolute top-3 right-5 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
-                                                        <motion.svg whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                                                        </motion.svg>
+                                                {/* Ellipsis icon */}
+                                                <div className="absolute top-3 right-5 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
+                                                    <motion.svg whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={contactInfo.Id} data-key={contactInfo.Id}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                                    </motion.svg>
 
-                                                        <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-10 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
-                                                            <motion.button whileHover={{ scale: 1.05 }} onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start space-x-1 mb-2">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                                </svg>
-                                                                <span id={contactInfo.Id} className='mt-1'>Edit</span>
-                                                            </motion.button>
-                                                            <motion.button whileHover={{ scale: 1.05 }} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start space-x-1" onClick={handleDeleteContact}>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                                </svg>
-                                                                <span id={contactInfo.Id} className='mt-1'>Remove</span>
-                                                            </motion.button>
-                                                        </motion.div>
-                                                    </div>
-                                                </motion.div>
+                                                    <motion.div initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} name="kebabDropdown" id={contactInfo.Id} className="hidden flex-col z-50 bg-slate-200 p-10 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]">
+                                                        <motion.button whileHover={{ scale: 1.05 }} onClick={handleEditMode} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-slate-400 rounded-sm flex items-start justify-start mb-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                            </svg>
+                                                            <span id={contactInfo.Id} className='mt-1'>Edit</span>
+                                                        </motion.button>
+                                                        <motion.button whileHover={{ scale: 1.05 }} id={contactInfo.Id} className="text-sm cursor-pointer hover:text-red-400 rounded-sm flex items-start justify-start" onClick={handleDeleteContact}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                            </svg>
+                                                            <span id={contactInfo.Id} className='mt-1'>Remove</span>
+                                                        </motion.button>
+                                                    </motion.div>
+                                                </div>
+                                            </motion.div>
 
 
-                                            )
-                                        })
-                                            :
-                                            <div className='flex items-start justify-center bg-slate-100 h-screen'>
-                                                <h2 className='font-bold'>No Contact Person Found.</h2>
+                                        )
+                                    })
+                                        :
+                                        <div className='flex items-start justify-center bg-slate-100 h-screen'>
+                                            <h2 className='font-bold'>No Contact Person Found.</h2>
 
-                                            </div>
-                                        }
+                                        </div>
+                                    }
 
                                     {/* </div>
                                 </div> */}
-                            </div>
+                                </div>
                             </section>
                         )
                     }
@@ -929,7 +945,7 @@ const ClientContactInfo = () => {
 
                             <form onSubmit={handleAddContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
-                                    <motion.div whileHover={{scale : 1.1}} className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110'>
+                                    <motion.div whileHover={{ scale: 1.1 }} className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110'>
                                         <img
                                             key={selectedImage}
                                             alt="not found"
@@ -1114,7 +1130,7 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={changeInput? { scale: 1.08 } : { scale: 1 }} whileTap={changeInput? { scale: 0.5 } : { scale: 1 }} type="submit"
+                                <motion.button whileHover={changeInput ? { scale: 1.08 } : { scale: 1 }} whileTap={changeInput ? { scale: 0.5 } : { scale: 1 }} type="submit"
                                     className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Submit</motion.button>
                             </form>
                         </div>
@@ -1140,7 +1156,7 @@ const ClientContactInfo = () => {
                             </div>
                             <form onSubmit={handleEditContact} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                                 {selectedImage && (
-                                    <motion.div whileHover={{scale : 1.1}} className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110'>
+                                    <motion.div whileHover={{ scale: 1.1 }} className='flex flex-col items-center bg-white py-4 px-2 rounded-full hover:scale-110'>
                                         <img
                                             key={selectedImage}
                                             alt="not found"
@@ -1339,7 +1355,7 @@ const ClientContactInfo = () => {
                                             className="p-4 bg-white max-w-md mx-auto w-full block text-sm border mb-10 border-slate-300 outline-slate-700 rounded" rows="3"></textarea>
                                     </div>
                                 </div>
-                                <motion.button whileHover={changeInput? { scale: 1.08 } : { scale: 1 }} whileTap={changeInput? { scale: 0.5 } : { scale: 1 }} type="submit" disabled={!changeInput}
+                                <motion.button whileHover={changeInput ? { scale: 1.08 } : { scale: 1 }} whileTap={changeInput ? { scale: 0.5 } : { scale: 1 }} type="submit" disabled={!changeInput}
                                     className="mt-8 px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600">Update</motion.button>
                             </form>
                         </div>
@@ -1402,7 +1418,7 @@ const ClientContactInfo = () => {
                                         </div>
                                     </div>
 
-                                    <motion.button whileHover={changeInput? { scale: 1 } : { scale: 1.08 }} whileTap={changeInput? { scale: 1 } : { scale: 0.5 }} type="submit"
+                                    <motion.button whileHover={changeInput ? { scale: 1 } : { scale: 1.08 }} whileTap={changeInput ? { scale: 1 } : { scale: 0.5 }} type="submit"
                                         className="px-6 py-2 w-full bg-slate-800 text-sm text-white hover:bg-slate-500 mx-auto block">Update</motion.button>
                                 </form>
                             </div>
