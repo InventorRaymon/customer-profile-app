@@ -36,9 +36,11 @@ const UserPage = () => {
   const [passwordErr, setPasswordErr] = useState("");
   const [confirmPasswordErr, setConfirmPasswordErr] = useState("");
   const [errorMsg, setErrorMsg] = useState("")
+  const [isChecked, setIsChecked] = useState(false);
 
 
   const [inputValue, setInputValue] = useState({
+    employeeid: "",
     employeeno: "",
     position: "",
     firstname: "",
@@ -47,7 +49,8 @@ const UserPage = () => {
     department: "",
     username: "",
     password: "",
-    confirmpassword: ""
+    confirmpassword: "",
+    userType: 0
   });
 
   const [changepassInput, setChangepassInput] = useState({
@@ -55,7 +58,7 @@ const UserPage = () => {
     confirmchangepassword: ""
   })
   const { newpassword, confirmchangepassword } = changepassInput;
-  const { employeeno, position, firstname, middlename, lastname, department, username, password, confirmpassword } = inputValue;
+  const { employeeid, employeeno, position, firstname, middlename, lastname, department, username, password, confirmpassword, userType } = inputValue;
 
 
   const dummyArr = [
@@ -136,22 +139,47 @@ const UserPage = () => {
   }
 
   const handleAddModalClose = () => {
+    closeDropdown("");
+    setInputValue({
+      ...inputValue,
+      employeeid: "",
+    employeeno: "",
+    position: "",
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    department: "",
+    username: "",
+    password: "",
+    confirmpassword: "",
+    userType: 0
+    });
+    setIsChecked(false);
     setIsModalOpen('hidden');
   }
 
   const handleUpdateUserClose = () => {
     setInputValue({
       ...inputValue,
-      userid: "",
-      username: "",
-      useraddress: ""
+      employeeid: "",
+    employeeno: "",
+    position: "",
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    department: "",
+    username: "",
+    password: "",
+    confirmpassword: "",
+    userType: 0
     });
+    setIsChecked(false);
+    closeDropdown("");
     setIsUserModalOpen('hidden');
   }
 
   const handleAddUser = async (e) => {
     e.preventDefault();
-    // console.log(inputValue)
     try {
       const { data } = await axios.post(
         `${base_url}/PostUser`,
@@ -206,6 +234,7 @@ const UserPage = () => {
     }
     setInputValue({
       ...inputValue,
+      employeeid: "",
       employeeno: "",
       position: "",
       firstname: "",
@@ -214,13 +243,37 @@ const UserPage = () => {
       department: "",
       username: "",
       password: "",
-      confirmpassword: ""
+      confirmpassword: "",
+      userType: 0
     });
+    setIsChecked(false);
+    const errorMethod = () => {
+      setEmployeeNoErr("");
+      setFirstnameErr("");
+      setLastnameErr("");
+      setUsernameErr("");
+      setPasswordErr("");
+      setConfirmPasswordErr("");
+    }
+    if (employeeNoErr !== "") {
+      errorMethod();
+    } else if (firstnameErr !== "") {
+      errorMethod();
+    } else if (lastnameErr !== "") {
+      errorMethod();
+    } else if (usernameErr !== "") {
+      errorMethod();
+    } else if (passwordErr !== "") {
+      errorMethod();
+    } else if (confirmPasswordErr !== "") {
+      errorMethod();
+    }
   };
 
   // console.log(userData)
   const handleOnChange = (e) => {
     e.preventDefault();
+    // console.log(e.target)
     if (addErrorHandler === 'block') {
       setAddErrorHandler('hidden')
     }
@@ -264,12 +317,16 @@ const UserPage = () => {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
     const userId = e.target.id;
-    for(let i in userData){
+    for (let i in userData) {
       const data = userData[i];
-      if(data.EmployeeId === userId){
+      if (data.EmployeeId === userId) {
+        if(data.UserType === 1){
+          setIsChecked(true);
+        }
         setInputValue({
           ...inputValue,
-          employeeno: data.EmployeeId,
+          employeeid: data.EmployeeId,
+          employeeno: data.EmployeeNo,
           position: data.PositionName,
           firstname: data.FirstName,
           middlename: data.MiddleName,
@@ -277,17 +334,37 @@ const UserPage = () => {
           department: data.DepartmnentName,
           username: data.UserName,
           password: data.Password,
-          confirmpassword: data.ConfirmPassword
+          confirmpassword: data.ConfirmPassword,
+          userType: data.UserType
         });
       }
     }
-        setIsUserModalOpen('block');
+    const errorMethod = () => {
+      setEmployeeNoErr("");
+      setFirstnameErr("");
+      setLastnameErr("");
+      setUsernameErr("");
+      setPasswordErr("");
+      setConfirmPasswordErr("");
+    }
+    if (employeeNoErr !== "") {
+      errorMethod();
+    } else if (firstnameErr !== "") {
+      errorMethod();
+    } else if (lastnameErr !== "") {
+      errorMethod();
+    } else if (usernameErr !== "") {
+      errorMethod();
+    } else if (passwordErr !== "") {
+      errorMethod();
+    } else if (confirmPasswordErr !== "") {
+      errorMethod();
+    }
+    setIsUserModalOpen('block');
   }
 
   const handleDeleteUser = async (e) => {
-
     const userId = e.target.id;
-
     Swal.fire({
       title: "Remove Contact",
       text: "Are you sure you want to delete this contact?",
@@ -318,11 +395,6 @@ const UserPage = () => {
 
             if (input.isConfirmed) {
               window.location.reload();
-              navigate("/users",
-                // {
-                //     state: { clientId }
-                // }
-              );
             }
           })
         }
@@ -330,7 +402,7 @@ const UserPage = () => {
 
     })
   }
-  // console.log(userData)
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     try {
@@ -364,9 +436,26 @@ const UserPage = () => {
     }
   }
 
+  const handleClicked = (e) => {
+    const checkedValue = e.target.checked;
+    setIsChecked(checkedValue);
+    if(checkedValue === true) {
+      setInputValue({...inputValue, userType: 1})
+    } else {
+      setInputValue({...inputValue, userType: 0})
+    }
+  }
+
   const handleSubmitUpdate = async (e) => {
     e.preventDefault();
-    console.log(inputValue)
+    for(let index in inputValue){
+      const value = inputValue[index];
+      if(value == null || value == undefined
+        || value == ""
+      ) {
+        delete inputValue[index];
+      }
+    }
     try {
       const { data } = await axios.post(
         `${base_url}/PostUser`,
@@ -379,19 +468,44 @@ const UserPage = () => {
           }
         }
       );
-      const { ReturnMsg } = data;
-      console.log(data)
-      // if (ReturnMsg === "Success") {
-      //   Swal.fire({
-      //     title: "User Updated",
-      //     text: "Successfuly updated user!",
-      //     confirmButtonColor: "#334155",
-      //     color: "#334155",
-      //   }).then(() => {
-      //     setIsUserModalOpen('hidden');
-      //   })
+      const { ReturnMsg, ResultList } = data;
+      if (ReturnMsg === "Success") {
+        Swal.fire({
+          title: "User Updated",
+          text: "Successfuly updated user!",
+          confirmButtonColor: "#334155",
+          color: "#334155",
+        }).then(() => {
+          setIsUserModalOpen('hidden');
+          closeDropdown("");
+          window.location.reload();
+        })
+      } else {
+        if (ReturnMsg === "Fail") {
+          for (let index in ResultList) {
+            const errorData = ResultList[index];
+            if (errorData.ValidationKey === "EmployeeNo") {
+              setEmployeeNoErr(errorData.ValidationMsg)
+            } else if (errorData.ValidationKey === "FirstName") {
+              setFirstnameErr(errorData.ValidationMsg)
 
-      // }
+            } else if (errorData.ValidationKey === "LastName") {
+              setLastnameErr(errorData.ValidationMsg)
+
+            } else if (errorData.ValidationKey === "UserName") {
+              setUsernameErr(errorData.ValidationMsg)
+
+            } else if (errorData.ValidationKey === "Password") {
+              setPasswordErr(errorData.ValidationMsg)
+            } else if (errorData.ValidationKey === "ConfirmPassword") {
+              setConfirmPasswordErr(errorData.ValidationMsg)
+            }
+          }
+        } else if (ReturnMsg === "Username already exists") {
+          setAddErrorHandler('block');
+          setErrorMsg(ReturnMsg);
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -411,6 +525,22 @@ const UserPage = () => {
       }
     })
   }
+
+  const closeDropdown = ({ contactId }) => {
+    const allElements = document.getElementsByName("kebabDropdown");
+    for (let index in allElements) {
+        const targetElement = allElements[index];
+        
+        if (targetElement.id !== undefined && targetElement.id !== null) {
+            const elementHidden = "hidden flex-col z-50 bg-slate-200 p-2 w-[170px] sm:min-w-[10px] max-sm:min-w-[120px] absolute right-0 top-6 rounded-md shadow-[2px_5px_10px_-3px_rgba(6,81,237,0.3)]";
+            if (contactId == targetElement.id) {
+                targetElement.setAttribute('class', elementHidden);
+            } else {
+              targetElement.setAttribute('class', "hidden");
+            }
+        }
+    }
+}
 
   const handleUserDropdown = () => {
     if (userDropdown === 'hidden') {
@@ -465,13 +595,13 @@ const UserPage = () => {
 
   return (
     <>
-      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-full">
+      <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-full sm:h-screen">
         <div className="">
           <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
             <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
 
               <div className="flex justify-between items-center w-full">
-                <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
+                <motion.div whileHover={{ x: 10 }} whileTap={{ x: 0 }} className="lg:cursor-pointer-hidden xl:cursor-pointer-hidden md:cursor-pointer-hidden sm:cursor-pointer-hidden lg:hidden xl:hidden md:hidden sm:hidden flex items-center h-[25px] cursor-pointer" onClick={() => navigate("/landing")} >
                   <svg className="w-6 h-6 text-slate-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="#FFFFFF" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7" />
                   </svg>
@@ -484,13 +614,13 @@ const UserPage = () => {
                   <div className='flex items-center space-x-6'>
                     <ul>
                       <li className="relative px-1 after:absolute after:bg-transparent after:w-full after:h-[2px] after:block after:top-8 after:left-0 after:transition-all after:duration-200">
-                        <motion.svg whileHover={{ scale : 1.08}} whileTap={{ scale: 0.8}} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
+                        <motion.svg whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.8 }} xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" className="cursor-pointer xl:hover:fill-slate-500 lg:hover:fill-slate-500" fill="white" onClick={handleUserDropdown}
                           viewBox="0 0 512 512">
                           <path
                             d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
                             data-original="#000000" />
                         </motion.svg>
-                        <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} div className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
+                        <motion.div animate={userDropdown === 'block' ? { opacity: 1, y: 0 } : { opacity: 1, y: "100%" }} className={userDropdown + " z-50 shadow-md bg-white p-4 w-[250px] sm:min-w-[140px] max-sm:min-w-[200px] absolute right-0 top-10 rounded-md"}>
                           <motion.h6 whileHover={{ scale: 1.1 }} className="font-semibold cursor-pointer hover:text-slate-400" onClick={() => { setChangePassModal('block') }}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 mr-2 float-start">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33" />
@@ -517,7 +647,7 @@ const UserPage = () => {
               </div>
             </section>
           </header>
-          <motion.div whileHover={{x : 10}} whileTap={{ x: 0}} className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
+          <motion.div whileHover={{ x: 10 }} whileTap={{ x: 0 }} className='justify-start text-sm mt-2 cursor-pointer hidden sm:flex md:flex lg:flex xl:flex text-gray-400' onClick={() => navigate("/landing")}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3 fill-current mr-2" viewBox="0 0 55.753 55.753">
               <path
                 d="M12.745 23.915c.283-.282.59-.52.913-.727L35.266 1.581a5.4 5.4 0 0 1 7.637 7.638L24.294 27.828l18.705 18.706a5.4 5.4 0 0 1-7.636 7.637L13.658 32.464a5.367 5.367 0 0 1-.913-.727 5.367 5.367 0 0 1-1.572-3.911 5.369 5.369 0 0 1 1.572-3.911z"
@@ -562,9 +692,9 @@ const UserPage = () => {
                         Users Contact Persons
                       </h3>
                     </div>
-                    <div  className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                    <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
                       <motion.button
-                      whileHover={{ scale : 1.08}} whileTap={{ scale: 0.08}}
+                        whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.08 }}
                         className="text-slate-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={() => setShowModal(false)}
@@ -572,7 +702,7 @@ const UserPage = () => {
                         Close
                       </motion.button>
                       <motion.button
-                      whileHover={{ scale : 1.08}} whileTap={{ scale: 0.08}}
+                        whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.08 }}
                         className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
                         onClick={() => setShowModal(false)}
@@ -657,9 +787,41 @@ const UserPage = () => {
                     data-original="#000000"></path>
                 </svg>
               </div>
-              <div className="m-10">
               <form onSubmit={handleSubmitUpdate} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                 <div className="grid sm:grid-cols-2 gap-10">
+                <div className="relative flex items-center sm:col-span-2">
+                    <label
+                      className="relative flex cursor-pointer items-center rounded-full p-3"
+                      htmlhtmlfor="updateCheckbox"
+                      data-ripple-dark="true"
+                    >
+                      <input
+                        type="checkbox"
+                        className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-slate-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-md before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-sky-500 checked:bg-sky-500 checked:before:bg-sky-500 hover:before:opacity-10"
+                        id="updateCheckbox"
+                        checked={isChecked}
+                        name='userType'
+                        onChange={handleClicked}
+                      />
+                      <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3.5 w-3.5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          strokeWidth="1"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    </label>
+                    <div className="text-[13px] font-semibold mt-0.5 text-slate-500">Grant Admin Permission</div>
+                  </div>
                   <div className="relative flex items-center">
                     <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                       Employee No.</label>
@@ -669,7 +831,7 @@ const UserPage = () => {
                       value={employeeno}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${employeeNoErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${employeeNoErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -689,7 +851,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-200 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -708,7 +870,7 @@ const UserPage = () => {
                       name='firstname'
                       value={firstname}
                       autoComplete='off'
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${firstnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${firstnameErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -728,7 +890,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-200 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -746,7 +908,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${lastnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${lastnameErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -766,7 +928,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-200 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -784,7 +946,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${usernameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${usernameErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -805,7 +967,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${passwordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${passwordErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -825,7 +987,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${confirmPasswordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${confirmPasswordErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -860,7 +1022,6 @@ const UserPage = () => {
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8 }} type="submit"
                   className="px-6 py-2.5 w-full text-sm font-semibold bg-slate-500 text-white rounded hover:bg-slate-600 mt-5">Submit</motion.button>
               </form>
-              </div>
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
@@ -882,6 +1043,39 @@ const UserPage = () => {
 
               <form onSubmit={handleAddUser} className="font-[sans-serif] m-6 max-w-4xl mx-auto">
                 <div className="grid sm:grid-cols-2 gap-10">
+                <div className="relative flex items-center sm:col-span-2">
+                    <label
+                      className="relative flex cursor-pointer items-center rounded-full p-3"
+                      htmlhtmlfor="addCheckbox"
+                      data-ripple-dark="true"
+                    >
+                      <input
+                        type="checkbox"
+                        className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-slate-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-8 before:w-8 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-md before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-sky-500 checked:bg-sky-500 checked:before:bg-sky-500 hover:before:opacity-10"
+                        id="addCheckbox"
+                        checked={isChecked}
+                        name='userType'
+                        onChange={handleClicked}
+                      />
+                      <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3.5 w-3.5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          strokeWidth="1"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    </label>
+                    <div className="text-[13px] font-semibold mt-0.5 text-slate-500">Grant Admin Permission</div>
+                  </div>
                   <div className="relative flex items-center">
                     <label className="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">
                       Employee No.</label>
@@ -891,7 +1085,7 @@ const UserPage = () => {
                       value={employeeno}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${employeeNoErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${employeeNoErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -911,7 +1105,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-200 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -930,7 +1124,7 @@ const UserPage = () => {
                       name='firstname'
                       value={firstname}
                       autoComplete='off'
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${firstnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${firstnameErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -950,7 +1144,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-200 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -968,7 +1162,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${lastnameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${lastnameErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -988,7 +1182,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-100 focus:border-slate-500 rounded outline-none" />
+                      className="truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-slate-200 focus:border-slate-500 rounded outline-none" />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -1006,7 +1200,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${usernameErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${usernameErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -1027,7 +1221,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${passwordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${passwordErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -1047,7 +1241,7 @@ const UserPage = () => {
                       onChange={handleOnChange}
                       autoComplete='off'
                       // required
-                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${confirmPasswordErr !== "" ? "red" : "slate"}-500 focus:border-slate-500 rounded outline-none`} />
+                      className={`truncate px-4 py-3.5 bg-white text-black w-full text-sm border-2 border-${confirmPasswordErr !== "" ? "red" : "slate"}-200 focus:border-slate-500 rounded outline-none`} />
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb" className="w-[18px] h-[18px] absolute right-4"
                       viewBox="0 0 24 24">
                       <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -1120,7 +1314,7 @@ const UserPage = () => {
                       className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
                     <div className="my-auto text-xs leading-6 text-right text-neutral-400">
                       <a className="font-bold text-neutral-800">
-                        <motion.label whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} className="cursor-pointer" name="newpassword" onClick={handleShowPass} htmlFor="check">{showHideNew}</motion.label>
+                        <motion.label whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} className="cursor-pointer" name="newpassword" onClick={handleShowPass} htmlhtmlhtmlfor="check">{showHideNew}</motion.label>
                       </a>
                     </div>
                   </div>
@@ -1138,7 +1332,7 @@ const UserPage = () => {
                       className="px-2 py-2 w-full border-b-2 focus:border-[#333] outline-none text-sm bg-white" />
                     <div className="my-auto text-xs leading-6 text-right text-neutral-400">
                       <a className="font-bold text-neutral-800">
-                        <motion.label whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} className="cursor-pointer" name="confirmchangepassword" onClick={handleShowPass} htmlFor="check">{showHide}</motion.label>
+                        <motion.label whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.5 }} className="cursor-pointer" name="confirmchangepassword" onClick={handleShowPass} htmlhtmlhtmlfor="check">{showHide}</motion.label>
                       </a>
                     </div>
                   </div>
@@ -1161,7 +1355,7 @@ const UserPage = () => {
 
                   {foundUser && foundUser.length > 0 ? foundUser.map((userInfo, i) => {
                     return (
-                      <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={userInfo.EmployeeId}>
+                      <motion.div whileHover={{ scale: 1.05 }} initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={userInfo.EmployeeId}>
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                         <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
                           <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.1 }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={userInfo.EmployeeId} data-key={userInfo.EmployeeId}>

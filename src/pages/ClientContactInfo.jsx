@@ -658,7 +658,7 @@ const ClientContactInfo = () => {
 
     return (
         <>
-            <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-screen">
+            <div className="font-[sans-serif] text-[#333] bg-slate-100 p-4 h-max">
                 <div className="">
                     <header className='shadow-md font-[sans-serif] tracking-wide relative z-50'>
                         <section className='md:flex lg:items-center relative py-3 lg:px-10 px-4 border-slate-200 border-b bg-white bg-gradient-to-r from-slate-900 via-slate-500 via-50% to-slate-900 to-90% h-[50px] sm:h-[50px] md:h-[50px] lg:h-[50px] xl:h-[50px]'>
@@ -746,7 +746,7 @@ const ClientContactInfo = () => {
                                 <input type='text' value={contact} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
 
                             </div>
-                            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.8 }} type="button"
+                            <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.5 }} type="button"
                                 onClick={handleAddContactOpen}
                                 className="h-[40px] w-[220px] max-sm:w-[260px] sm:w-[240px] md:w-[200px] lg:w-[200px] xl:w-[200px] px-4 py-2.5 flex items-center text-[#fff] rounded-sm text-sm font-semibold outline-none bg-slate-600 hover:bg-slate-700 active:bg-slate-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18px" fill="currentColor" className="mr-2" viewBox="0 0 6.35 6.35">

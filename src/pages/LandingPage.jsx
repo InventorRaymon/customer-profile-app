@@ -538,7 +538,7 @@ const LandingPage = () => {
                 <input type='text' value={client} onChange={handleSearchBar} placeholder='Search...' className="w-full outline-none bg-transparent text-black text-sm" />
 
               </div>
-              <motion.button whileHover={{ scale: 1.2 }}
+              <motion.button whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.5 }}
                 type="button"
                 onClick={handleAddModalOpen}
@@ -590,7 +590,7 @@ const LandingPage = () => {
             <div className="w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
               <div className="flex items-center pb-3 border-b text-black">
                 <h3 className="text-xl font-bold flex-1">Add Client</h3>
-                <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.3 }} onClick={handleAddModalClose} xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
+                <motion.svg whileTap={{ scale: 0.5 }} whileHover={{ scale: 1.08 }} onClick={handleAddModalClose} xmlns="http://www.w3.org/2000/svg" className="w-3.5 ml-2 cursor-pointer shrink-0 fill-black hover:fill-red-500"
                   viewBox="0 0 320.591 320.591">
                   <path
                     d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z"
@@ -770,7 +770,7 @@ const LandingPage = () => {
 
                   {foundClient && foundClient.length > 0 ? foundClient.map((clientInfo, i) => {
                     return (
-                      <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-100%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={clientInfo.Value}>
+                      <motion.div whileHover={{scale : 1.05}} initial={{ opacity: 0, y: "-40%" }} whileInView={{ opacity: 1, y: 0 }} className="relative group overflow-hidden p-8 rounded-xl bg-white border border-gray-200 dark:border-gray-800 dark:bg-gray-900 shadow-lg" key={clientInfo.Value}>
                         <div aria-hidden="true" className="inset-0 absolute aspect-video border rounded-full -translate-y-1/2 group-hover:-translate-y-1/4 duration-300 bg-gradient-to-b from-blue-500 to-white dark:from-white dark:to-white blur-2xl opacity-25 dark:opacity-5 dark:group-hover:opacity-10 p-10"></div>
                         <div className="absolute top-0 right-0 m-2 flex items-center justify-center rounded-md cursor-pointer h-[40px] w-[40px]" onClick={handleOpenKebab} id="menuOpen">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="max-sm:w-9 max-sm:h-9 w-6 h-6" key={clientInfo.Value} data-key={clientInfo.Value}>
